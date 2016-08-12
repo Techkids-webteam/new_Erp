@@ -22,11 +22,11 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         nationality = require("./Modules/Nationality.js")(logWriter, mongoose, models),
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event),
         classes = require("./Modules/Classes.js")(logWriter, mongoose, employee, models);
-        instructor = require("./Modules/Instructor.js")(logWriter, mongoose, employee, classes, models);
-        instructor_coppy = require("./Modules/Instructor_coppy.js")(logWriter, mongoose, employee, classes, models);
         rate = require("./Modules/Rate.js")(logWriter, mongoose, classes, models);
         record = require("./Modules/Record.js")(logWriter, mongoose , models);
         role = require("./Modules/Role.js")(logWriter, mongoose, models);
+        instructor = require("./Modules/Instructor.js")(logWriter, mongoose, employee, classes, models, record);
+
 
 
     //binding for remove Workflow

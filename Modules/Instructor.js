@@ -1,4 +1,4 @@
-var Instructor = function (logWriter, mongoose, employee, classes, models){
+var Instructor = function (logWriter, mongoose, employee, classes, models, record){
     var instructorSchema = mongoose.Schema({
         employee_id: String,
         image: String,
@@ -6,6 +6,7 @@ var Instructor = function (logWriter, mongoose, employee, classes, models){
         code: String,
         classes: [],
         name: String,
+        record_count : Number,
         contact : {}
     }, { collection: 'Instructor' });
 
@@ -19,11 +20,42 @@ var Instructor = function (logWriter, mongoose, employee, classes, models){
         // For each instructor, get his/her info fom Employee collection
 
         var promis = query.exec(function(err,data){
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if(dd<10) {
+                dd='0'+dd
+            }
+
+            if(mm<10) {
+                mm='0'+mm
+            }
+            today = yyyy + '-' + mm + '-'+ dd;
+
+            var tomorow = new Date();
+            dd = tomorow.getDate()+1;
+            mm = tomorow.getMonth()+1; //January is 0!
+            yyyy = tomorow.getFullYear();
+
+            if(dd<10) {
+                dd='0'+dd
+            }
+
+            if(mm<10) {
+                mm='0'+mm
+            }
+
+            tomorow = yyyy + '-' + mm + '-'+ dd;
             var instrucorFecthCount = 0;
             for (var i=0;i<data.length; i++) {
                 var instructor = data[i];
 
                 (function(instructor) {
+                    models.get(req.session.lastDb - 1, "Teaching_Record", record.recordSchema).find({"instructor_code": instructor.code, "record_time" : {"$gte": today, "$lt": tomorow }}, function (err, recordData) {
+                        instructor.record_count = recordData.length;
+                    });
                     models.get(req.session.lastDb - 1,
                         "Employees",
                         employee.employeeSchema)
@@ -37,11 +69,13 @@ var Instructor = function (logWriter, mongoose, employee, classes, models){
                             };
                             instructors.push(instructor);
                             if(instrucorFecthCount == data.length) {
-                                res.json({items: instructors});
+                                res.json({
+                                    items: instructors,
+                                    date: today
+                                });
                             }
                         });
                 }) (data[i]);
-
 
             }
         });
@@ -61,7 +95,7 @@ var Instructor = function (logWriter, mongoose, employee, classes, models){
                     instructor.contact = {
                         "phone": data1.workPhones.mobile,
                         "email": data1.personalEmail
-                    }
+                    };
                     res.json({items: instructor});
                 });
             } else {
@@ -78,3 +112,5 @@ var Instructor = function (logWriter, mongoose, employee, classes, models){
 };
 
 module.exports = Instructor;
+
+

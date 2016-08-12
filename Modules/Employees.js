@@ -119,7 +119,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         }
 
 
-        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+        models.get(req.session.lastDb - 1, "+Department", department.DepartmentSchema).aggregate(
             {
                 $match: {
                     users: newObjectId(req.session.uId)
