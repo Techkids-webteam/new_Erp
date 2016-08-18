@@ -54,7 +54,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
                 var instructor = data[i];
 
                 (function(instructor) {
-                    models.get(req.session.lastDb - 1, "Teaching_Record", record.recordSchema).find({"instructor_code": instructor.code, "record_time" : {"$gte": today, "$lt": tomorow }}, function (err, recordData) {
+                    models.get(req.session.lastDb - 1, "Teaching_Record", record.recordSchema).find({"instructor_code": instructor.code, "date" : {"$gte": today, "$lt": tomorow }}, function (err, recordData) {
                         instructor.record_count = recordData.length;
                     });
                     models.get(req.session.lastDb - 1,
@@ -122,7 +122,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
                         var getInfo = function(cb1) {
                             async.waterfall([
                                 function (callback) {
-                                    models.get(req.session.lastDb - 1, "Teaching_Record", record.recordSchema).find({"instructor_code": instructor.code, "record_time" : {"$gte": today, "$lt": tomorow }}, function (err, recordData) {
+                                    models.get(req.session.lastDb - 1, "Teaching_Record", record.recordSchema).find({"instructor_code": instructor.code, "date" : {"$gte": today, "$lt": tomorow }}, function (err, recordData) {
                                         instructor.record_count = recordData.length;
                                     });
                                     models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema).findById(instructor.employee_id, function(err, employeeData){
