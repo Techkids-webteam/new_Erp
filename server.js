@@ -1247,7 +1247,7 @@ app.get('/getTeachingRecord', function(req, res){
         var data = {
             'code': code,
             'date': date
-        }
+        };
         requestHandler.getTeachingRecordByCode(req, res, data);
     }
     else requestHandler.getTeachingRecord(req, res);

@@ -7,7 +7,7 @@ var Role = function (logWriter, mongoose, models){
         title: String
     }, { collection: 'Role' });
 
-    mongoose.model('Role', roleSchema);
+    var schema = mongoose.model('Role', roleSchema);
 
     function getData(req, res){
         var query = models.get(req.session.lastDb - 1, "Role", roleSchema).find();

@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "async": "^2.0.1",
     "connect-mongo": "0.3.3",
     "express": "3.4.0",
     "googleapis": "0.4.6",
