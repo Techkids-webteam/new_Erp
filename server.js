@@ -1194,6 +1194,14 @@ app.get('/getInstructor', function(req,res){
      else requestHandler.getInstructor(req,res);
 });
 
+app.get('/getInstructor1', function(req,res){
+    if(req.query.code){
+        var data = req.query.code;
+        requestHandler.getInstructorByCode(req,res,data);
+    }
+    else requestHandler.getInstructor1(req,res);
+});
+
 app.get('/getInstructorNew', function(req,res){
     if(req.query.code){
         var data = req.query.code;

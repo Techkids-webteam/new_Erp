@@ -25,7 +25,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         rate = require("./Modules/Rate.js")(logWriter, mongoose, classes, models);
         record = require("./Modules/Record.js")(logWriter, mongoose , models);
         role = require("./Modules/Role.js")(logWriter, mongoose, models);
-        instructor = require("./Modules/Instructor.js")(logWriter, mongoose, employee, role, models, record);
+        instructor = require("./Modules/Instructor.js")(logWriter, mongoose, employee, role, models, record, classes);
 
 
 
@@ -1962,6 +1962,21 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     }
 
 //-------------------------Instructor-----------------------------------
+    //beta
+    function getInstructor1(req, res){
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 42, function (access) {
+                if (access) {
+                    instructor.getData1(req,res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
 
     function getInstructor(req, res){
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -2382,6 +2397,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
 
         getInstructor: getInstructor,
+        getInstructor1: getInstructor1,
         getInstructorByCode : getInstructorByCode,
 
         getInstructorNew: getInstructorNew,
