@@ -1222,6 +1222,7 @@ app.delete('/deleteInstructor', function (req, res){
 
 app.post('/updateInstructor', function (req, res){
     var data =  req.body;
+    //hey
     requestHandler.updateInstructor(req, res, data);
 });
 
