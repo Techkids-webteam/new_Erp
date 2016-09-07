@@ -415,6 +415,205 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         }
     };//End create
 
+    function createData(req, data, res, cb) {
+        try {
+            if (!data) {
+                logWriter.log('Employees.create Incorrect Incoming Data');
+                res.send(400, { error: 'Employees.create Incorrect Incoming Data' });
+                return;
+            } else {
+                savetoDb(data);
+            }
+
+            function savetoDb(data) {
+                _employee = new models.get(req.session.lastDb - 1, "Employees", employeeSchema)();
+                if (data.uId) {
+                    _employee.createdBy.user = data.uId;
+                    //uId for edited by field on creation
+                    _employee.editedBy.user = data.uId;
+                }
+                if (data.isEmployee) {
+                    _employee.isEmployee = data.isEmployee;
+                }
+                if (data.name) {
+                    if (data.name.first) {
+                        _employee.name.first = data.name.first;
+                    }
+                    if (data.name.last) {
+                        _employee.name.last = data.name.last;
+                    }
+                }
+                if (data.gender) {
+                    _employee.gender = data.gender;
+                }
+                if (data.marital) {
+                    _employee.marital = data.marital;
+                }
+                if (data.subject) {
+                    _employee.subject = data.subject;
+                }
+                if (data.tags) {
+                    _employee.tags = data.tags;
+                }
+                if (data.workAddress) {
+                    if (data.workAddress.street) {
+                        _employee.workAddress.street = data.workAddress.street;
+                    }
+                    if (data.workAddress.city) {
+                        _employee.workAddress.city = data.workAddress.city;
+                    }
+                    if (data.workAddress.state) {
+                        _employee.workAddress.state = data.workAddress.state;
+                    }
+                    if (data.workAddress.zip) {
+                        _employee.workAddress.zip = data.workAddress.zip;
+                    }
+                    if (data.workAddress.country) {
+                        _employee.workAddress.country = data.workAddress.country;
+                    }
+                }
+                if (data.workEmail) {
+                    _employee.workEmail = data.workEmail;
+                }
+                if (data.personalEmail) {
+                    _employee.personalEmail = data.personalEmail;
+                }
+                if (data.skype) {
+                    _employee.skype = data.skype;
+                }
+                if (data.workPhones) {
+                    if (data.workPhones.phone) {
+                        _employee.workPhones.phone = data.workPhones.phone;
+                    }
+                    if (data.workPhones.mobile) {
+                        _employee.workPhones.mobile = data.workPhones.mobile;
+                    }
+                }
+                if (data.officeLocation) {
+                    _employee.officeLocation = data.officeLocation;
+                }
+                if (data.relatedUser) {
+                    _employee.relatedUser = data.relatedUser;
+                }
+                if (data.visibility) {
+                    _employee.visibility = data.visibility;
+                }
+                if (data.department) {
+                    _employee.department = data.department;
+                }
+                if (data.groups) {
+                    _employee.groups = data.groups;
+                }
+                if (data.whoCanRW) {
+                    _employee.whoCanRW = data.whoCanRW;
+                }
+                if (data.jobPosition) {
+                    _employee.jobPosition = data.jobPosition;
+                }
+                if (data.manager) {
+                    _employee.manager = data.manager;
+                }
+                if (data.coach) {
+                    _employee.coach = data.coach;
+                }
+                if (data.nationality) {
+                    _employee.nationality = data.nationality;
+                }
+                if (data.identNo) {
+                    _employee.identNo = data.identNo;
+                }
+                if (data.passportNo) {
+                    _employee.passportNo = data.passportNo;
+                }
+                if (data.bankAccountNo) {
+                    _employee.bankAccountNo = data.bankAccountNo;
+                }
+                if (data.otherId) {
+                    _employee.otherId = data.otherId;
+                }
+                if (data.homeAddress) {
+                    if (data.homeAddress.street) {
+                        _employee.homeAddress.street = data.homeAddress.street;
+                    }
+                    if (data.homeAddress.city) {
+                        _employee.homeAddress.city = data.homeAddress.city;
+                    }
+                    if (data.homeAddress.state) {
+                        _employee.homeAddress.state = data.homeAddress.state;
+                    }
+                    if (data.homeAddress.zip) {
+                        _employee.homeAddress.zip = data.homeAddress.zip;
+                    }
+                    if (data.homeAddress.country) {
+                        _employee.homeAddress.country = data.homeAddress.country;
+                    }
+                }
+                if (data.dateBirth) {
+                    _employee.dateBirth = getDate(data.dateBirth);
+                    _employee.age = getAge(data.dateBirth);
+                }
+                if (data.nextAction) {
+                    _employee.nextAction = data.nextAction;
+                }
+                //new source (add Vasya)
+                if (data.source) {
+                    _employee.source = data.source;
+                }
+                if (data.referredBy) {
+                    _employee.referredBy = data.referredBy;
+                }
+                if (data.active) {
+                    _employee.active = data.active;
+                }
+                if (data.workflow) {
+                    _employee.workflow = data.workflow;
+                }
+                if (data.otherInfo) {
+                    _employee.otherInfo = data.otherInfo;
+                }
+                if (data.expectedSalary) {
+                    _employee.expectedSalary = data.expectedSalary;
+                }
+                if (data.proposedSalary) {
+                    _employee.proposedSalary = data.proposedSalary;
+                }
+                if (data.color) {
+                    _employee.color = data.color;
+                }
+                if (data.imageSrc) {
+                    _employee.imageSrc = data.imageSrc;
+                }
+                if (data.jobType) {
+                    _employee.jobType = data.jobType;
+                }
+                if (data.nationality) {
+                    _employee.nationality = data.nationality;
+                }
+                ///////////////////////////////////////////////////
+                event.emit('updateSequence', models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", 0, 0, _employee.workflow, _employee.workflow, true, false, function (sequence) {
+                    _employee.sequence = sequence;
+                    _employee.save(function (err, result) {
+                        if (err) {
+                            console.log(err);
+                            logWriter.log("Employees.js create savetoBd _employee.save " + err);
+                            res.send(500, { error: 'Employees.save BD error' });
+                        } else {
+                            // res.send(201, { success: 'A new Employees create success', result: result, id: result._id });
+                            // if (result.isEmployee)
+                            //     event.emit('recalculate', req);
+                            cb(result._id);
+                        }
+                    });
+                });
+            }
+        }
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("Employees.js  " + exception);
+            res.send(500, { error: 'Employees.save  error' });
+        }
+    };//End create
+
     function get(req, response) {
         var res = {};
         res['data'] = [];
@@ -1073,6 +1272,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         getFilter: getFilter,
 
         getData : getData,
+
+        createData:createData,
 
         getEmployeesAlphabet: getEmployeesAlphabet,
 
