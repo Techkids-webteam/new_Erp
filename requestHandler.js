@@ -2052,6 +2052,20 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+
+    function deleteInstructor(req, res, data){
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 42, function (access) {
+                if (access) {
+                    instructor.deleteInstructor(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
 //-----------------------------Rate----------------------------------------
 
     function getRate(req, res){

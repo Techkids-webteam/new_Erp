@@ -1214,6 +1214,11 @@ app.post('/createInstructor', function (req, res) {
     var data = req.body;
     requestHandler.createInstructor(req, res, data);
 })
+app.delete('/deleteInstructor', function (req, res){
+    var data = req.body;
+    requestHandler.deleteInstructor(req, res);
+})
+
 
 
 
@@ -1482,10 +1487,6 @@ app.get('/:id', function (req, res) {
         res.send(500);
     }
 });
-app.delete('/deleteInstructor', function (req, res)){
-
-}
-
 app.listen(8088);
 
 

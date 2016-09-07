@@ -1223,7 +1223,23 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         });
     }// end update
 
-
+    function removeData(req, res, data, cb) {
+        models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndRemove(data.employee_id, function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log("Employees.js remove employee.remove " + err);
+                res.send(500, { error: "Can't remove Employees" });
+            } else {
+                if (result && !result.isEmployee) {
+                    event.emit('updateSequence', models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true, function () {
+                        cb(req, res, data);
+                    });
+                }
+                event.emit('recalculate', req);
+                cb(req, res, data);
+            }
+        });
+    }
 
     function remove(req, _id, res) {
         models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndRemove(_id, function (err, result) {
@@ -1286,6 +1302,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         updateOnlySelectedFields: updateOnlySelectedFields,
 
         remove: remove,
+
+        removeData: removeData,
 
         getApplications: getApplications,
 
