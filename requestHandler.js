@@ -2066,6 +2066,10 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+
+    function updateInstructor(req, res, data) {
+
+    }
 //-----------------------------Rate----------------------------------------
 
     function getRate(req, res){

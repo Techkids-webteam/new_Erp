@@ -1214,10 +1214,16 @@ app.post('/createInstructor', function (req, res) {
     var data = req.body;
     requestHandler.createInstructor(req, res, data);
 })
+
 app.delete('/deleteInstructor', function (req, res){
     var data = req.body;
-    requestHandler.deleteInstructor(req, res);
+    requestHandler.deleteInstructor(req, res, data);
 })
+
+app.post('/updateInstructor', function (req, res){
+    var data =  req.body;
+    requestHandler.updateInstructor(req, res, data);
+});
 
 
 

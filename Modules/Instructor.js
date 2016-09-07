@@ -230,18 +230,19 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
 
     function deleteInstructor(req, res, data) {
         models.get(req.session.lastDb - 1, 'Instructor', instructorSchema).findById(data._id, function(err, ins){
-            employee.removeData(req, res, ins, deleteOnlyInstructor);
+            employee.removeData(req, res, ins, function(req, res, data) {
+              models.get(req.session.lastDb - 1, 'Instructor', instructorSchema).remove({ _id: data._id }, function (err, result) {
+                  if (err) {
+                      res.json({result_code: 0, result_message: err});
+                  } else {
+                      res.json({result_code: 1, result_message: "success"});
+                  }
+              });
+            });
         });
     }
-    function deleteOnlyInstructor(req, res, data) {
-      models.get(req.session.lastDb - 1, 'Instructor', instructorSchema).remove({ _id: data._id }, function (err, result) {
-          if (err) {
-              res.json({result_code: 0, result_message: err});
-          } else {
-              res.json({result_code: 1, result_message: "success"});
-          }
-      });
-    }
+
+    
 
     return {
         getData: getData,
