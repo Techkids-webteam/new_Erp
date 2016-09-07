@@ -1210,6 +1210,12 @@ app.get('/getInstructorNew', function(req,res){
     else requestHandler.getInstructorNew(req,res);
 });
 
+app.post('/createInstructor', function (req, res) {
+    var data = req.body;
+    requestHandler.createInstructor(req, res, data);
+})
+
+
 
 
 //----------------------Rate-------------------------------------------------------

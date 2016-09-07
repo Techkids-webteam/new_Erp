@@ -1,7 +1,10 @@
 var Instructor = function (logWriter, mongoose, employee, role, models, record, classes){
     var async = require('async');
     var instructorSchema = mongoose.Schema({
-        employee_id: String,
+        employee_id: {
+            type: String,
+            unique: true
+        },
         image: String,
         team: String,
         code: String,
@@ -191,7 +194,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
 
     }
 
-    function getDataByCode(req,res,data){
+    function getDataByCode(req, res, data){
         models.get(req.session.lastDb - 1, "Instructor", instructorSchema).findOne({'code': data}, function(err, instructor){
             if(instructor){
                 models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema ).findById(instructor.employee_id, function(err, data1){
@@ -209,11 +212,28 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
         });
     }
 
+    function createData(req, res, data) {
+        employee.createData(req, data, res, function (employee_id) {
+            var newIns = models.get(req.session.lastDb - 1, 'Instructor', instructorSchema)();
+            console.log(employee_id);
+            newIns.employee_id = employee_id;
+            newIns.team = data.team;
+            newIns.code = data.code;
+            newIns.classes = data.classes;
+
+            newIns.save(function (err, result) {
+                if(err) logWriter.log(err);
+                else res.json({id: result._id, result_code: 1, result_message: "success" });
+            })
+        })
+    }
+
     return {
         getData: getData,
         getData1: getData1,
         instructorSchema: instructorSchema,
-        getDataByCode: getDataByCode
+        getDataByCode: getDataByCode,
+        createData: createData
     };
 };
 

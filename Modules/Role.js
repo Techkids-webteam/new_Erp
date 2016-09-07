@@ -11,8 +11,11 @@ var Role = function (logWriter, mongoose, models){
 
     function getData(req, res){
         var query = models.get(req.session.lastDb - 1, "Role", roleSchema).find();
-        query.exec(function(err,data){
-            res.json({items: data});
+        query.exec(function(err, data){
+            if(err) {
+                logWriter.log(err);
+            }
+            else res.json({items: data});
         });
     }
 

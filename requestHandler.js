@@ -2038,6 +2038,20 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+
+    function createInstructor(req, res, data){
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 42, function (access) {
+                if (access) {
+                    instructor.createData(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
 //-----------------------------Rate----------------------------------------
 
     function getRate(req, res){
@@ -2399,6 +2413,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getInstructor: getInstructor,
         getInstructor1: getInstructor1,
         getInstructorByCode : getInstructorByCode,
+        createInstructor: createInstructor,
 
         getInstructorNew: getInstructorNew,
         getInstructorByCodeNew : getInstructorByCodeNew,
