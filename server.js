@@ -1476,7 +1476,9 @@ app.get('/:id', function (req, res) {
         res.send(500);
     }
 });
+app.delete('/deleteInstructor', function (req, res)){
 
+}
 
 app.listen(8088);
 
