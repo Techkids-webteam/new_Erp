@@ -1098,6 +1098,111 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
     }
 
+    function updateData(req, res, _id, data, cb) {
+        var fileName = data.fileName;
+        delete data.fileName;
+
+        var updateObject = {};
+
+        for (var i in data) {
+            if (i === 'contractEndReason') {
+                updateObject['isEmployee'] = false;
+                updateObject['contractEnd'] = {
+                    reason: data[i],
+                    date: new Date()
+                };
+            } else {
+                updateObject[i] = data[i];
+            }
+        }
+
+        if (data.workflow && data.sequenceStart && data.workflowStart) {
+            if (data.sequence == -1) {
+                event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
+                    event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+                        data.sequence = sequence;
+                        if (data.workflow == data.workflowStart)
+                            data.sequence -= 1;
+                        models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+                            if (!err) {
+                                cb(req, res);
+                            } else {
+                                res.send(500, { error: "Can't update Employees" });
+                            }
+
+                        });
+
+                    });
+                });
+            } else {
+                event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
+                    delete data.sequenceStart;
+                    delete data.workflowStart;
+                    data.sequence = sequence;
+                    models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+                        if (!err) {
+                            cb(req, res);
+                        } else {
+                            res.send(500, { error: "Can't update Employees" });
+                        }
+
+                    });
+                });
+            }
+        } else {
+            if (updateObject.dateBirth)
+                updateObject['age'] = getAge(updateObject.dateBirth);
+            models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: updateObject }, function (err, result) {
+                if (!err) {
+                    if (updateObject.dateBirth || updateObject.contractEnd || updateObject.hired) {
+                        event.emit('recalculate', req);
+                    }
+                    if (fileName) {
+                        var os = require("os");
+                        var osType = (os.type().split('_')[0]);
+                        var path;
+                        var dir;
+                        switch (osType) {
+                            case "Windows":
+                                {
+                                    var newDirname = __dirname.replace("\\Modules", "");
+                                    while (newDirname.indexOf("\\") !== -1) {
+                                        newDirname = newDirname.replace("\\", "\/");
+                                    }
+                                    path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                    dir = newDirname + "\/uploads\/" + _id;
+                                }
+                                break;
+                            case "Linux":
+                                {
+                                    var newDirname = __dirname.replace("/Modules", "");
+                                    while (newDirname.indexOf("\\") !== -1) {
+                                        newDirname = newDirname.replace("\\", "\/");
+                                    }
+                                    path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                    dir = newDirname + "\/uploads\/" + _id;
+                                }
+                        }
+
+                        logWriter.fs.unlink(path, function (err) {
+                            console.log(err);
+                            logWriter.fs.readdir(dir, function (err, files) {
+                                if (files.length === 0) {
+                                    logWriter.fs.rmdir(dir, function () { });
+                                }
+                            });
+                        });
+
+                    }
+                        cb(req, res);
+                } else {
+                    res.send(500, { error: "Can't update Employees" });
+                }
+
+            });
+        }
+    }
+
     function updateOnlySelectedFields(req, _id, data, res) {
         var fileName = data.fileName;
         delete data.fileName;
@@ -1300,6 +1405,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         addAtach: addAtach,
 
         updateOnlySelectedFields: updateOnlySelectedFields,
+
+        updateData: updateData,
 
         remove: remove,
 

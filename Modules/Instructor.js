@@ -242,7 +242,22 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
         });
     }
 
-    
+    function updateInstructor(req, res, data) {
+        models.get(req.session.lastDb - 1, 'Instructor', instructorSchema).findById(data._id, function(err, ins){
+            ins.code = data.code;
+            employee.updateData(req, res, ins.employee_id, data, function(req, res) {
+              models.get(req.session.lastDb - 1, 'Instructor', instructorSchema).findByIdAndUpdate(_id, { $set: ins} function (err, result) {
+                  if (err) {
+                      res.json({result_code: 0, result_message: err});
+                  } else {
+                      res.json({result_code: 1, result_message: "success"});
+                  }
+              });
+            });
+        });
+    }
+
+
 
     return {
         getData: getData,
@@ -250,7 +265,8 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
         instructorSchema: instructorSchema,
         getDataByCode: getDataByCode,
         createData: createData,
-        deleteInstructor: deleteInstructor
+        deleteInstructor: deleteInstructor,
+        update: updateInstructor
     };
 };
 
