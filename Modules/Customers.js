@@ -328,7 +328,7 @@
                                 logWriter.log("Person.js create savetoBd _customer.save " + err);
                                 res.send(500, { error: 'Person.save BD error' });
                             } else {
-                                
+
                                 res.send(201, { success: 'A new Person crate success', id: result._id });
                             }
                         });
@@ -578,7 +578,7 @@
                 function (err, deps) {
                     if (!err) {
                         var arrOfObjectId = deps.objectID();
-                        
+
                         models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
                             {
                                 $match: {
@@ -715,7 +715,7 @@
                 function (err, deps) {
                     if (!err) {
                         var arrOfObjectId = deps.objectID();
-                        
+
                         models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
                             {
                                 $match: {
@@ -921,7 +921,7 @@
 				    obj.author = req.session.uName;
 				data.notes[data.notes.length - 1] = obj;
 			}
-			 
+
 			models.get(req.session.lastDb - 1, 'Customers', customerSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, result) {
 				if (err) {
 					logWriter.log("Customer.js update customer.update " + err);

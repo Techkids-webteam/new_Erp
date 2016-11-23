@@ -2,6 +2,37 @@ var http = require('http'),
     url = require('url'),
     fs = require("fs");
 
+const colors = {
+  Reset: "\x1b[0m",
+  Bright: "\x1b[1m",
+  Dim: "\x1b[2m",
+  Underscore: "\x1b[4m",
+  Blink: "\x1b[5m",
+  Reverse: "\x1b[7m",
+  Hidden: "\x1b[8m",
+  fg: {
+    Black: "\x1b[30m",
+    Red: "\x1b[31m",
+    Green: "\x1b[32m",
+    Yellow: "\x1b[33m",
+    Blue: "\x1b[34m",
+    Magenta: "\x1b[35m",
+    Cyan: "\x1b[36m",
+    White: "\x1b[37m",
+    Crimson: "\x1b[38m"
+  },
+  bg: {
+    Black: "\x1b[40m",
+    Red: "\x1b[41m",
+    Green: "\x1b[42m",
+    Yellow: "\x1b[43m",
+    Blue: "\x1b[44m",
+    Magenta: "\x1b[45m",
+    Cyan: "\x1b[46m",
+    White: "\x1b[47m",
+    Crimson: "\x1b[48m"
+  }
+};
 
 var mongoose = require('mongoose');
 var Admin = mongoose.mongo.Admin;
@@ -15,7 +46,7 @@ var mainDb = mongoose.createConnection('localhost', 'mainDB');
 
 mainDb.on('error', console.error.bind(console, 'connection error:'));
 mainDb.once('open', function callback() {
-    console.log("Connection to mainDB is success");
+    console.log("Connection to", colors.fg.Green, "mainDB", colors.Reset, "is success");
     var mainDBSchema = mongoose.Schema({
         _id: Number,
         url: { type: String, default: 'localhost' },
@@ -35,11 +66,13 @@ mainDb.once('open', function callback() {
                 var dbObject = mongoose.createConnection(_db.url, _db.DBname);
                 dbObject.on('error', console.error.bind(console, 'connection error:'));
                 dbObject.once('open', function callback() {
-                    console.log("Connection to " + _db.DBname + " is success" + index);
+                    console.log("Connection to ", colors.fg.Green,  _db.DBname, colors.Reset, " is success" + index);
                     dbInfo.url = result[index].url;
                     dbInfo.DBname = result[index].DBname;
                     dbsArray[index] = dbObject;
                     dbsNames[index] = dbInfo;
+                    console.log(colors.fg.Black, colors.bg.White, '\tDatabase conections array: ' , colors.Reset);
+                    console.log(dbsArray);
                 });
             });
         } else {
@@ -50,6 +83,7 @@ mainDb.once('open', function callback() {
 
 var express = require('express');
 var app = express();
+
 app.use(function(req, res, next) {
     var origin = req.headers.origin;
     if(origin == "null"){
@@ -104,9 +138,7 @@ app.configure(function () {
     app.use(app.router);
 });
 
-console.log(dbsArray);
 var requestHandler = require("./requestHandler.js")(fs, mongoose, event, dbsArray);
-
 
 
 app.get('/', function (req, res) {
@@ -468,6 +500,7 @@ app.post('/uploadTasksFiles', function (req, res, next) {
         }
     });
 });
+
 app.post('/uploadOpportunitiesFiles', function (req, res, next) {
     var os = require("os");
     var osType = (os.type().split('_')[0]);
@@ -1226,10 +1259,6 @@ app.post('/updateInstructor', function (req, res){
     requestHandler.updateInstructor(req, res, data);
 });
 
-
-
-
-
 //----------------------Rate-------------------------------------------------------
 
 app.get('/getRate', function(req,res){
@@ -1494,7 +1523,7 @@ app.get('/:id', function (req, res) {
         res.send(500);
     }
 });
-app.listen(8088);
+app.set('port', 8088);
+app.listen(app.get('port'));
 
-
-console.log("server start");
+console.log(colors.fg.Black, colors.bg.White, "Server opening at port: " ,colors.fg.Green, colors.bg.Red, app.get('port'), colors.Reset);

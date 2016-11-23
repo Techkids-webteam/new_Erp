@@ -1,7 +1,13 @@
 var Classes = function (logWriter, mongoose, employee, models){
     var classesSchema = mongoose.Schema({
-        title: String,
-        code: String
+        title: {
+          type: String,
+          unique: true
+        },
+        code: {
+          type: String,
+          unique: true
+        }
     }, { collection: 'Classes' });
 
     mongoose.model('Classes', classesSchema);
