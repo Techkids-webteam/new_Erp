@@ -1078,7 +1078,11 @@ app.delete('/JobPositions/:_id', function (req, res) {
     var id = req.param('_id');
     requestHandler.removeJobPosition(req, res, id);
 });
+//------------------PersonTree---------------------------------------------------
 
+app.get('/getPersonTree', function(req, res) {
+  requestHandler.getPersonTree(req, res, req.query || {});
+});
 
 //------------------Departments---------------------------------------------------
 app.get('/Departments', function (req, res) {
@@ -1137,7 +1141,6 @@ app.get('/getForDdByRelatedUser', function (req, res) {
     requestHandler.getForDdByRelatedUser(req, res);
 });
 
-
 app.get('/Employees/:viewType', function (req, res) {
     var data = {};
     for (var i in req.query) {
@@ -1186,6 +1189,12 @@ app.get('/getSalesTeam', function (req, res) {
     requestHandler.getDepartmentForDd(req, res);
 });
 
+
+app.get('/getEmployees', function(req, res) {
+    requestHandler.getEmployees(req, res);
+});
+
+
 app.get('/getEmployeesAlphabet', function (req, res) {
     requestHandler.getEmployeesAlphabet(req, res);
 });
@@ -1198,7 +1207,7 @@ app.get('/getEmployeesImages', function (req, res) {
 
 //--------------------Classes----------------------------------------------------
 
-app.get('/Classes', function(req,res){
+app.get('/getClasses', function(req,res){
     requestHandler.getClasses(req,res);
 });
 
@@ -1225,14 +1234,6 @@ app.get('/getInstructor', function(req,res){
         requestHandler.getInstructorByCode(req,res,data);
     }
      else requestHandler.getInstructor(req,res);
-});
-
-app.get('/getInstructor1', function(req,res){
-    if(req.query.code){
-        var data = req.query.code;
-        requestHandler.getInstructorByCode(req,res,data);
-    }
-    else requestHandler.getInstructor1(req,res);
 });
 
 app.get('/getInstructorNew', function(req,res){

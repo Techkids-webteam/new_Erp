@@ -1,5 +1,5 @@
 // JavaScript source code
-var Employee = function (logWriter, mongoose, event, department, models) {
+var Employee = function (logWriter, mongoose, event, department, models, personTree) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var newObjectId = mongoose.Types.ObjectId;
     var employeeSchema = new mongoose.Schema({
@@ -719,18 +719,18 @@ var Employee = function (logWriter, mongoose, event, department, models) {
     }
 
     function getEmployeesAlphabet(req, response) {
-        var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate([{ $match: { isEmployee: true } }, { $project: { later: { $substr: ["$name.last", 0, 1] } } }, { $group: { _id: "$later" } }]);
-        query.exec(function (err, result) {
-            if (err) {
-                console.log(err);
-                logWriter.log("employees.js get employees alphabet " + err);
-                response.send(500, { error: "Can't find employees" });
-            } else {
-                var res = {};
-                res['data'] = result;
-                response.send(res);
-            }
-        });
+        // var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate([{ $match: { isEmployee: true } }, { $project: { later: { "$substr": ["$name.last", 0, 1] } } }, { $group: { _id: "$later" } }]);
+        // query.exec(function (err, result) {
+        //     if (err) {
+        //         console.log(err);
+        //         logWriter.log("employees.js get employees alphabet " + err);
+        //         response.send(500, { error: "Can't find employees" });
+        //     } else {
+        //         var res = {};
+        //         res['data'] = result;
+        //         response.send(res);
+        //     }
+        // });
     };
 
     function getData(req,res){
@@ -1081,7 +1081,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         query.populate('relatedUser', 'login _id');
         query.populate('jobPosition', 'name _id');
         query.populate('workflow').
-			populate('createdBy.user').
+			      populate('createdBy.user').
             populate('editedBy.user').
             populate('groups.users').
             populate('groups.group').

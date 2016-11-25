@@ -3,11 +3,12 @@
 var requestHandler = function (fs, mongoose, event, dbsArray) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
         models = require("./models.js")(dbsArray),
+        personTree = require("./Modules/PersonTree.js")(logWriter, mongoose, models);
         department = require("./Modules/Department.js")(logWriter, mongoose, models),
         users = require("./Modules/Users.js")(logWriter, mongoose, models, department),
         profile = require("./Modules/Profile.js")(logWriter, mongoose, models, users),
         access = require("./Modules/additions/access.js")(profile.schema, users, models, logWriter),
-        employee = require("./Modules/Employees.js")(logWriter, mongoose, event, department, models),
+        employee = require("./Modules/Employees.js")(logWriter, mongoose, event, department, models, personTree),
         customer = require("./Modules/Customers.js")(logWriter, mongoose, models, department),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose, models, event),
         project = require("./Modules/Projects.js")(logWriter, mongoose, department, models, workflow, event),
@@ -25,9 +26,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         rate = require("./Modules/Rate.js")(logWriter, mongoose, classes, models);
         record = require("./Modules/Record.js")(logWriter, mongoose , models);
         role = require("./Modules/Role.js")(logWriter, mongoose, models);
-        instructor = require("./Modules/Instructor.js")(logWriter, mongoose, employee, role, models, record, classes);
-
-
+        instructor = require("./Modules/Instructor.js")(logWriter, mongoose, employee, role, models, record, classes, personTree);
 
     //binding for remove Workflow
     event.on('removeWorkflow', function (req, wId, id) {
@@ -1497,6 +1496,21 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    //---------------------PersonTree--------------------------------
+
+    function getPersonTree(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 15, function (access) {
+                if (access) {
+                    personTree.getData(req, res, data.node);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    }
 
     //---------------------Department--------------------------------
     function createDepartment(req, res, data) {
@@ -1908,7 +1922,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 42, function (access) {
                 if (access) {
-                    classes.getData(req,res);
+                    classes.getData(req, res);
                 } else {
                     res.send(403);
                 }
@@ -2309,6 +2323,9 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         createProfile: createProfile,
         updateProfile: updateProfile,
         removeProfile: removeProfile,
+
+        //personTree
+        getPersonTree: getPersonTree,
 
         createPerson: createPerson,
         getPersonById: getPersonById,
