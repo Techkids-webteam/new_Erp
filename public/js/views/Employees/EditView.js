@@ -115,7 +115,7 @@ define([
                     height: "20px",
                     display:"block"
                 }, 250);
-               
+
             },
             hideEdit: function () {
                 $(".upload").animate({
@@ -136,7 +136,7 @@ define([
 
             saveItem: function () {
                 var self = this;
-				
+
                 var gender = $("#genderDd").data("id");
                 gender = gender ? gender : null;
 
@@ -166,7 +166,7 @@ define([
                     var el = $(this);
                     homeAddress[el.attr("name")] = $.trim(el.val());
                 });
-                // date parse 
+                // date parse
                 var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
 
                 var active = (this.$el.find("#active").is(":checked")) ? true : false;
@@ -328,7 +328,7 @@ define([
 				populate.get("#departmentsDd", "/DepartmentsForDd", {}, "departmentName", this);
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
 
-                
+
                 $('#dateBirth').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth : true,

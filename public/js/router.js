@@ -204,7 +204,7 @@ define([
                     Backbone.history.navigate("login", { trigger: true });
                 }
             });
-            
+
             function goProjectDashboard(context) {
                 var startTime = new Date();
                 var contentViewUrl = "views/projectDashboard/ContentView";

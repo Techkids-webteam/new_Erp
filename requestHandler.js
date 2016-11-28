@@ -3,7 +3,7 @@
 var requestHandler = function (fs, mongoose, event, dbsArray) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
         models = require("./models.js")(dbsArray),
-        personTree = require("./Modules/PersonTree.js")(logWriter, mongoose, models);
+        personTree = require("./Modules/PersonTree.js")(logWriter, mongoose, models),
         department = require("./Modules/Department.js")(logWriter, mongoose, models),
         users = require("./Modules/Users.js")(logWriter, mongoose, models, department),
         profile = require("./Modules/Profile.js")(logWriter, mongoose, models, users),
@@ -1512,6 +1512,20 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     }
 
+    function getPersonTreeParent(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 15, function (access) {
+                if (access) {
+                    personTree.getParent(req, res, data.node);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    }
+
     //---------------------Department--------------------------------
     function createDepartment(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -2326,6 +2340,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         //personTree
         getPersonTree: getPersonTree,
+        getPersonTreeParent: getPersonTreeParent,
 
         createPerson: createPerson,
         getPersonById: getPersonById,
