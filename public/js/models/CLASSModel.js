@@ -11,8 +11,8 @@
         },
         validate: function(attrs){
             var errors = [];
-            Validation.checkGroupsNameField(errors, true, attrs.name, "Job name");
-            Validation.checkNumberField(errors, true, attrs.expectedRecruitment, "Expected in Recruitment");
+            // Validation.checkGroupsNameField(errors, true, attrs.name, "Job name");
+            // Validation.checkNumberField(errors, true, attrs.expectedRecruitment, "Expected in Recruitment");
             if(errors.length > 0)
                 return errors;
         },

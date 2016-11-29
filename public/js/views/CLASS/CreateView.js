@@ -91,12 +91,16 @@ define([
                 }
                 var self = this;
                 var mid = 39;
-                var name = $.trim($("#name").val());
-                var expectedRecruitment = parseInt($.trim($("#expectedRecruitment").val()));
-                var description = $.trim($("#description").val());
-                var requirements = $.trim($("#requirements").val());
-                var workflow = this.$("#workflowsDd").data("id");
-                var department = this.$("#departmentDd").data("id")?this.$("#departmentDd").data("id"):null;
+
+                var title = $.trim($("#title").val());
+                var code = $.trim($("#code").val());
+                // var name = $.trim($("#name").val());
+                // var expectedRecruitment = parseInt($.trim($("#expectedRecruitment").val()));
+                // var description = $.trim($("#description").val());
+                // var requirements = $.trim($("#requirements").val());
+                // var workflow = this.$("#workflowsDd").data("id");
+                // var department = this.$("#departmentDd").data("id")?this.$("#departmentDd").data("id"):null;
+
                 var usersId=[];
                 var groupsId=[];
                 $(".groupsAndUser tr").each(function(){
@@ -109,12 +113,14 @@ define([
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
                 this.model.save({
-                    name: name,
-                    expectedRecruitment: expectedRecruitment,
-                    description: description,
-                    requirements: requirements,
-                    department: department,
-                    workflow: workflow,
+                    title: title,
+                    code: code,
+                    // name: name,
+                    // expectedRecruitment: expectedRecruitment,
+                    // description: description,
+                    // requirements: requirements,
+                    // department: department,
+                    // workflow: workflow,
                     groups: {
 						owner: $("#allUsersSelect").data("id"),
                         users: usersId,

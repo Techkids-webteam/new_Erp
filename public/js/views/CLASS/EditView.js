@@ -88,14 +88,16 @@ define([
                 }
                 var self = this;
                 var mid = 39;
-                var name = $.trim($("#name").val());
-                var expectedRecruitment =  parseInt($.trim($("#expectedRecruitment").val()));
-                var description = $.trim($("#description").val());
-                var requirements = $.trim($("#requirements").val());
-                var department = this.$("#departmentDd").data("id");
-				if (department==""){
-					department=null;
-				}
+                var title = $.trim($("#title").val());
+                var code = $.trim($("#code").val());
+        //         var name = $.trim($("#name").val());
+        //         var expectedRecruitment =  parseInt($.trim($("#expectedRecruitment").val()));
+        //         var description = $.trim($("#description").val());
+        //         var requirements = $.trim($("#requirements").val());
+        //         var department = this.$("#departmentDd").data("id");
+				// if (department==""){
+				// 	department=null;
+				// }
                 var usersId=[];
                 var groupsId=[];
                 $(".groupsAndUser tr").each(function(){
@@ -110,11 +112,13 @@ define([
                 var workflow = this.$("#workflowsDd").data("id");
                 var currentWorkflow = this.currentModel.get('workflow');
                 var data = {
-                    name: name,
-                    expectedRecruitment: expectedRecruitment,
-                    description: description,
-                    requirements: requirements,
-                    department: department || null,
+                    title: title,
+                    code: code,
+                    // name: name,
+                    // expectedRecruitment: expectedRecruitment,
+                    // description: description,
+                    // requirements: requirements,
+                    // department: department || null,
                     groups: {
 						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
@@ -181,7 +185,7 @@ define([
                             text: "Save",
                             click: function () { self.saveItem(); }
                         },
-						
+
 						{
 							text: "Cancel",
 							click: function () { $(this).dialog().remove();
@@ -190,7 +194,7 @@ define([
 						{
 							text: "Delete",
 							click:self.deleteItem }
-						
+
                     ]
                 });
 				var notDiv = this.$el.find('.assignees-container');

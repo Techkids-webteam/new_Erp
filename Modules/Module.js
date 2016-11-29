@@ -47,7 +47,6 @@ var Module = function (logWriter, mongoose, profile, models) {
                             sort({ sequence: 1 }).
                             exec(function (err, mod) {
                                 if (mod) {
-                                  console.log(mod);
                                     response.send(mod);
                                 } else {
                                     console.log("Node JS error " + err);

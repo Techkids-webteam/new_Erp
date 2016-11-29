@@ -1240,10 +1240,9 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function createCLASS(req, res, data) {
 
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            data.jobPosition.uId = req.session.uId;
             access.getEditWritAccess(req, req.session.uId, 14, function (access) {
                 if (access) {
-                    classes.create(req, data.jobPosition, res);
+                    classes.create(req, res, data);
                 } else {
                     res.send(403);
                 }
@@ -1252,21 +1251,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
-
-    function getJobType(req, res) {
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            jobType.getForDd(req, res);
-        } else {
-            res.send(401);
-        }
-    }
-    function getNationality(req, res) {
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            nationality.getForDd(req, res);
-        } else {
-            res.send(401);
-        }
-    }
 
     function getCLASSForDd(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -1306,15 +1290,34 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     };
 
-    function updateCLASS(req, res, id, data) {
+    function updateCLASS(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            data.jobPosition.editedBy = {
+            data.editedBy = {
                 user: req.session.uId,
                 date: new Date().toISOString()
             }
             access.getEditWritAccess(req, req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.update(req, id, data.jobPosition, res);
+                    classes.update(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
+    function updateCLASSselectedFields(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            data.editedBy = {
+                user: req.session.uId,
+                date: new Date().toISOString()
+            }
+            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    classes.updateOnlySelectedFields(req, res, data);
                 } else {
                     res.send(403);
                 }
@@ -1329,7 +1332,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getDeleteAccess(req, req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.remove(req, id, res);
+                    classes.remove(req, res, id);
                 } else {
                     res.send(403);
                 }
@@ -2528,6 +2531,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         CLASSTotalCollectionLength: CLASSTotalCollectionLength,
         createCLASS: createCLASS,
         updateCLASS: updateCLASS,
+        updateCLASSselectedFields: updateCLASSselectedFields,
         removeCLASS: removeCLASS,
         getCLASSById: getCLASSById,
         getCLASSForDd: getCLASSForDd,

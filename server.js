@@ -1061,11 +1061,8 @@ app.delete('/JobPositions/:_id', function (req, res) {
 
 app.post('/CLASS', function (req, res) {
     var data = {};
-    data.jobPosition = req.body;
-    console.log(">>>>.");
-    console.log(req.body);
-    res.send(200);
-    // requestHandler.createCLASS(req, res, data);
+    data = req.body;
+    requestHandler.createCLASS(req, res, data);
 });
 
 app.get('/CLASSForDd', function (req, res) {
@@ -1091,31 +1088,19 @@ app.get('/CLASS/:viewType', function (req, res) {
 });
 
 app.patch('/CLASS/:_id', function (req, res) {
-    var data = {};
-    var id = req.param('_id');
-    data.jobPosition = req.body;
-    console.log(">>>>.");
-    console.log(req.body);
-    res.send(200);
-    // requestHandler.updateCLASS(req, res, id, data);
+    var data = req.body || {};
+    data._id = req.param('_id');
+    requestHandler.updateCLASS(req, res, data);
 });
 
 app.put('/CLASS/:_id', function (req, res) {
-    var data = {};
-    var id = req.param('_id');
-    data.jobPosition = req.body;
-    console.log(">>>>.");
-    console.log(req.body);
-    res.send(200);
-    // requestHandler.updateCLASS(req, res, id, data);
+    var data = req.body || {};
+    data._id = req.param('_id');
+    requestHandler.updateCLASSselectedFields(req, res, data);
 });
 
 app.delete('/CLASS/:_id', function (req, res) {
-    var id = req.param('_id');
-    console.log(">>>>.");
-    console.log(req.body);
-    res.send(200);
-    // requestHandler.removeCLASS(req, res, id);
+    requestHandler.removeCLASS(req, res, req.param('_id'));
 });
 
 //------------------PersonTree---------------------------------------------------
