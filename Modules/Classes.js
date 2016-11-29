@@ -15,7 +15,7 @@ var Classes = function (logWriter, mongoose, employee, models){
     function getData(req, res){
         var query = models.get(req.session.lastDb - 1, "Classes", classesSchema).find();
         query.exec(function(err,data){
-            res.json({item: data});
+            res.json(data);
         });
     };
 
