@@ -181,7 +181,7 @@ define([
                             text: "Save",
                             click: function () { self.saveItem(); }
                         },
-						
+
 						{
 							text: "Cancel",
 							click: function () { $(this).dialog().remove();
@@ -190,7 +190,7 @@ define([
 						{
 							text: "Delete",
 							click:self.deleteItem }
-						
+
                     ]
                 });
 				var notDiv = this.$el.find('.assignees-container');

@@ -667,7 +667,7 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
             break;
         case ('JobPositions'): requestHandler.jobPositionsTotalCollectionLength(req, res);
             break;
-        case ('JobPositions0'): requestHandler.jobPositionsTotalCollectionLength(req, res);
+        case ('JobPositions0'): requestHandler.jobPositions0TotalCollectionLength(req, res);
             break;
         case ('Users'): requestHandler.usersTotalCollectionLength(req, res);
             break;
@@ -1037,21 +1037,6 @@ app.get('/JobPositions/:viewType', function (req, res) {
 
 });
 
-app.get('/JobPositions0/:viewType', function (req, res) {
-    var data = {};
-    for (var i in req.query) {
-        data[i] = req.query[i];
-    }
-    var viewType = req.params.viewType;
-    switch (viewType) {
-        case "form": requestHandler.getJobPositionById(req, res, data);
-            break;
-        default: requestHandler.getFilterJobPosition(req, res);
-            break;
-    }
-
-});
-
 app.patch('/JobPositions/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
@@ -1070,6 +1055,54 @@ app.delete('/JobPositions/:_id', function (req, res) {
     var id = req.param('_id');
     requestHandler.removeJobPosition(req, res, id);
 });
+
+
+//------------------JobPositions0---------------------------------------------------
+
+app.post('/JobPositions0', function (req, res) {
+    var data = {};
+    data.jobPosition = req.body;
+    requestHandler.createJobPosition0(req, res, data);
+});
+
+app.get('/JobPosition0ForDd', function (req, res) {
+    requestHandler.getJobPosition0ForDd(req, res);
+});
+
+app.get('/JobPositions0/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getJobPosition0ById(req, res, data);
+            break;
+        default: requestHandler.getFilterJobPosition0(req, res);
+            break;
+    }
+
+});
+
+app.patch('/JobPositions0/:_id', function (req, res) {
+    var data = {};
+    var id = req.param('_id');
+    data.jobPosition = req.body;
+    requestHandler.updateJobPosition0(req, res, id, data);
+});
+
+app.put('/JobPositions0/:_id', function (req, res) {
+    var data = {};
+    var id = req.param('_id');
+    data.jobPosition = req.body;
+    requestHandler.updateJobPosition0(req, res, id, data);
+});
+
+app.delete('/JobPositions0/:_id', function (req, res) {
+    var id = req.param('_id');
+    requestHandler.removeJobPosition0(req, res, id);
+});
+
 //------------------PersonTree---------------------------------------------------
 
 app.get('/getPersonTree', function(req, res) {

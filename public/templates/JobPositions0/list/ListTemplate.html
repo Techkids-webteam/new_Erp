@@ -1,18 +1,21 @@
 
-<% jobPositionsCollection.forEach(function(jobPosition, index){ %>
-<tr data-index="<%= index %>" data-id="<%=jobPosition._id%>" class="stage-<%=(jobPosition.workflow) ? jobPosition.workflow.status.toLowerCase().replace(' ','') : ''%>">
-    <td class = "notForm"><input type="checkbox" value="<%=jobPosition._id%>" class="checkbox"/></td>
+<% jobPositions0Collection.forEach(function(jobPosition0, index){ %>
+<tr data-index="<%= index %>" data-id="<%=jobPosition0._id%>" class="stage-<%=(jobPosition0.workflow) ? jobPosition0.workflow.status.toLowerCase().replace(' ','') : ''%>">
+    <td class = "notForm"><input type="checkbox" value="<%=jobPosition0._id%>" class="checkbox"/></td>
     <td><%=startNumber + index +1 %></td>
-    <td><%=jobPosition.name%></td>
-    <td><%= (jobPosition.department) ? jobPosition.department.departmentName : ''%> </td>
-    <td><%=jobPosition.totalForecastedEmployees%></td>
-    <!--<td><%=jobPosition.numberOfEmployees + jobPosition.expectedRecruitment%></td>-->
-    <td><%=jobPosition.numberOfEmployees%></td>
-    <td><%=jobPosition.expectedRecruitment%></td>
-    <td id='stages_<%=jobPosition._id%>'>
-        <a href="javascript:;" class="stageSelect"><%=(jobPosition.workflow) ? jobPosition.workflow.name : 'Undefinded'%></a>
+    <!-- <td><%=jobPosition0.name%></td>
+    <td><%= (jobPosition0.department) ? jobPosition0.department.departmentName : ''%> </td>
+    <td><%=jobPosition0.totalForecastedEmployees%></td> -->
+    <!--<td><%=jobPosition0.numberOfEmployees + jobPosition0.expectedRecruitment%></td>-->
+    <!-- <td><%=jobPosition0.numberOfEmployees%></td>
+    <td><%=jobPosition0.expectedRecruitment%></td>
+    <td id='stages_<%=jobPosition0._id%>'>
+        <a href="javascript:;" class="stageSelect"><%=(jobPosition0.workflow) ? jobPosition0.workflow.name : 'Undefinded'%></a>
     </td>
-			<td><%=(jobPosition.createdBy&&jobPosition.createdBy.date)?( jobPosition.createdBy.date + ((jobPosition.createdBy.user) ?(' (' + jobPosition.createdBy.user.login + ')') : '')):''%></td>
-			<td><%=(jobPosition.editedBy&&jobPosition.editedBy.date)?( jobPosition.editedBy.date + ((jobPosition.editedBy.user) ?(' (' + jobPosition.editedBy.user.login + ')') : '')):''%></td>
+			<td><%=(jobPosition0.createdBy&&jobPosition0.createdBy.date)?( jobPosition0.createdBy.date + ((jobPosition0.createdBy.user) ?(' (' + jobPosition0.createdBy.user.login + ')') : '')):''%></td>
+			<td><%=(jobPosition0.editedBy&&jobPosition0.editedBy.date)?( jobPosition0.editedBy.date + ((jobPosition0.editedBy.user) ?(' (' + jobPosition0.editedBy.user.login + ')') : '')):''%></td> -->
+      <td><%=jobPosition0.name%></td>
+      <td><%=jobPosition0.name%></td>
+
 </tr>
 <% }) %>

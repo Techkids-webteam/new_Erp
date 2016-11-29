@@ -9,7 +9,7 @@ function (ListTemplate) {
             this.startNumber = (options.page - 1 ) * options.itemsNumber;
         },
         render: function() {
-            this.$el.append(_.template(ListTemplate, { jobPositionsCollection: this.collection.toJSON(), startNumber: this.startNumber }));
+            this.$el.append(_.template(ListTemplate, { jobPositions0Collection: this.collection.toJSON(), startNumber: this.startNumber }));
         }
     });
     return JobPositions0ListItemView;

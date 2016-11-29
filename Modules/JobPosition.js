@@ -345,7 +345,7 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                                     skip((data.page - 1) * data.count).
                                     limit(data.count).
                                     exec(function (error, _res) {
-                                        
+
                                         if (!error) {
                                             res['data'] = _res;
                                             if (_res.length !== 0) {
@@ -406,6 +406,8 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                                                                 }
 
                                                             }
+                                                            console.log("job filter");
+                                                            console.log(res["data"][0]);
                                                             response.send(res);
                                                         }
                                                     });

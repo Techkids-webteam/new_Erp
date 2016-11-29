@@ -1230,6 +1230,115 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    //---------------------JobPosition0--------------------------------
+
+    // get  jobPositions Total count
+    function jobPositions0TotalCollectionLength(req, res) {
+        jobPosition.getTotalCount(req, res);
+    }
+
+    function createJobPosition0(req, res, data) {
+
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            data.jobPosition.uId = req.session.uId;
+            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    jobPosition.create(req, data.jobPosition, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getJobType(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            jobType.getForDd(req, res);
+        } else {
+            res.send(401);
+        }
+    }
+    function getNationality(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            nationality.getForDd(req, res);
+        } else {
+            res.send(401);
+        }
+    }
+
+    function getJobPosition0ForDd(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            jobPosition.getJobPositionForDd(req, res);
+        } else {
+            res.send(401);
+        }
+    };
+
+    // Get JobPosition for list
+    function getFilterJobPosition0(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    jobPosition.getFilter(req, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getJobPosition0ById(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    jobPosition.getJobPositionById(req, data.id, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+
+    };
+
+    function updateJobPosition0(req, res, id, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            data.jobPosition.editedBy = {
+                user: req.session.uId,
+                date: new Date().toISOString()
+            }
+            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    jobPosition.update(req, id, data.jobPosition, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
+    function removeJobPosition0(req, res, id) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getDeleteAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    jobPosition.remove(req, id, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+
 
     //---------------------Employee--------------------------------
 
@@ -2415,6 +2524,15 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeJobPosition: removeJobPosition,
         getJobPositionById: getJobPositionById,
         getJobPositionForDd: getJobPositionForDd,
+
+        jobPositions0TotalCollectionLength: jobPositions0TotalCollectionLength,
+        createJobPosition0: createJobPosition0,
+        updateJobPosition0: updateJobPosition0,
+        removeJobPosition0: removeJobPosition0,
+        getJobPosition0ById: getJobPosition0ById,
+        getJobPosition0ForDd: getJobPosition0ForDd,
+
+        getFilterJobPosition0: getFilterJobPosition0,
 
         createEmployee: createEmployee,
         getFilterJobPosition: getFilterJobPosition,
