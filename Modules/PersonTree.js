@@ -41,10 +41,6 @@ var PersonTree = function (logWriter, mongoose, models){
         if(node.childs instanceof Array) {
           for(var i = node.childs.length - 1; i >= 0; i--) {
             node.childs[i] = findChildById(node.childs[i], docs);
-            console.log(node.childs[i]);
-            node.childs[i]["parent"] = {_id:node._id, name: node.name};
-            console.log("after");
-            console.log(node.childs[i]["parent"]);
             if(!node.childs[i]) {
               docs.splice(i, 1);
             }
@@ -65,13 +61,68 @@ var PersonTree = function (logWriter, mongoose, models){
       }
     }
 
-    function findNode() {
+    function findNode(data, node) {
+      if(!data){
+        return null;
+      }
+
+      if(!node) {
+        node = root;
+      }
+
+      if(node.name == data.name || node._id.toString() == data._id) {
+        return node;
+      } else {
+        var result = null;
+        for(var i = 0; i < node.childs.length; i++) {
+          if(node.childs[i] && (result = findNode(data, node.childs[i])) ){
+            break;
+          }
+        }
+        return result;
+      }
+    }
+
+    function findParent(data, node, rootClone) {
+      // var root = JSON.parse(JSON.stringify(this.root));
+      // if(!rootClone) {
+      //     rootClone = JSON.parse(JSON.stringify(root));
+      // }
+      // if(!node) {
+      //     node = rootClone;
+      // }
+      //
+      // if(node.name == data.name || node._id.toString() == data._id) {
+      //   return rootClone;
+      // } else (data.name == node.name || data._id == node._id) {
+      //   var result = null;
+      //   for(var i = 0; i < node.childs.length; i++) {
+      //     if(node.childs[i] && (result = findNode(data, node.childs[i])) ){
+      //       node.childs = childs[i];
+      //       break;
+      //     }
+      //   }
+      //   return rootClone;
+      // }
+      // return rootClone;
+      // console.log(this.root);
 
     }
 
     //------------Services----------
     function getData(req, res, data){
+        data = (data.name || data._id) ? data : null;
+        function process(docs){
+          root = root || build(docs);
+          if(data) {
+            res.json(findNode(data, root));
+          } else {
+            res.json(root);
+          }
+        }
+
         if(root) {
+          process();
         } else {
           var model = models.get(req.session.lastDb - 1, 'PersonTree', personTreeSchema);
           model.find({})
@@ -79,31 +130,36 @@ var PersonTree = function (logWriter, mongoose, models){
               if(err) {
                 res.json(500, err);
               } else {
-                build(docs);
-                if(data) {
-                  res.end("find tree node");
-                } else {
-                  res.json(root || build(docs));
-                }
+                process(docs);
               }
             });
-
         }
     };
 
     function getParent(req, res, data) {
-      console.log("in get parent API");
-      if(data) {
-        var model = models.get(req.session.lastDb - 1, 'PersonTree', personTreeSchema);
-        var x = req.session.lastDb - 1;
-        console.log("_________");
-        console.log(x);
-        console.log(req.session.lastDb);
-        console.log("_________");
-        res.end(x);
-      } else {
-        res.json(200, "Missing data on '/getPersonTreeParent' api!");
-      }
+        data = (data.name || data._id) ? data : null;
+        function process(docs){
+          if(!root) build(docs);
+          if(data) {
+            res.json(findParent(data, root));
+          } else {
+            res.json(null);
+          }
+        }
+
+        if(root) {
+          process();
+        } else {
+          var model = models.get(req.session.lastDb - 1, 'PersonTree', personTreeSchema);
+          model.find({})
+            .exec(function(err, docs) {
+              if(err) {
+                res.json(500, err);
+              } else {
+                process(docs);
+              }
+            });
+        }
     };
 
     return {

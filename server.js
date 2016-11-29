@@ -662,6 +662,8 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
             break;
         case ('JobPositions'): requestHandler.jobPositionsTotalCollectionLength(req, res);
             break;
+        case ('JobPositions0'): requestHandler.jobPositionsTotalCollectionLength(req, res);
+            break;
         case ('Users'): requestHandler.usersTotalCollectionLength(req, res);
             break;
         default: next();
@@ -1016,6 +1018,21 @@ app.get('/JobPositionForDd', function (req, res) {
 });
 
 app.get('/JobPositions/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getJobPositionById(req, res, data);
+            break;
+        default: requestHandler.getFilterJobPosition(req, res);
+            break;
+    }
+
+});
+
+app.get('/JobPositions0/:viewType', function (req, res) {
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];

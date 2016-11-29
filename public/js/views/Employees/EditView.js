@@ -2,6 +2,7 @@ define([
     "text!templates/Employees/EditTemplate.html",
     'views/Notes/AttachView',
     "collections/Employees/EmployeesCollection",
+    "collections/JobPositions0/JobPositions0Collection",
     "collections/JobPositions/JobPositionsCollection",
     "collections/Departments/DepartmentsCollection",
     "collections/Customers/AccountsDdCollection",
@@ -10,7 +11,7 @@ define([
     "common",
     "populate"
 ],
-    function (EditTemplate, attachView, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, AccountsDdCollection, UsersCollection, AssigneesView, common, populate) {
+    function (EditTemplate, attachView, EmployeesCollection,JobPositions0Collection, JobPositionsCollection, DepartmentsCollection, AccountsDdCollection, UsersCollection, AssigneesView, common, populate) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",

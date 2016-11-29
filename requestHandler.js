@@ -1502,7 +1502,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 15, function (access) {
                 if (access) {
-                    personTree.getData(req, res, data.node);
+                    personTree.getData(req, res, data);
                 } else {
                     res.send(403);
                 }
@@ -1516,7 +1516,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 15, function (access) {
                 if (access) {
-                    personTree.getParent(req, res, data.node);
+                    personTree.getParent(req, res, data);
                 } else {
                     res.send(403);
                 }

@@ -9,12 +9,12 @@ var Module = function (logWriter, mongoose, profile, models) {
         link: Boolean,
         visible: Boolean
     }, { collection: 'modules' });
-    
+
     mongoose.model('modules', moduleSchema);
 
     return {
         get: function (req, id, response) {
-           
+
             models.get(req.session.lastDb - 1, "Profile", profile.schema).aggregate(
                 {
                     $project: {
@@ -47,6 +47,7 @@ var Module = function (logWriter, mongoose, profile, models) {
                             sort({ sequence: 1 }).
                             exec(function (err, mod) {
                                 if (mod) {
+                                  console.log(mod);
                                     response.send(mod);
                                 } else {
                                     console.log("Node JS error " + err);
