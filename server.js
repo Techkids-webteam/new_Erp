@@ -1236,7 +1236,7 @@ app.get('/getEmployeesImages', function (req, res) {
 
 //--------------------Classes----------------------------------------------------
 
-app.get('/getClasses', function(req,res){
+app.get('/Classes', function(req,res){
     requestHandler.getClasses(req,res);
 });
 
