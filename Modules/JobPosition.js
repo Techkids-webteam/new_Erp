@@ -406,8 +406,6 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                                                                 }
 
                                                             }
-                                                            console.log("job filter");
-                                                            console.log(res["data"][0]);
                                                             response.send(res);
                                                         }
                                                     });

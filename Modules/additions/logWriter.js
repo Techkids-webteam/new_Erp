@@ -13,11 +13,11 @@ var logWriter = function (fs) {
                     if (!err) {
                         fs.close(file_handle);
                     } else {
-                        console.log(err)// ��������� ������ ��� ������
+                        console.log(err)// Ïðîèçîøëà îøèáêà ïðè çàïèñè
                     }
                 });
             } else {
-                // ��������� ������ ��� ��������
+                // Îáðàáîòêà îøèáîê ïðè îòêðûòèè
             }
         });
     }

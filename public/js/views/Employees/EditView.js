@@ -11,7 +11,7 @@ define([
     "common",
     "populate"
 ],
-    function (EditTemplate, attachView, EmployeesCollection,CLASSCollection, JobPositionsCollection, DepartmentsCollection, AccountsDdCollection, UsersCollection, AssigneesView, common, populate) {
+    function (EditTemplate, attachView, EmployeesCollection, CLASSCollection, JobPositionsCollection, DepartmentsCollection, AccountsDdCollection, UsersCollection, AssigneesView, common, populate) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
