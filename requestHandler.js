@@ -2600,6 +2600,14 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 		getNationality: getNationality,
         customerTotalCollectionLength: customerTotalCollectionLength,
 
+                // jobPositions0TotalCollectionLength: jobPositions0TotalCollectionLength,
+                // createJobPosition0: createJobPosition0,
+                // updateJobPosition0: updateJobPosition0,
+                // removeJobPosition0: removeJobPosition0,
+                // getJobPosition0ById: getJobPosition0ById,
+                // getJobPosition0ForDd: getJobPosition0ForDd,
+                //
+                // getFilterJobPosition0: getFilterJobPosition0,
         getClasses :getClasses,
         addClass: addClass,
         deleteClass: deleteClass,
