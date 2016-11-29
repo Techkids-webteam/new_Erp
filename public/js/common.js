@@ -792,7 +792,7 @@
                 if (callback) callback();
             });
         };
-        var populateJobPositions0 = function (selectId, url, model, callback) {
+        var populateCLASS = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -966,7 +966,7 @@
             populateSourceDd: populateSourceDd,
             populateJobTypeDd: populateJobTypeDd,
             populateJobPositions: populateJobPositions,
-            populateJobPositions0: populateJobPositions0,
+            populateCLASS: populateCLASS,
             populateUsers: populateUsers,
             utcDateToLocaleFullDateTime: utcDateToLocaleFullDateTime,
             utcDateToLocaleDateTime: utcDateToLocaleDateTime,

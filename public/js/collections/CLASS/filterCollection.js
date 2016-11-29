@@ -1,11 +1,11 @@
 ﻿define([
-    'models/JobPositions0Model',
+    'models/CLASSModel',
     'common'
 ],
-function (JobPositions0Model, common) {
-        var JobPositions0Collection = Backbone.Collection.extend({
-            model: JobPositions0Model,
-            url: "/JobPositions0/",
+function (CLASSModel, common) {
+        var CLASSCollection = Backbone.Collection.extend({
+            model: CLASSModel,
+            url: "/CLASS/",
             page:null,
             namberToShow: null,
             viewType: null,
@@ -64,5 +64,5 @@ function (JobPositions0Model, common) {
                 return response.data;
             }
         });
-        return JobPositions0Collection;
+        return CLASSCollection;
 });

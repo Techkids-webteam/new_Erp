@@ -1,20 +1,20 @@
 define([
-    "text!templates/JobPositions0/CreateTemplate.html",
+    "text!templates/CLASS/CreateTemplate.html",
     "collections/Departments/DepartmentsCollection",
     "collections/Workflows/WorkflowsCollection",
-    "models/JobPositions0Model",
+    "models/CLASSModel",
     'views/Assignees/AssigneesView',
     "common",
     "populate"
 ],
-    function (CreateTemplate, DepartmentsCollection, WorkflowsCollection, JobPositions0Model, AssigneesView, common, populate) {
+    function (CreateTemplate, DepartmentsCollection, WorkflowsCollection, CLASSModel, AssigneesView, common, populate) {
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
-            contentType: "JobPositions0",
+            contentType: "CLASS",
             template: _.template(CreateTemplate),
             initialize: function () {
                 _.bindAll(this, "saveItem", "render");
-                this.model = new JobPositions0Model();
+                this.model = new CLASSModel();
                 this.responseObj = {};
                 this.render();
             },

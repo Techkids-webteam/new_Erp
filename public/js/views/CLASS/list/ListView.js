@@ -1,24 +1,24 @@
 define([
-    'text!templates/JobPositions0/list/ListHeader.html',
-    'views/JobPositions0/CreateView',
-    'views/JobPositions0/list/ListItemView',
-    'collections/JobPositions0/filterCollection',
-    'models/JobPositions0Model',
-    'views/JobPositions0/EditView',
+    'text!templates/CLASS/list/ListHeader.html',
+    'views/CLASS/CreateView',
+    'views/CLASS/list/ListItemView',
+    'collections/CLASS/filterCollection',
+    'models/CLASSModel',
+    'views/CLASS/EditView',
     'common',
     'dataService',
     'text!templates/stages.html'
 ],
 
        function (listTemplate, createView, listItemView, contentCollection, currentModel, editView, common, dataService, stagesTamplate) {
-           var JobPositions0ListView = Backbone.View.extend({
+           var CLASSListView = Backbone.View.extend({
                el: '#content-holder',
                defaultItemsNumber: null,
                listLength: null,
                sort: null,
                newCollection: null,
                page: null,
-               contentType: 'JobPositions0',
+               contentType: 'CLASS',
                viewType: 'list',
 
                initialize: function (options) {
@@ -77,7 +77,7 @@ define([
                    var targetElement = $(e.target).parents("td");
                    var id = targetElement.attr("id").replace("stages_", '');
                    var obj = this.collection.get(id);
-                   obj.urlRoot = '/JobPositions0';
+                   obj.urlRoot = '/CLASS';
                    obj.save({
                        workflow: $(e.target).attr("id"),
                        expectedRecruitment: obj.toJSON().expectedRecruitment,
@@ -179,7 +179,7 @@ define([
                },
 
                getTotalLength: function (currentNumber, itemsNumber) {
-                   dataService.getData('/totalCollectionLength/JobPositions0', {
+                   dataService.getData('/totalCollectionLength/CLASS', {
                        currentNumber: currentNumber,
                        newCollection: this.newCollection
                    }, function (response, context) {
@@ -241,7 +241,7 @@ define([
                        sort: this.sort,
                        newCollection: this.newCollection,
                    });
-                   dataService.getData('/totalCollectionLength/JobPositions0', {
+                   dataService.getData('/totalCollectionLength/CLASS', {
                        newCollection: this.newCollection
                    }, function (response, context) {
                        context.listLength = response.count || 0;
@@ -256,7 +256,7 @@ define([
                        sort: this.sort,
                        newCollection: this.newCollection,
                    });
-                   dataService.getData('/totalCollectionLength/JobPositions0', {
+                   dataService.getData('/totalCollectionLength/CLASS', {
                        newCollection: this.newCollection
                    }, function (response, context) {
                        context.listLength = response.count || 0;
@@ -271,7 +271,7 @@ define([
                        sort: this.sort,
                        newCollection: this.newCollection
                    });
-                   dataService.getData('/totalCollectionLength/JobPositions0', {
+                   dataService.getData('/totalCollectionLength/CLASS', {
                        filter: this.filter,
                        newCollection: this.newCollection
                    }, function (response, context) {
@@ -288,7 +288,7 @@ define([
                        filter: this.filter,
                        newCollection: this.newCollection
                    });
-                   dataService.getData('/totalCollectionLength/JobPositions0', {
+                   dataService.getData('/totalCollectionLength/CLASS', {
                        sort: this.sort,
                        newCollection: this.newCollection
                    }, function (response, context) {
@@ -338,7 +338,7 @@ define([
                    e.preventDefault();
                    var id = $(e.target).closest('tr').data("id");
                    var model = new currentModel({ validate: false });
-                   model.urlRoot = '/JobPositions0/form';
+                   model.urlRoot = '/CLASS/form';
                    model.fetch({
                        data: { id: id },
                        success: function (model) {
@@ -368,7 +368,7 @@ define([
                    }
                },
                deleteItemsRender: function (deleteCounter, deletePage) {
-                   dataService.getData('/totalCollectionLength/JobPositions0', {
+                   dataService.getData('/totalCollectionLength/CLASS', {
                        filter: this.filter,
                        newCollection: this.newCollection
                    }, function (response, context) {
@@ -427,5 +427,5 @@ define([
                    });
                }
            });
-           return JobPositions0ListView;
+           return CLASSListView;
        });

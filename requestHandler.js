@@ -1230,20 +1230,20 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
-    //---------------------JobPosition0--------------------------------
+    //---------------------CLASS--------------------------------
 
     // get  jobPositions Total count
-    function jobPositions0TotalCollectionLength(req, res) {
-        jobPosition.getTotalCount(req, res);
+    function CLASSTotalCollectionLength(req, res) {
+        classes.getTotalCount(req, res);
     }
 
-    function createJobPosition0(req, res, data) {
+    function createCLASS(req, res, data) {
 
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             data.jobPosition.uId = req.session.uId;
             access.getEditWritAccess(req, req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.create(req, data.jobPosition, res);
+                    classes.create(req, data.jobPosition, res);
                 } else {
                     res.send(403);
                 }
@@ -1268,7 +1268,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     }
 
-    function getJobPosition0ForDd(req, res) {
+    function getCLASSForDd(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             jobPosition.getJobPositionForDd(req, res);
         } else {
@@ -1277,11 +1277,11 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     };
 
     // Get JobPosition for list
-    function getFilterJobPosition0(req, res) {
+    function getFilterCLASS(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.getFilter(req, res);
+                    classes.getClasses(req, res);
                 } else {
                     res.send(403);
                 }
@@ -1291,11 +1291,11 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function getJobPosition0ById(req, res, data) {
+    function getCLASSById(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.getJobPositionById(req, data.id, res);
+                    classes.getCLASSById(req, res, data.id);
                 } else {
                     res.send(403);
                 }
@@ -1306,7 +1306,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     };
 
-    function updateJobPosition0(req, res, id, data) {
+    function updateCLASS(req, res, id, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             data.jobPosition.editedBy = {
                 user: req.session.uId,
@@ -1325,7 +1325,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function removeJobPosition0(req, res, id) {
+    function removeCLASS(req, res, id) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getDeleteAccess(req, req.session.uId, 14, function (access) {
                 if (access) {
@@ -2525,14 +2525,14 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getJobPositionById: getJobPositionById,
         getJobPositionForDd: getJobPositionForDd,
 
-        jobPositions0TotalCollectionLength: jobPositions0TotalCollectionLength,
-        createJobPosition0: createJobPosition0,
-        updateJobPosition0: updateJobPosition0,
-        removeJobPosition0: removeJobPosition0,
-        getJobPosition0ById: getJobPosition0ById,
-        getJobPosition0ForDd: getJobPosition0ForDd,
+        CLASSTotalCollectionLength: CLASSTotalCollectionLength,
+        createCLASS: createCLASS,
+        updateCLASS: updateCLASS,
+        removeCLASS: removeCLASS,
+        getCLASSById: getCLASSById,
+        getCLASSForDd: getCLASSForDd,
 
-        getFilterJobPosition0: getFilterJobPosition0,
+        getFilterCLASS: getFilterCLASS,
 
         createEmployee: createEmployee,
         getFilterJobPosition: getFilterJobPosition,
@@ -2597,17 +2597,9 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getSources: getSources,
         getLanguages: getLanguages,
         getJobType: getJobType,
-		getNationality: getNationality,
+        getNationality: getNationality,
         customerTotalCollectionLength: customerTotalCollectionLength,
 
-                // jobPositions0TotalCollectionLength: jobPositions0TotalCollectionLength,
-                // createJobPosition0: createJobPosition0,
-                // updateJobPosition0: updateJobPosition0,
-                // removeJobPosition0: removeJobPosition0,
-                // getJobPosition0ById: getJobPosition0ById,
-                // getJobPosition0ForDd: getJobPosition0ForDd,
-                //
-                // getFilterJobPosition0: getFilterJobPosition0,
         getClasses :getClasses,
         addClass: addClass,
         deleteClass: deleteClass,

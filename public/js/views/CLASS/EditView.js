@@ -1,6 +1,6 @@
 define([
-    "text!templates/JobPositions0/EditTemplate.html",
-    "collections/JobPositions0/JobPositions0Collection",
+    "text!templates/CLASS/EditTemplate.html",
+    "collections/CLASS/CLASSCollection",
     "collections/Departments/DepartmentsCollection",
     "collections/Workflows/WorkflowsCollection",
     'views/Assignees/AssigneesView',
@@ -8,10 +8,10 @@ define([
     'common',
     "populate"
 ],
-    function (EditTemplate, JobPositions0Collection, DepartmentsCollection, WorkflowsCollection, AssigneesView, Custom, common, populate) {
+    function (EditTemplate, CLASSCollection, DepartmentsCollection, WorkflowsCollection, AssigneesView, Custom, common, populate) {
         var EditView = Backbone.View.extend({
             el: "#content-holder",
-            contentType: "JobPositions0",
+            contentType: "CLASS",
             template: _.template(EditTemplate),
             initialize: function (options) {
                 _.bindAll(this, "render", "saveItem");
@@ -22,7 +22,7 @@ define([
 				else{
 					this.currentModel = (options.model) ? options.model : options.collection.getElement();
 				}
-				this.currentModel.urlRoot = "/JobPositions0";
+				this.currentModel.urlRoot = "/CLASS";
                 this.responseObj = {};
                 this.render();
             },

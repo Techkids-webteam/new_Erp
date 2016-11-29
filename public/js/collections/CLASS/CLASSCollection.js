@@ -1,14 +1,14 @@
 define([
-    'models/JobPositions0Model'
+    'models/CLASSModel'
 ],
-function (JobPositions0Model) {
-        var JobPositions0Collection = Backbone.Collection.extend({
-            model: JobPositions0Model,
+function (CLASSModel) {
+        var CLASSCollection = Backbone.Collection.extend({
+            model: CLASSModel,
             url: function () {
-                return "/JobPosition";
+                return "/CLASS";
             },
             initialize: function () {
-                console.log("JobPosition Collection Init");
+                console.log("CLASS Collection Init");
                 var mid = 39;
                 this.fetch({
                     data: $.param({
@@ -25,5 +25,5 @@ function (JobPositions0Model) {
                 return response.data;
             },
         });
-        return JobPositions0Collection;
+        return CLASSCollection;
 });

@@ -667,7 +667,7 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
             break;
         case ('JobPositions'): requestHandler.jobPositionsTotalCollectionLength(req, res);
             break;
-        case ('JobPositions0'): requestHandler.jobPositions0TotalCollectionLength(req, res);
+        case ('CLASS'): requestHandler.CLASSTotalCollectionLength(req, res);
             break;
         case ('Users'): requestHandler.usersTotalCollectionLength(req, res);
             break;
@@ -1057,50 +1057,65 @@ app.delete('/JobPositions/:_id', function (req, res) {
 });
 
 
-//------------------JobPositions0---------------------------------------------------
+//------------------CLASS---------------------------------------------------
 
-app.post('/JobPositions0', function (req, res) {
+app.post('/CLASS', function (req, res) {
     var data = {};
     data.jobPosition = req.body;
-    requestHandler.createJobPosition0(req, res, data);
+    console.log(">>>>.");
+    console.log(req.body);
+    res.send(200);
+    // requestHandler.createCLASS(req, res, data);
 });
 
-app.get('/JobPosition0ForDd', function (req, res) {
-    requestHandler.getJobPosition0ForDd(req, res);
+app.get('/CLASSForDd', function (req, res) {
+    console.log(">>>>.");
+    console.log(req.body);
+    res.send(200);
+    // requestHandler.getCLASSForDd(req, res);
 });
 
-app.get('/JobPositions0/:viewType', function (req, res) {
+app.get('/CLASS/:viewType', function (req, res) {
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
     }
     var viewType = req.params.viewType;
     switch (viewType) {
-        case "form": requestHandler.getJobPosition0ById(req, res, data);
+        case "form": requestHandler.getCLASSById(req, res, data);
             break;
-        default: requestHandler.getFilterJobPosition0(req, res);
+        default: requestHandler.getFilterCLASS(req, res);
             break;
     }
 
 });
 
-app.patch('/JobPositions0/:_id', function (req, res) {
+app.patch('/CLASS/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
     data.jobPosition = req.body;
-    requestHandler.updateJobPosition0(req, res, id, data);
+    console.log(">>>>.");
+    console.log(req.body);
+    res.send(200);
+    // requestHandler.updateCLASS(req, res, id, data);
 });
 
-app.put('/JobPositions0/:_id', function (req, res) {
+app.put('/CLASS/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
     data.jobPosition = req.body;
-    requestHandler.updateJobPosition0(req, res, id, data);
+    console.log(">>>>.");
+    console.log(req.body);
+    res.send(200);
+    // requestHandler.updateCLASS(req, res, id, data);
 });
 
-app.delete('/JobPositions0/:_id', function (req, res) {
+app.delete('/CLASS/:_id', function (req, res) {
     var id = req.param('_id');
-    requestHandler.removeJobPosition0(req, res, id);
+    console.log(">>>>.");
+    console.log(req.body);
+    res.send(200);
+    // requestHandler.removeCLASS(req, res, id);
 });
 
 //------------------PersonTree---------------------------------------------------

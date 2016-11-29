@@ -1,6 +1,6 @@
 define([
-    'text!templates/JobPositions0/form/FormTemplate.html',
-    'views/JobPositions0/EditView'
+    'text!templates/CLASS/form/FormTemplate.html',
+    'views/CLASS/EditView'
 ],
     function (FormTemplate, EditView) {
         var FormView = Backbone.View.extend({
@@ -25,7 +25,7 @@ define([
                         mid: mid
                     },
                     success: function () {
-                        Backbone.history.navigate("#easyErp/JobPositions0/list", { trigger: true });
+                        Backbone.history.navigate("#easyErp/CLASS/list", { trigger: true });
                     }
                 });
             }

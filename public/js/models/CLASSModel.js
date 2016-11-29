@@ -1,5 +1,5 @@
 ﻿define(['Validation'], function (Validation) {
-    var JobPositions0Model = Backbone.Model.extend({
+    var CLASSModel = Backbone.Model.extend({
         idAttribute: "_id",
         initialize: function(){
             this.on('invalid', function(model, errors){
@@ -17,27 +17,12 @@
                 return errors;
         },
         defaults: {
-            name: "New Job Position",
-            expectedRecruitment: 0,
-            interviewForm: {
-                id: "",
-                name: ""
-            },
-            department: {
-                id: "",
-                name: ""
-            },
-            description: "",
-            requirements: "",
-            workflow: {
-                wName: 'jobposition',
-                name: 'No Recruitment',
-                status: 'New'
-            }
+            title: "New Class",
+            code: ""
         },
         urlRoot: function () {
-            return "/JobPositions0";
+            return "/CLASS";
         }
     });
-    return JobPositions0Model;
+    return CLASSModel;
 });
