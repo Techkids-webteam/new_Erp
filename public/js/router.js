@@ -204,7 +204,7 @@ define([
                     Backbone.history.navigate("login", { trigger: true });
                 }
             });
-            
+
             function goProjectDashboard(context) {
                 var startTime = new Date();
                 var contentViewUrl = "views/projectDashboard/ContentView";
@@ -585,7 +585,7 @@ define([
             }
         },
         testContent: function (contentType) {
-            var arrayOfContentTypes = ['Persons', 'Companies', 'Leads', 'Opportunities', 'Projects', 'Tasks', 'Employees', 'Applications', 'JobPositions', 'Birthdays', 'Departments', 'Users', 'Profiles'];
+            var arrayOfContentTypes = ['Persons', 'Companies', 'Leads', 'Opportunities', 'Projects', 'Tasks', 'Employees', 'Applications', 'CLASS', 'JobPositions', 'Birthdays', 'Departments', 'Users', 'Profiles'];
             if (arrayOfContentTypes.indexOf(contentType) < 0)
                 contentType = arrayOfContentTypes[0];
             return contentType;

@@ -792,6 +792,28 @@
                 if (callback) callback();
             });
         };
+        var populateCLASS = function (selectId, url, model, callback) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if (model && model.jobPosition) {
+                    options = $.map(response.data, function (item) {
+                        return (model.jobPosition._id === item._id) ?
+                            $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.name);
+                    });
+                }
+                selectList.append(options);
+                if (callback) callback();
+            });
+        };
+
         var populateOpportunitiesForMiniView = function (url, personId, companyId, page, count, onlyCount, callback) {
             var self = this;
             dataService.getData(url, { person:personId,company:companyId, page:page,count:count,onlyCount:onlyCount }, function (response) {
@@ -841,7 +863,7 @@
                 selectList.append(options);
                 if (callback) callback();
             });
-            
+
         }
 
         var populateJobTypeDd = function (selectId, url, model, callback) {
@@ -944,6 +966,7 @@
             populateSourceDd: populateSourceDd,
             populateJobTypeDd: populateJobTypeDd,
             populateJobPositions: populateJobPositions,
+            populateCLASS: populateCLASS,
             populateUsers: populateUsers,
             utcDateToLocaleFullDateTime: utcDateToLocaleFullDateTime,
             utcDateToLocaleDateTime: utcDateToLocaleDateTime,

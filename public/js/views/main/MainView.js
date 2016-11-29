@@ -33,7 +33,7 @@ define([
 					var currentRootId = currentChildren[0].get("parrent");
 					currentRoot = this.collection.where({_id:currentRootId});
 				}
-                this.leftMenu = new LeftMenuView({ collection: this.collection, currentChildren:currentChildren,currentRoot: currentRoot });
+                this.leftMenu = new LeftMenuView({ collection: this.collection, currentChildren: currentChildren, currentRoot: currentRoot });
                 this.topMenu = new TopMenuView({ collection: this.collection.getRootElements(),currentRoot: currentRoot, leftMenu: this.leftMenu });
                 this.topMenu.bind('changeSelection', this.leftMenu.setCurrentSection, { leftMenu: this.leftMenu });
                 this.topMenu.bind('mouseOver', this.leftMenu.mouseOver, { leftMenu: this.leftMenu });

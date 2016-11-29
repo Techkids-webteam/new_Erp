@@ -9,12 +9,12 @@ var Module = function (logWriter, mongoose, profile, models) {
         link: Boolean,
         visible: Boolean
     }, { collection: 'modules' });
-    
+
     mongoose.model('modules', moduleSchema);
 
     return {
         get: function (req, id, response) {
-           
+
             models.get(req.session.lastDb - 1, "Profile", profile.schema).aggregate(
                 {
                     $project: {

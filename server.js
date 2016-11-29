@@ -2,6 +2,7 @@ var http = require('http'),
     url = require('url'),
     fs = require("fs");
 
+const colors = require('./Modules/additions/colors.js');
 
 var mongoose = require('mongoose');
 var Admin = mongoose.mongo.Admin;
@@ -15,7 +16,7 @@ var mainDb = mongoose.createConnection('localhost', 'mainDB');
 
 mainDb.on('error', console.error.bind(console, 'connection error:'));
 mainDb.once('open', function callback() {
-    console.log("Connection to mainDB is success");
+    console.log("Connection to", colors.fg.Green, "mainDB", colors.Reset, "is success");
     var mainDBSchema = mongoose.Schema({
         _id: Number,
         url: { type: String, default: 'localhost' },
@@ -35,11 +36,13 @@ mainDb.once('open', function callback() {
                 var dbObject = mongoose.createConnection(_db.url, _db.DBname);
                 dbObject.on('error', console.error.bind(console, 'connection error:'));
                 dbObject.once('open', function callback() {
-                    console.log("Connection to " + _db.DBname + " is success" + index);
+                    console.log("Connection to ", colors.fg.Green,  _db.DBname, colors.Reset, " is success" + index);
                     dbInfo.url = result[index].url;
                     dbInfo.DBname = result[index].DBname;
                     dbsArray[index] = dbObject;
                     dbsNames[index] = dbInfo;
+                    console.log(colors.fg.Black, colors.bg.White, '\tDatabase conections array: ' , colors.Reset);
+                    console.log(dbsArray);
                 });
             });
         } else {
@@ -50,6 +53,7 @@ mainDb.once('open', function callback() {
 
 var express = require('express');
 var app = express();
+
 app.use(function(req, res, next) {
     var origin = req.headers.origin;
     if(origin == "null"){
@@ -104,9 +108,7 @@ app.configure(function () {
     app.use(app.router);
 });
 
-console.log(dbsArray);
 var requestHandler = require("./requestHandler.js")(fs, mongoose, event, dbsArray);
-
 
 
 app.get('/', function (req, res) {
@@ -468,6 +470,7 @@ app.post('/uploadTasksFiles', function (req, res, next) {
         }
     });
 });
+
 app.post('/uploadOpportunitiesFiles', function (req, res, next) {
     var os = require("os");
     var osType = (os.type().split('_')[0]);
@@ -628,6 +631,11 @@ app.put('/Profiles/:_id', function (req, res) {
     requestHandler.updateProfile(req, res, id, data);
 });
 
+app.put('/ProfileAccess/:_id', function (req, res) {
+    var id = req.param('_id');
+    requestHandler.insertProfileAccess(req, res, id, req.body || {});
+});
+
 app.delete('/Profiles/:_id', function (req, res) {
     var id = req.param('_id');
     requestHandler.removeProfile(req, res, id);
@@ -658,6 +666,8 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
         case ('Applications'): requestHandler.employeesTotalCollectionLength(req, res);
             break;
         case ('JobPositions'): requestHandler.jobPositionsTotalCollectionLength(req, res);
+            break;
+        case ('CLASS'): requestHandler.CLASSTotalCollectionLength(req, res);
             break;
         case ('Users'): requestHandler.usersTotalCollectionLength(req, res);
             break;
@@ -1047,6 +1057,62 @@ app.delete('/JobPositions/:_id', function (req, res) {
 });
 
 
+//------------------CLASS---------------------------------------------------
+
+app.post('/CLASS', function (req, res) {
+    var data = {};
+    data = req.body;
+    requestHandler.createCLASS(req, res, data);
+});
+
+app.get('/CLASSForDd', function (req, res) {
+    console.log(">>>>.");
+    console.log(req.body);
+    res.send(200);
+    // requestHandler.getCLASSForDd(req, res);
+});
+
+app.get('/CLASS/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getCLASSById(req, res, data);
+            break;
+        default: requestHandler.getFilterCLASS(req, res);
+            break;
+    }
+
+});
+
+app.patch('/CLASS/:_id', function (req, res) {
+    var data = req.body || {};
+    data._id = req.param('_id');
+    requestHandler.updateCLASS(req, res, data);
+});
+
+app.put('/CLASS/:_id', function (req, res) {
+    var data = req.body || {};
+    data._id = req.param('_id');
+    requestHandler.updateCLASSselectedFields(req, res, data);
+});
+
+app.delete('/CLASS/:_id', function (req, res) {
+    requestHandler.removeCLASS(req, res, req.param('_id'));
+});
+
+//------------------PersonTree---------------------------------------------------
+
+app.get('/getPersonTree', function(req, res) {
+  requestHandler.getPersonTree(req, res, req.query || {});
+});
+
+app.get('/getPersonTreeParent', function(req, res) {
+  requestHandler.getPersonTreeParent(req, res, req.query || {});
+});
+
 //------------------Departments---------------------------------------------------
 app.get('/Departments', function (req, res) {
     requestHandler.getDepartment(req, res);
@@ -1104,7 +1170,6 @@ app.get('/getForDdByRelatedUser', function (req, res) {
     requestHandler.getForDdByRelatedUser(req, res);
 });
 
-
 app.get('/Employees/:viewType', function (req, res) {
     var data = {};
     for (var i in req.query) {
@@ -1153,6 +1218,12 @@ app.get('/getSalesTeam', function (req, res) {
     requestHandler.getDepartmentForDd(req, res);
 });
 
+
+app.get('/getEmployees', function(req, res) {
+    requestHandler.getEmployees(req, res);
+});
+
+
 app.get('/getEmployeesAlphabet', function (req, res) {
     requestHandler.getEmployeesAlphabet(req, res);
 });
@@ -1194,14 +1265,6 @@ app.get('/getInstructor', function(req,res){
      else requestHandler.getInstructor(req,res);
 });
 
-app.get('/getInstructor1', function(req,res){
-    if(req.query.code){
-        var data = req.query.code;
-        requestHandler.getInstructorByCode(req,res,data);
-    }
-    else requestHandler.getInstructor1(req,res);
-});
-
 app.get('/getInstructorNew', function(req,res){
     if(req.query.code){
         var data = req.query.code;
@@ -1225,10 +1288,6 @@ app.post('/updateInstructor', function (req, res){
     //hey
     requestHandler.updateInstructor(req, res, data);
 });
-
-
-
-
 
 //----------------------Rate-------------------------------------------------------
 
@@ -1494,7 +1553,7 @@ app.get('/:id', function (req, res) {
         res.send(500);
     }
 });
-app.listen(8088);
+app.set('port', 8088);
+app.listen(app.get('port'));
 
-
-console.log("server start");
+console.log(colors.fg.Black, colors.bg.White, "Server opening at port: " ,colors.fg.Green, colors.bg.Red, app.get('port'), colors.Reset);

@@ -1,5 +1,5 @@
 var Profile = function (logWriter, mongoose, models, users) {
-    
+
     var ProfileSchema = mongoose.Schema({
         _id: Number,
         profileName: { type: String, default: 'emptyProfile' },
@@ -141,6 +141,38 @@ var Profile = function (logWriter, mongoose, models, users) {
         }
     };
 
+    function insertProfileAccess(req, _id, data, res) {
+        models.get(req.session.lastDb - 1, "Profile", ProfileSchema).findOne({_id: _id})
+        .exec(function(err, doc) {
+          if(err) {
+            logWriter.log("Profile.js insertProfileAccess profile.insertProfileAccess " + err);
+            res.json(500, {error: err});
+          }else if(!doc){
+            res.json(400);
+          }else {
+            var update = false;
+            for(var i = 0; i < doc.profileAccess.length; i++) {
+              if(doc.profileAccess[i].module == data.module) {
+                doc.profileAccess[i].access = data.access;
+                update = true;
+                break;
+              }
+            }
+            if(!update) {
+              doc.profileAccess.push(data);
+            }
+            doc.save(function(err) {
+              if(err) {
+                logWriter.log("Profile.js insertProfileAccess profile.insertProfileAccess " + err);
+                res.json(500, err);
+              } else {
+                res.json(200, doc);
+              }
+            });
+          }
+        });
+    };
+
     function removeProfile(req, _id, res) {
 		models.get(req.session.lastDb - 1, 'Users', users.schema).update({ profile: _id}, {profile:"1387275504000"},{multi:true}, function (err, result) {
 			models.get(req.session.lastDb - 1, "Profile", ProfileSchema).remove({ _id: _id }, function (err, result) {
@@ -155,17 +187,18 @@ var Profile = function (logWriter, mongoose, models, users) {
     };
 
     return {
-        
+
         createProfile: createProfile,
-        
+
         getProfile: getProfile,
 
 		getProfileForDd: getProfileForDd,
-        
+
         updateProfile: updateProfile,
-        
+        insertProfileAccess:insertProfileAccess,
+
         removeProfile: removeProfile,
-        
+
         schema: ProfileSchema
     };
 

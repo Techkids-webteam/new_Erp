@@ -564,7 +564,7 @@ require(['app'], function (app) {
                 that.collection.add(newFetchModels.models, { merge: true });
                 that.showMoreContent(that.collection);//added two parameters page and items number
             });
-            
+
             $("#grid-start").text((deletePage - 1) * itemsNumber + 1);
             if (itemsNumber === this.collectionLength && (deletePage * this.collectionLength <= this.listLength))
                 $("#grid-end").text(deletePage * itemsNumber);
@@ -628,7 +628,7 @@ require(['app'], function (app) {
                 $("#firstShowPage").prop("disabled", true);
                 $("#lastShowPage").prop("disabled", true);
             }
-            
+
             //$('#timeRecivingDataFromServer').remove();
             //this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         }

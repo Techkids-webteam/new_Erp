@@ -1,6 +1,6 @@
 define([
-    "text!templates/JobPositions/EditTemplate.html",
-    "collections/JobPositions/JobPositionsCollection",
+    "text!templates/CLASS/EditTemplate.html",
+    "collections/CLASS/CLASSCollection",
     "collections/Departments/DepartmentsCollection",
     "collections/Workflows/WorkflowsCollection",
     'views/Assignees/AssigneesView',
@@ -8,10 +8,10 @@ define([
     'common',
     "populate"
 ],
-    function (EditTemplate, JobPositionsCollection, DepartmentsCollection, WorkflowsCollection, AssigneesView, Custom, common, populate) {
+    function (EditTemplate, CLASSCollection, DepartmentsCollection, WorkflowsCollection, AssigneesView, Custom, common, populate) {
         var EditView = Backbone.View.extend({
             el: "#content-holder",
-            contentType: "JobPositions",
+            contentType: "CLASS",
             template: _.template(EditTemplate),
             initialize: function (options) {
                 _.bindAll(this, "render", "saveItem");
@@ -22,7 +22,7 @@ define([
 				else{
 					this.currentModel = (options.model) ? options.model : options.collection.getElement();
 				}
-				this.currentModel.urlRoot = "/JobPositions";
+				this.currentModel.urlRoot = "/CLASS";
                 this.responseObj = {};
                 this.render();
             },
@@ -88,14 +88,16 @@ define([
                 }
                 var self = this;
                 var mid = 39;
-                var name = $.trim($("#name").val());
-                var expectedRecruitment =  parseInt($.trim($("#expectedRecruitment").val()));
-                var description = $.trim($("#description").val());
-                var requirements = $.trim($("#requirements").val());
-                var department = this.$("#departmentDd").data("id");
-				if (department==""){
-					department=null;
-				}
+                var title = $.trim($("#title").val());
+                var code = $.trim($("#code").val());
+        //         var name = $.trim($("#name").val());
+        //         var expectedRecruitment =  parseInt($.trim($("#expectedRecruitment").val()));
+        //         var description = $.trim($("#description").val());
+        //         var requirements = $.trim($("#requirements").val());
+        //         var department = this.$("#departmentDd").data("id");
+				// if (department==""){
+				// 	department=null;
+				// }
                 var usersId=[];
                 var groupsId=[];
                 $(".groupsAndUser tr").each(function(){
@@ -110,11 +112,13 @@ define([
                 var workflow = this.$("#workflowsDd").data("id");
                 var currentWorkflow = this.currentModel.get('workflow');
                 var data = {
-                    name: name,
-                    expectedRecruitment: expectedRecruitment,
-                    description: description,
-                    requirements: requirements,
-                    department: department || null,
+                    title: title,
+                    code: code,
+                    // name: name,
+                    // expectedRecruitment: expectedRecruitment,
+                    // description: description,
+                    // requirements: requirements,
+                    // department: department || null,
                     groups: {
 						owner: $("#allUsersSelect").data("id"),
                         users: usersId,

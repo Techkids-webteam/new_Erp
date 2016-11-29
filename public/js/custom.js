@@ -125,6 +125,9 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
                     case 'Users':
                         App.currentViewType = "list";
                         break;
+                    case 'CLASS':
+                        App.currentViewType = "list";
+                        break;
                     case 'JobPositions':
                         App.currentViewType = "list";
                         break;

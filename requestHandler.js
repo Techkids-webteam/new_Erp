@@ -3,11 +3,12 @@
 var requestHandler = function (fs, mongoose, event, dbsArray) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
         models = require("./models.js")(dbsArray),
+        personTree = require("./Modules/PersonTree.js")(logWriter, mongoose, models),
         department = require("./Modules/Department.js")(logWriter, mongoose, models),
         users = require("./Modules/Users.js")(logWriter, mongoose, models, department),
         profile = require("./Modules/Profile.js")(logWriter, mongoose, models, users),
         access = require("./Modules/additions/access.js")(profile.schema, users, models, logWriter),
-        employee = require("./Modules/Employees.js")(logWriter, mongoose, event, department, models),
+        employee = require("./Modules/Employees.js")(logWriter, mongoose, event, department, models, personTree),
         customer = require("./Modules/Customers.js")(logWriter, mongoose, models, department),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose, models, event),
         project = require("./Modules/Projects.js")(logWriter, mongoose, department, models, workflow, event),
@@ -25,9 +26,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         rate = require("./Modules/Rate.js")(logWriter, mongoose, classes, models);
         record = require("./Modules/Record.js")(logWriter, mongoose , models);
         role = require("./Modules/Role.js")(logWriter, mongoose, models);
-        instructor = require("./Modules/Instructor.js")(logWriter, mongoose, employee, role, models, record, classes);
-
-
+        instructor = require("./Modules/Instructor.js")(logWriter, mongoose, employee, role, models, record, classes, personTree);
 
     //binding for remove Workflow
     event.on('removeWorkflow', function (req, wId, id) {
@@ -363,6 +362,19 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             access.getEditWritAccess(req, req.session.uId, 51, function (access) {
                 if (access) {
                     profile.updateProfile(req, id, data.profile, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+    function insertProfileAccess(req, res, id, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 51, function (access) {
+                if (access) {
+                    profile.insertProfileAccess(req, id, data, res);
                 } else {
                     res.send(403);
                 }
@@ -1218,6 +1230,118 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    //---------------------CLASS--------------------------------
+
+    // get  jobPositions Total count
+    function CLASSTotalCollectionLength(req, res) {
+        classes.getTotalCount(req, res);
+    }
+
+    function createCLASS(req, res, data) {
+
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    classes.create(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getCLASSForDd(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            jobPosition.getJobPositionForDd(req, res);
+        } else {
+            res.send(401);
+        }
+    };
+
+    // Get JobPosition for list
+    function getFilterCLASS(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    classes.getClasses(req, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getCLASSById(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    classes.getCLASSById(req, res, data.id);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+
+    };
+
+    function updateCLASS(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            data.editedBy = {
+                user: req.session.uId,
+                date: new Date().toISOString()
+            }
+            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    classes.update(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
+    function updateCLASSselectedFields(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            data.editedBy = {
+                user: req.session.uId,
+                date: new Date().toISOString()
+            }
+            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    classes.updateOnlySelectedFields(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
+    function removeCLASS(req, res, id) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getDeleteAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    classes.remove(req, res, id);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+
 
     //---------------------Employee--------------------------------
 
@@ -1497,6 +1621,35 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    //---------------------PersonTree--------------------------------
+
+    function getPersonTree(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 15, function (access) {
+                if (access) {
+                    personTree.getData(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    }
+
+    function getPersonTreeParent(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 15, function (access) {
+                if (access) {
+                    personTree.getParent(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    }
 
     //---------------------Department--------------------------------
     function createDepartment(req, res, data) {
@@ -1908,7 +2061,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 42, function (access) {
                 if (access) {
-                    classes.getData(req,res);
+                    classes.getData(req, res);
                 } else {
                     res.send(403);
                 }
@@ -2307,8 +2460,13 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getProfile: getProfile,
         getProfileForDd: getProfileForDd,
         createProfile: createProfile,
+        insertProfileAccess: insertProfileAccess,
         updateProfile: updateProfile,
         removeProfile: removeProfile,
+
+        //personTree
+        getPersonTree: getPersonTree,
+        getPersonTreeParent: getPersonTreeParent,
 
         createPerson: createPerson,
         getPersonById: getPersonById,
@@ -2369,6 +2527,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeJobPosition: removeJobPosition,
         getJobPositionById: getJobPositionById,
         getJobPositionForDd: getJobPositionForDd,
+
+        CLASSTotalCollectionLength: CLASSTotalCollectionLength,
+        createCLASS: createCLASS,
+        updateCLASS: updateCLASS,
+        updateCLASSselectedFields: updateCLASSselectedFields,
+        removeCLASS: removeCLASS,
+        getCLASSById: getCLASSById,
+        getCLASSForDd: getCLASSForDd,
+
+        getFilterCLASS: getFilterCLASS,
 
         createEmployee: createEmployee,
         getFilterJobPosition: getFilterJobPosition,
@@ -2433,7 +2601,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getSources: getSources,
         getLanguages: getLanguages,
         getJobType: getJobType,
-		getNationality: getNationality,
+        getNationality: getNationality,
         customerTotalCollectionLength: customerTotalCollectionLength,
 
         getClasses :getClasses,

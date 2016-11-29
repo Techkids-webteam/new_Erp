@@ -32,7 +32,7 @@
             workflow: {
                 wName: 'jobposition',
                 name: 'No Recruitment',
-                status: 'New' 
+                status: 'New'
             }
         },
         urlRoot: function () {
