@@ -370,6 +370,19 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function insertProfileAccess(req, res, id, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 51, function (access) {
+                if (access) {
+                    profile.insertProfileAccess(req, id, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
 
     function removeProfile(req, res, id) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -2335,6 +2348,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getProfile: getProfile,
         getProfileForDd: getProfileForDd,
         createProfile: createProfile,
+        insertProfileAccess: insertProfileAccess,
         updateProfile: updateProfile,
         removeProfile: removeProfile,
 

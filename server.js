@@ -631,6 +631,11 @@ app.put('/Profiles/:_id', function (req, res) {
     requestHandler.updateProfile(req, res, id, data);
 });
 
+app.put('/ProfileAccess/:_id', function (req, res) {
+    var id = req.param('_id');
+    requestHandler.insertProfileAccess(req, res, id, req.body || {});
+});
+
 app.delete('/Profiles/:_id', function (req, res) {
     var id = req.param('_id');
     requestHandler.removeProfile(req, res, id);
