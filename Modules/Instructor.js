@@ -9,7 +9,8 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
     var instructorSchema = mongoose.Schema({
         employee_id: {
             type: String,
-            unique: true
+            unique: true,
+            ref: 'Employees'
         },
         image: String,
         team: String,
@@ -34,10 +35,20 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
             } else {
               if(docs) {
                 docs.forEach(function(doc, i) {
+                  // this just for running old API
                   doc.classes = doc.history;
+                  if(doc.employee_id) {
+                      doc.name = doc.employee_id.name.last + " " + doc.employee_id.name.first;
+                      doc.image = doc.employee_id.imageSrc;
+                      doc.contact = {
+                          "phone": doc.employee_id.workPhones.mobile,
+                          "email": doc.employee_id.personalEmail
+                      };
+                      doc.employee_id = undefined;
+                  };
                 });
               }
-              res.json(docs);
+              res.json(200, {items: docs, date: Date.now()});
             }
           });
 

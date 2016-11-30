@@ -101,26 +101,19 @@ var Module = function (logWriter, mongoose, profile, models) {
             );
         },
         update: function(req, res, data) {
-          console.log(">> in update module");
-          console.log(data);
           if(data) {
             models.get(req.session.lastDb - 1, "modules", moduleSchema)
             .findOne({_id: data._id})
             .exec(function(err, doc){
-              console.log(">in query ");
-              console.log(err || doc);
               if(err) {
-                console.log(err);
                 res.json(500, {error: err});
               } else if(!doc) {
-                console.log("Not found Module with _id: " + data._id);
                 res.json(400, {error: new Error("Not found Module with _id: " + data._id)});
               }else {
                 doc.mname = data.mname || doc.mname;
                 doc.href = data.href || doc.href;
                 doc.save(function(err, result) {
                   if(err || !result) {
-                    console.log("Something went wrong!");
                     res.json(500, err || new Error("Something went wrong!"));
                   } else {
                     res.json(200);
@@ -129,7 +122,6 @@ var Module = function (logWriter, mongoose, profile, models) {
               }
             })
           } else {
-            console.log("Missing data");
             res.json(400, {error: new Error("Missing data!")});
           }
         }
