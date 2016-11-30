@@ -132,6 +132,10 @@ app.get('/getModules', function (req, res) {
     requestHandler.getModules(req, res);
 });
 
+app.put('/updateModules', function (req, res) {
+    requestHandler.updateModules(req, res, req.body || {});
+});
+
 app.post('/uploadFiles', function (req, res, next) {
     var os = require("os");
     var osType = (os.type().split('_')[0]);

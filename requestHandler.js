@@ -149,12 +149,27 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
         return showMore;
     };
-
+    //-----------------Module-----------------
     function getModules(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             models.get(req.session.lastDb - 1, 'Users', users.schema).findById(req.session.uId, function (err, _user) {
                 if (_user) {
                     modules.get(req, _user.profile, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
+    function updateModules(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            models.get(req.session.lastDb - 1, 'Users', users.schema).findById(req.session.uId, function (err, _user) {
+                if (_user) {
+                    modules.update(req, res, data);
                 } else {
                     res.send(403);
                 }
@@ -2442,6 +2457,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         mongoose: mongoose,
         getModules: getModules,
+        updateModules: updateModules,
         redirectFromModuleId: redirectFromModuleId,
 
         login: login,
