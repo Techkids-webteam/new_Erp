@@ -25,100 +25,101 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
 
     function getData(req, res){
         // res.json(employee.employeeSchema);
-        models.get(req.session.lastDb - 1, "Instructor", instructorSchema)
-          .find()
-          .lean().populate('employee_id')
-          .lean().populate('history.class')
-          .exec(function(err, docs){
-            if(err) {
-              res.json(500, err);
-            } else {
-              if(docs) {
-                docs.forEach(function(doc, i) {
-                  // this just for running old API
-                  doc.classes = doc.history;
-                  if(doc.employee_id) {
-                      doc.name = doc.employee_id.name.last + " " + doc.employee_id.name.first;
-                      doc.image = doc.employee_id.imageSrc;
-                      doc.contact = {
-                          "phone": doc.employee_id.workPhones.mobile,
-                          "email": doc.employee_id.personalEmail
-                      };
-                      doc.employee_id = undefined;
-                  };
-                });
-              }
-              res.json(200, {items: docs, date: Date.now()});
-            }
-          });
+        // models.get(req.session.lastDb - 1, "Instructor", instructorSchema)
+        //   .find()
+        //   .lean().populate('employee_id')
+        //   .lean().populate('history.class')
+        //   .exec(function(err, docs){
+        //     if(err) {
+        //       res.json(500, err);
+        //     } else {
+        //       if(docs) {
+        //         docs.forEach(function(doc, i) {
+        //           // this just for running old API
+        //           doc.history = undefined;
+        //
+        //           if(doc.employee_id) {
+        //               doc.name = doc.employee_id.name.last + " " + doc.employee_id.name.first;
+        //               doc.image = doc.employee_id.imageSrc;
+        //               doc.contact = {
+        //                   "phone": doc.employee_id.workPhones.mobile,
+        //                   "email": doc.employee_id.personalEmail
+        //               };
+        //               doc.employee_id = doc.employee_id._id;
+        //           };
+        //         });
+        //       }
+        //       res.json(200, {items: docs, date: Date.now()});
+        //     }
+        //   });
 
-        // var instructors = [];
-        // // Get all instructors from Instrcutor collectiona
-        // var query = models.get(req.session.lastDb - 1, "Instructor", instructorSchema).find();
-        //
-        // // For each instructor, get his/her info fom Employee collection
-        //
-        // var promis = query.exec(function(err,data){
-        //     var today = new Date();
-        //     var dd = today.getDate();
-        //     var mm = today.getMonth()+1; //January is 0!
-        //     var yyyy = today.getFullYear();
-        //
-        //     if(dd<10) {
-        //         dd='0'+dd
-        //     }
-        //
-        //     if(mm<10) {
-        //         mm='0'+mm
-        //     }
-        //     today = yyyy + '-' + mm + '-'+ dd;
-        //
-        //     var tomorow = new Date();
-        //     dd = tomorow.getDate()+1;
-        //     mm = tomorow.getMonth()+1; //January is 0!
-        //     yyyy = tomorow.getFullYear();
-        //
-        //     if(dd<10) {
-        //         dd='0'+dd
-        //     }
-        //
-        //     if(mm<10) {
-        //         mm='0'+mm
-        //     }
-        //
-        //     tomorow = yyyy + '-' + mm + '-'+ dd;
-        //     var instrucorFecthCount = 0;
-        //     for (var i=0;i<data.length; i++) {
-        //         var instructor = data[i];
-        //         (function(instructor) {
-        //             models.get(req.session.lastDb - 1, "Teaching_Record", record.recordSchema).find({"instructor_code": instructor.code, "date" : {"$gte": today, "$lt": tomorow }}, function (err, recordData) {
-        //                 instructor.record_count = recordData.length;
-        //             });
-        //             models.get(req.session.lastDb - 1,
-        //                 "Employees",
-        //                 employee.employeeSchema)
-        //                 .findById(instructor.employee_id, function (err, empData) {
-        //                     instrucorFecthCount++;
-        //                     if(empData) {
-        //                       instructor.name = empData.name.last + " " + empData.name.first;
-        //                       instructor.image = empData.imageSrc;
-        //                       instructor.contact = {
-        //                           "phone": empData.workPhones.mobile,
-        //                           "email": empData.personalEmail
-        //                       };
-        //                     }
-        //                     instructors.push(instructor);
-        //                     if(instrucorFecthCount == data.length) {
-        //                         res.json({
-        //                             items: instructors,
-        //                             date: today
-        //                         });
-        //                     }
-        //                 });
-        //         }) (data[i]);
-        //
-        //     }
-        // });
+        var instructors = [];
+        // Get all instructors from Instrcutor collectiona
+        var query = models.get(req.session.lastDb - 1, "Instructor", instructorSchema).find();
+
+        // For each instructor, get his/her info fom Employee collection
+
+        var promis = query.exec(function(err,data){
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if(dd<10) {
+                dd='0'+dd
+            }
+
+            if(mm<10) {
+                mm='0'+mm
+            }
+            today = yyyy + '-' + mm + '-'+ dd;
+
+            var tomorow = new Date();
+            dd = tomorow.getDate()+1;
+            mm = tomorow.getMonth()+1; //January is 0!
+            yyyy = tomorow.getFullYear();
+
+            if(dd<10) {
+                dd='0'+dd
+            }
+
+            if(mm<10) {
+                mm='0'+mm
+            }
+
+            tomorow = yyyy + '-' + mm + '-'+ dd;
+            var instrucorFecthCount = 0;
+            for (var i=0;i<data.length; i++) {
+                var instructor = data[i];
+                (function(instructor) {
+                    models.get(req.session.lastDb - 1, "Teaching_Record", record.recordSchema).find({"instructor_code": instructor.code, "date" : {"$gte": today, "$lt": tomorow }}, function (err, recordData) {
+                        instructor.record_count = recordData.length;
+                    });
+                    models.get(req.session.lastDb - 1,
+                        "Employees",
+                        employee.employeeSchema)
+                        .findById(instructor.employee_id, function (err, empData) {
+                            instrucorFecthCount++;
+                            if(empData) {
+                              instructor.name = empData.name.last + " " + empData.name.first;
+                              instructor.image = empData.imageSrc;
+                              instructor.contact = {
+                                  "phone": empData.workPhones.mobile,
+                                  "email": empData.personalEmail
+                              };
+                            }
+                            instructors.push(instructor);
+                            if(instrucorFecthCount == data.length) {
+                                res.json({
+                                    items: instructors,
+                                    date: today
+                                });
+                            }
+                        });
+                }) (data[i]);
+
+            }
+        });
     }
 
     function getData1(req, res) {
