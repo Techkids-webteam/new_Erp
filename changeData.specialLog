@@ -1,0 +1,42 @@
+02/12/2016:
+{
+    add new Parent Menu: 'EDU' + swap postion parent menu: 'Sales', 'Project', 'HR', 'EDU'
+    {
+        insert to 'db.CRM.modules':
+        {
+            "_id" : 55.0,
+            "ancestors" : [],
+            "attachments" : [],
+            "href" : "EDU",
+            "link" : false,
+            "mname" : "EDU",
+            "parrent" : null,
+            "sequence" : 5.0,
+            "visible" : true
+        },
+        update sequence:
+        {
+          'Project' >> 5,
+          'HR' >> 1,
+          'EDU' >> 2,
+          'Sales' >> 3
+        },
+        update profile admin: insert to 'db.CRM.Profile' > admin-profile.profileAccess:
+        {
+          "module": 55,
+          "access": {
+            "del": true,
+            "editWrite": false,
+            "read": true
+          }
+        }
+    },
+    switch menu 'HR.Classes' to 'EDU':
+    {
+      update 'db.CRM.modules':
+      {
+        change Classes module: parrent: 54 >> 55,
+        run command: |db.modules.update({_id: 54}, {$set: {parrent: 55}})|
+      }
+    }
+}
