@@ -5,6 +5,8 @@ var Role = function (logWriter, mongoose, models){
     var roleSchema = mongoose.Schema({
         code: String,
         title: String
+        //rate:
+        //class_id
     }, { collection: 'Role' });
 
     var schema = mongoose.model('Role', roleSchema);

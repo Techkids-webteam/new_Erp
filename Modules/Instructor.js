@@ -16,6 +16,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
         team: String,
         code: String,
         classes: [],
+        //classes: [type: role_id, ref: 'Roles']
         name: String,
         record_count : Number,
         contact : {}
