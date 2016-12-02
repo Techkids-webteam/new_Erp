@@ -1,0 +1,21 @@
+
+<% RolesCollection.forEach(function(cl, index){ %>
+<tr data-index="<%= index %>" data-id="<%=cl._id%>" class="stage-<%=(cl.workflow) ? cl.workflow.status.toLowerCase().replace(' ','') : ''%>">
+    <td class = "notForm"><input type="checkbox" value="<%=cl._id%>" class="checkbox"/></td>
+    <td><%=startNumber + index +1 %></td>
+    <!-- <td><%=cl.name%></td>
+    <td><%= (cl.department) ? cl.department.departmentName : ''%> </td>
+    <td><%=cl.totalForecastedEmployees%></td> -->
+    <!--<td><%=cl.numberOfEmployees + cl.expectedRecruitment%></td>-->
+    <!-- <td><%=cl.numberOfEmployees%></td>
+    <td><%=cl.expectedRecruitment%></td>
+    <td id='stages_<%=cl._id%>'>
+        <a href="javascript:;" class="stageSelect"><%=(cl.workflow) ? cl.workflow.name : 'Undefinded'%></a>
+    </td>
+			<td><%=(cl.createdBy&&cl.createdBy.date)?( cl.createdBy.date + ((cl.createdBy.user) ?(' (' + cl.createdBy.user.login + ')') : '')):''%></td>
+			<td><%=(cl.editedBy&&cl.editedBy.date)?( cl.editedBy.date + ((cl.editedBy.user) ?(' (' + cl.editedBy.user.login + ')') : '')):''%></td> -->
+      <td><%=cl.title%></td>
+      <td><%=cl.code%></td>
+
+</tr>
+<% }) %>

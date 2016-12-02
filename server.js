@@ -673,6 +673,8 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
             break;
         case ('CLASS'): requestHandler.CLASSTotalCollectionLength(req, res);
             break;
+        case ('Roles'): requestHandler.RolesTotalCollectionLength(req, res);
+            break;
         case ('Users'): requestHandler.usersTotalCollectionLength(req, res);
             break;
         default: next();
@@ -1105,6 +1107,53 @@ app.put('/CLASS/:_id', function (req, res) {
 
 app.delete('/CLASS/:_id', function (req, res) {
     requestHandler.removeCLASS(req, res, req.param('_id'));
+});
+
+
+//------------------Roles---------------------------------------------------
+
+app.post('/Roles', function (req, res) {
+    var data = {};
+    data = req.body;
+    requestHandler.createRoles(req, res, data);
+});
+
+app.get('/RolesForDd', function (req, res) {
+    console.log(">>>>.");
+    console.log(req.body);
+    res.send(200);
+    // requestHandler.getRolesForDd(req, res);
+});
+
+app.get('/Roles/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getRolesById(req, res, data);
+            break;
+        default: requestHandler.getFilterRoles(req, res);
+            break;
+    }
+
+});
+
+app.patch('/Roles/:_id', function (req, res) {
+    var data = req.body || {};
+    data._id = req.param('_id');
+    requestHandler.updateRoles(req, res, data);
+});
+
+app.put('/Roles/:_id', function (req, res) {
+    var data = req.body || {};
+    data._id = req.param('_id');
+    requestHandler.updateRolesselectedFields(req, res, data);
+});
+
+app.delete('/Roles/:_id', function (req, res) {
+    requestHandler.removeRoles(req, res, req.param('_id'));
 });
 
 //------------------PersonTree---------------------------------------------------

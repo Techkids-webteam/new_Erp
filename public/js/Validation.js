@@ -47,7 +47,7 @@ define(
         var validateName = function(validatedString){
             return nameRegExp.test(validatedString);
         }
-        
+
         var validateGroupsName = function(validatedString){
             return groupsNameRegExp.test(validatedString);
         }
@@ -130,7 +130,7 @@ define(
                 }
             }
         }
-        
+
         var checkLogedField = function(errorArray, required, fieldValue, fieldName){
             if(required){
                 if(!fieldValue){

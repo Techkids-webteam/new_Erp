@@ -1,11 +1,11 @@
 define([
-    'models/CLASSModel'
+    'models/RoleModel'
 ],
-function (CLASSModel) {
-        var CLASSCollection = Backbone.Collection.extend({
-            model: CLASSModel,
+function (RoleModel) {
+        var RolesCollection = Backbone.Collection.extend({
+            model: RoleModel,
             url: function () {
-                return "/CLASS";
+                return "/Roles";
             },
             initialize: function () {
                 var mid = 39;
@@ -24,5 +24,5 @@ function (CLASSModel) {
                 return response.data;
             },
         });
-        return CLASSCollection;
+        return RolesCollection;
 });

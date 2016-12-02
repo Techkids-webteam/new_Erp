@@ -165,13 +165,6 @@ var Classes = function (logWriter, mongoose, employee, models){
         });
     };
 
-    function getData(req, res){
-        var query = models.get(req.session.lastDb - 1, "Classes", classesSchema).find();
-        query.exec(function(err,data){
-            res.json({items: data});
-        });
-    };
-
     function createData(req, res, data) {
         var new_class = new models.get(req.session.lastDb - 1, 'Classes', classesSchema)();
         new_class.title = data.title;

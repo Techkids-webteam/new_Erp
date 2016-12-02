@@ -1269,7 +1269,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function getCLASSForDd(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            jobPosition.getJobPositionForDd(req, res);
+            res.send(200, {});
+            // classes.getClassesForDd(req, res);
         } else {
             res.send(401);
         }
@@ -2283,9 +2284,9 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-//-----------------------------Role------------------------------------------
+//-----------------------------Roles------------------------------------------
 
-
+    //>>old
     function getRole(req, res){
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 42, function (access) {
@@ -2342,6 +2343,117 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     }
+    //>>new
+
+    // get  jobPositions Total count
+    function RolesTotalCollectionLength(req, res) {
+        role.getTotalCount(req, res);
+    }
+
+    function createRoles(req, res, data) {
+
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    role.create(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getRolesForDd(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            role.getRolesForDd(req, res);
+        } else {
+            res.send(401);
+        }
+    };
+
+    // Get JobPosition for list
+    function getFilterRoles(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    role.getRoles(req, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getRolesById(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    role.getRolesById(req, res, data.id);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+
+    };
+
+    function updateRoles(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            data.editedBy = {
+                user: req.session.uId,
+                date: new Date().toISOString()
+            }
+            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    role.update(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
+    function updateRolesselectedFields(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            data.editedBy = {
+                user: req.session.uId,
+                date: new Date().toISOString()
+            }
+            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    role.updateOnlySelectedFields(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
+    function removeRoles(req, res, id) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getDeleteAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    role.remove(req, res, id);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
 
 
 //-----------------------------Teaching_Record-------------------------------
@@ -2645,10 +2757,25 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         updateTeachingRecord: updateTeachingRecord,
         deleteTeachingRecord: deleteTeachingRecord,
 
+        //>>old
         getRole: getRole,
         addRole: addRole,
         updateRole: updateRole,
-        deleteRole: deleteRole
+        deleteRole: deleteRole,
+        //>>new
+        RolesTotalCollectionLength: RolesTotalCollectionLength,
+        createRoles: createRoles,
+        getRolesForDd: getRolesForDd,
+        getFilterRoles: getFilterRoles,
+        getRolesById: getRolesById,
+        updateRoles: updateRoles,
+        updateRolesselectedFields: updateRolesselectedFields,
+        removeRoles: removeRoles
+
+
+
+
+
 
 
     }

@@ -798,17 +798,22 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if (model && model.jobPosition) {
-                    options = $.map(response.data, function (item) {
-                        return (model.jobPosition._id === item._id) ?
-                            $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
-                            $('<option/>').val(item._id).text(item.name);
-                    });
-                } else {
-                    options = $.map(response.data, function (item) {
-                        return $('<option/>').val(item._id).text(item.name);
-                    });
-                }
+                options = $.map(response.data, function (item) {
+                    return $('<option/>').val(item._id).text(item.name);
+                });
+                selectList.append(options);
+                if (callback) callback();
+            });
+        };
+        var populateRoles = function (selectId, url, model, callback) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                options = $.map(response.data, function (item) {
+                    return $('<option/>').val(item._id).text(item.name);
+                });
                 selectList.append(options);
                 if (callback) callback();
             });
@@ -967,6 +972,7 @@
             populateJobTypeDd: populateJobTypeDd,
             populateJobPositions: populateJobPositions,
             populateCLASS: populateCLASS,
+            populateRoles: populateRoles,
             populateUsers: populateUsers,
             utcDateToLocaleFullDateTime: utcDateToLocaleFullDateTime,
             utcDateToLocaleDateTime: utcDateToLocaleDateTime,
