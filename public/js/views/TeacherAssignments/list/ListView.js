@@ -336,12 +336,14 @@ define([
 
                goToEditDialog: function (e) {
                    e.preventDefault();
+                   //hard code fix bug update >> TODO fix it if can
                    var id = $(e.target).closest('tr').data("id");
                    var model = new currentModel({ validate: false });
                    model.urlRoot = '/TeacherAssignments/form';
                    model.fetch({
                        data: { id: id },
                        success: function (model) {
+                          console.log(model);
                            new editView({ model: model });
                        },
                        error: function () { alert('Please refresh browser'); }

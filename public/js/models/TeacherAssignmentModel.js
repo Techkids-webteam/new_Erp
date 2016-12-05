@@ -17,10 +17,10 @@ define(['Validation'], function (Validation) {
                 return errors;
         },
         defaults: {
-            name: "Instructor",
+            instructor: {},
             class: {},
             role: {},
-            rate: {}
+            rate: 0
         },
         urlRoot: function () {
             return "/TeacherAssignments";

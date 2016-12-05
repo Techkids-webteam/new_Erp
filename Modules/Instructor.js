@@ -400,8 +400,10 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
             docs.forEach(function(entry, index) {
               if(entry.classes) {
                 entry.classes.forEach(function(cl, i){
-                  cl.instructor_id = entry._id;
-                  cl.name = entry.employee_id ? entry.employee_id.name.first + " " + entry.employee_id.name.last : "";
+                  cl.instructor = {
+                    _id: entry._id,
+                    name: entry.employee_id ? entry.employee_id.name.first + " " + entry.employee_id.name.last : ""
+                  };
                   processData.push(cl);
                 })
               }
@@ -428,8 +430,10 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
             docs.forEach(function(entry, index) {
               if(entry.classes) {
                 entry.classes.forEach(function(cl, i){
-                  cl.instructor_id = entry._id;
-                  cl.name = entry.employee_id ? entry.employee_id.name.first + " " + entry.employee_id.name.last : "";
+                  cl.instructor = {
+                    _id: entry._id,
+                    name: entry.employee_id ? entry.employee_id.name.first + " " + entry.employee_id.name.last : ""
+                  };
                   processData.push(cl);
                 })
               }
@@ -442,7 +446,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
 
     function getTeacherAssignmentsById(req, res, id) {
       var model = models.get(req.session.lastDb - 1, 'Instructor', instructorSchema);
-      model.find({"classes._id": id})
+      model.findOne({"classes._id": id})
         .lean().populate("employee_id")
         .lean().populate("classes.class")
         .lean().populate("classes.role")
@@ -451,7 +455,27 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
             logWriter.log("Instructor.js getTeacherAssignmentsById > Error: " + err);
             res.json(400, {error: err});
           } else {
-            res.json(200, {data: doc});
+            try{
+              for(var i = 0; i < doc.classes.length; i++) {
+                var cl = doc.classes[i];
+                if(cl._id.toString() == id) {
+                  var data = {
+                    _id: cl._id,
+                    instructor: {
+                      _id: doc._id,
+                      name: (doc.employee_id.name ? doc.employee_id.name.first + " " + doc.employee_id.name.last : "")
+                    },
+                    class: cl.class,
+                    role: cl.role,
+                    rate: cl.rate
+                  };
+                  res.json(200, data);
+                  break;
+                }
+              }
+            }catch(err) {
+              res.json(500);
+            }
           }
         })
     }
@@ -506,35 +530,40 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
 
     function updateTeacherAssignmentsOnlySelectedFields(req, res, data) {
       var model = models.get(req.session.lastDb - 1, 'Instructor', instructorSchema);
-      model.findOne({"classes._id": data._id})
-        .exec(function(err, doc) {
-          if(err || !doc) {
-            logWriter.log("Instructor.js updateTeacherAssignments > Error: " + err || "Not found instructor with _id: " + data._id);
-            res.json(500, {error: err || "Not found instructor with _id: " + data._id});
-          } else {
-            try {
-              for(var i = 0; i < doc.classes.length; i++) {
-                if(doc.classes[i]._id.toString() == data._id) {
-                  doc.classes[i].class = data.class || doc.classes[i].class;
-                  doc.classes[i].role = data.role || doc.classes[i].role;
-                  doc.classes[i].rate = data.rate || doc.classes[i].rate;
-                  doc.save(function(err, result) {
-                    if(err || !result) {
-                      logWriter.log("Instructor.js getTeacherAssignmentsForDd > Error: " + err || "Something went wrong!");
-                      res.json(500, {error: err || "Something went wrong!"})
-                    } else {
-                      res.json(200);
-                    }
-                  });
-                  return;
+      if(data._id) {
+        model.findOne({"classes._id": data._id})
+          .exec(function(err, doc) {
+            if(err || !doc) {
+              logWriter.log("Instructor.js updateTeacherAssignments > Error: " + err || "Not found instructor with _id: " + data._id);
+              res.json(500, {error: err || "Not found instructor with _id: " + data._id});
+            } else {
+              try {
+                for(var i = 0; i < doc.classes.length; i++) {
+                  if(doc.classes[i]._id.toString() == data._id) {
+                    doc.classes[i].class = data.class || doc.classes[i].class;
+                    doc.classes[i].role = data.role || doc.classes[i].role;
+                    doc.classes[i].rate = data.rate || doc.classes[i].rate;
+                    doc.save(function(err, result) {
+                      if(err || !result) {
+                        logWriter.log("Instructor.js getTeacherAssignmentsForDd > Error: " + err || "Something went wrong!");
+                        res.json(500, {error: err || "Something went wrong!"})
+                      } else {
+                        res.json(200);
+                      }
+                    });
+                    return;
+                  }
                 }
+              }catch(err) {
+                logWriter.log("Instructor.js getTeacherAssignmentsForDd > Error: " + err || "Something went wrong!");
+                res.json(500, {error: err || "Something went wrong!"});
               }
-            }catch(err) {
-              logWriter.log("Instructor.js getTeacherAssignmentsForDd > Error: " + err || "Something went wrong!");
-              res.json(500, {error: err || "Something went wrong!"})
             }
-          }
-        });
+          });
+      } else {
+        logWriter.log("Instructor.js getTeacherAssignmentsForDd > Error: " + "Missing data._id!");
+        res.json(500, {error: "Missing data._id!"});
+      }
     }
 
 

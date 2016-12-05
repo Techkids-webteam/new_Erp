@@ -1186,8 +1186,7 @@ app.get('/TeacherAssignments/:viewType', function (req, res) {
 
 app.patch('/TeacherAssignments/:_id', function (req, res) {
     var data = req.body || {};
-      console.log("come patch");
-      console.log(data);
+    data._id= req.param("_id");
     requestHandler.updateTeacherAssignmentsselectedFields(req, res, data);
 });
 

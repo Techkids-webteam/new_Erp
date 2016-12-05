@@ -1,5 +1,5 @@
 <div class="form-holder">
-  <form method="post" action="" id="editJobPositionForm" class="form" data-id="<%=model._id%>">
+  <form method="post" action="" id="editTeacherAssignmentForm" class="form" data-id="<%=model._id%>">
     <fieldset>
       <div class="inner">
         <ul class="dialog-tabs">
@@ -11,33 +11,34 @@
           <div class="dialog-tabs-item active">
 	        <div class="half-block left">
 			  <dl class="job-create-info">
-
-
+          <!-- <dt><label for="departmentDd">Department</label></dt>
+          <dd>
+                    <a id="departmentDd" data-id="<%=(model.department) ? model.department._id : ''%>" class="current-selected" href="javascript:;"><%=(model.department&&model.department.departmentName)?model.department.departmentName:'Select'%></a>
+          </dd> -->
 				<dt><label for="instructorDd">Instructor</label></dt>
-
         <dd>
-        <a id="instructorDd" class="current-selected" href="javascript:;"></a>
+        <a id="instructorDd" data-id="<%=(model.instructor) ? model.instructor._id : ''%>" class="current-selected" href="javascript:;"><%=(model.instructor && model.instructor._id) ? model.instructor._id : 'Select'%></a>
+        <!-- <a id="instructorDd" class="current-selected" href="javascript:;"></a> -->
         </dd>
 
         <dt><label for="classesDd">Class</label></dt>
-
         <dd>
-        <a id="classesDd" class="current-selected" href="javascript:;"></a>
+        <a id="classesDd" data-id="<%=(model.class) ? model.class._id : ''%>" class="current-selected" href="javascript:;"><%=(model.class && model.class.code) ? model.class.code : 'Select'%></a>
         </dd>
 
-        <dt><label for="rolesDd">Roles</label></dt>
-
-        <dd>
-        <a id="rolesDd" class="current-selected" href="javascript:;"></a>
-        </dd>
-
-			  </dl>
 			</div>
 	        <div class="half-block left">
 			  <dl class="job-create-info">
 
         <dt><label for="rate">Rate</label></dt><dd><input type="text" class="title-input blueback" name="rate" id="rate" placeholder="e.g. ios4" required maxlength="32"/></dd>
 
+        <dt><label for="rolesDd">Roles</label></dt>
+
+        <dd>
+        <a id="rolesDd" data-id="<%=(model.role) ? model.role._id : ''%>" class="current-selected" href="javascript:;"><%=(model.role&&model.role.title)?model.role.class:'Select'%></a>
+        </dd>
+
+			  </dl>
 			  </dl>
 			</div>
 	        <!-- <div class="half-block left">

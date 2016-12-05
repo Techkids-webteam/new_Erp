@@ -31,7 +31,7 @@ define([
                 "click .breadcrumb a": "changeWorkflow",
                 'keydown': 'keydownHandler',
                 'click .dialog-tabs a': 'changeTab',
-				"click .current-selected": "showNewSelect",
+		            "click .current-selected": "showNewSelect",
                 "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
@@ -171,9 +171,11 @@ define([
             },
             render: function () {
 			          var self = this;
+                console.log(this.currentModel.toJSON());
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
+
                 this.$el = $(formString).dialog({
                     autoOpen: true,
                     resizable: false,
