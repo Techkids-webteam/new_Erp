@@ -17,7 +17,8 @@
           </dd> -->
 				<dt><label for="instructorDd">Instructor</label></dt>
         <dd>
-        <a id="instructorDd" data-id="<%=(model.instructor) ? model.instructor._id : ''%>" class="current-selected" href="javascript:;"><%=(model.instructor && model.instructor._id) ? model.instructor._id : 'Select'%></a>
+          <label id="instructorDd"><%=model.instructor.name%></label>
+        <!-- <a id="instructorDd" data-id="<%=(model.instructor) ? model.instructor._id : ''%>" class="current-selected" href="javascript:;"><%=(model.instructor && model.instructor._id) ? model.instructor._id : 'Select'%></a> -->
         <!-- <a id="instructorDd" class="current-selected" href="javascript:;"></a> -->
         </dd>
 

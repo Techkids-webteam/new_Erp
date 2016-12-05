@@ -206,8 +206,7 @@ define([
                     }).render().el
                 );
 
-                // populate.get("#departmentDd", "/DepartmentsForDd", {}, "departmentName", this, true, true);
-                populate.get("#instructorDd", "/InstructorForDd", {}, "name", this, true, true);
+                // populate.get("#instructorDd", "/InstructorForDd", {}, "name", this, true, true);
                 populate.get("#classesDd", "/CLASSForDd", {}, "code", this, true, true);
                 populate.get("#rolesDd", "/RolesforDd", {}, "code", this, true, true);
                 // populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Job positions" }, "name", this, false);
