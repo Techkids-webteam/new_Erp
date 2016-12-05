@@ -585,7 +585,7 @@ define([
             }
         },
         testContent: function (contentType) {
-            var arrayOfContentTypes = ['Persons', 'Companies', 'Leads', 'Opportunities', 'Projects', 'Tasks', 'Employees', 'Applications', 'CLASS', 'Roles', 'JobPositions', 'Birthdays', 'Departments', 'Users', 'Profiles'];
+            var arrayOfContentTypes = ['Persons', 'Companies', 'Leads', 'Opportunities', 'Projects', 'Tasks', 'Employees', 'Applications', 'CLASS', 'Roles',  'TeacherAssignments','JobPositions', 'Birthdays', 'Departments', 'Users', 'Profiles'];
             if (arrayOfContentTypes.indexOf(contentType) < 0)
                 contentType = arrayOfContentTypes[0];
             return contentType;

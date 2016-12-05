@@ -818,6 +818,19 @@
                 if (callback) callback();
             });
         };
+        var populateTeacherAssignments = function (selectId, url, model, callback) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                options = $.map(response.data, function (item) {
+                    return $('<option/>').val(item._id).text(item.name);
+                });
+                selectList.append(options);
+                if (callback) callback();
+            });
+        };
 
         var populateOpportunitiesForMiniView = function (url, personId, companyId, page, count, onlyCount, callback) {
             var self = this;
@@ -973,6 +986,7 @@
             populateJobPositions: populateJobPositions,
             populateCLASS: populateCLASS,
             populateRoles: populateRoles,
+            populateTeacherAssignments: populateTeacherAssignments,
             populateUsers: populateUsers,
             utcDateToLocaleFullDateTime: utcDateToLocaleFullDateTime,
             utcDateToLocaleDateTime: utcDateToLocaleDateTime,

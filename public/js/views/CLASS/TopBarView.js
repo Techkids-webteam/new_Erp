@@ -7,10 +7,10 @@ define([
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
             contentType: "CLASS",
-            contentHeader:"Job Positions",
+            contentHeader:"Classes",
             actionType: null, //Content, Edit, Create
             template: _.template(ContentTopBarTemplate),
-            
+
             events:{
             	"click a.changeContentView": 'changeContentViewType',
             	"click ul.changeContentIndex a": 'changeItemIndex',
@@ -20,7 +20,7 @@ define([
                 "click #top-bar-editBtn": "editEvent",
                 "click #top-bar-createBtn": "createEvent"
             },
-            
+
             changeContentViewType:  function (e) {
                 Custom.changeContentViewType(e, this.contentType, this.collection);
             },
@@ -57,20 +57,20 @@ define([
 
                 return this;
             },
-            
+
             deleteEvent: function(event)
             {
             	event.preventDefault();
             	var answer=confirm("Realy DELETE items ?!");
             	if (answer==true) this.trigger('deleteEvent');
             },
-            
+
             saveEvent: function(event)
             {
             	event.preventDefault();
             	this.trigger('saveEvent');
             },
-            
+
             discardEvent: function(event)
             {
             	event.preventDefault();

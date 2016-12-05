@@ -1,13 +1,13 @@
 define([
-    'text!templates/Roles/TopBarTemplate.html',
+    'text!templates/TeacherAssignments/TopBarTemplate.html',
     'custom',
     'common'
 ],
     function (ContentTopBarTemplate, Custom, Common) {
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
-            contentType: "Roles",
-            contentHeader:"Roles",
+            contentType: "TeacherAssignments",
+            contentHeader:"Teacher Assignments",
             actionType: null, //Content, Edit, Create
             template: _.template(ContentTopBarTemplate),
 

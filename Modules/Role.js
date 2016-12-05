@@ -101,17 +101,14 @@ var Role = function (logWriter, mongoose, models){
 
 
     function getRolesForDd(req, res) {
-        var res = {};
-        res['data'] = [];
         var query = models.get(req.session.lastDb - 1, 'Role', roleSchema).find({});
         query.select('_id name');
-        query.exec(function (err, doc) {
+        query.exec(function (err, docs) {
             if (err) {
                 logWriter.log('Role.js get role.find' + err);
                 response.send(500, { error: "Can't find Role" });
             } else {
-                res['data'] = doc;
-                response.send(res);
+                response.send(res, {data: docs});
             }
         })
     }
@@ -140,8 +137,6 @@ var Role = function (logWriter, mongoose, models){
 
     function update(req, res, data) {
       data = data || {};
-      console.log("all");
-      console.log(data);
       if(data._id) {
         var model = models.get(req.session.lastDb - 1, "Role", roleSchema);
         model.findOne({_id: data._id}).exec(function(err, doc) {
@@ -171,8 +166,6 @@ var Role = function (logWriter, mongoose, models){
 
     function updateOnlySelectedFields(req, res, data) {
       data = data || {};
-      console.log("selectedFields");
-      console.log(data);
       if(data._id) {
         var model = models.get(req.session.lastDb - 1, "Role", roleSchema);
         model.findOne({_id: data._id}).exec(function(err, doc) {

@@ -18,7 +18,6 @@ var Rate = function (logWriter, mongoose, classes, models){
     function getByIntructorCode(req, res, data){
         var query = models.get(req.session.lastDb - 1, "Rate", rateSchema).find({code  : data});
         query.exec(function(err, rate){
-            console.log(data);
             res.json({items: data});
         });
     }

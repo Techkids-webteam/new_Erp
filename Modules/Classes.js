@@ -29,7 +29,6 @@ var Classes = function (logWriter, mongoose, employee, models){
         });
     }
 
-
     function getClasses(req, res){
         var query = models.get(req.session.lastDb - 1, "Classes", classesSchema).find();
         query.exec(function(err,docs){
@@ -99,8 +98,6 @@ var Classes = function (logWriter, mongoose, employee, models){
 
     function update(req, res, data) {
       data = data || {};
-      console.log("all");
-      console.log(data);
       if(data._id) {
         var model = models.get(req.session.lastDb - 1, "Classes", classesSchema);
         model.findOne({_id: data._id}).exec(function(err, doc) {
@@ -129,8 +126,6 @@ var Classes = function (logWriter, mongoose, employee, models){
 
     function updateOnlySelectedFields(req, res, id) {
       data = data || {};
-      console.log("selectedFields");
-      console.log(data);
       if(data._id) {
         var model = models.get(req.session.lastDb - 1, "Classes", classesSchema);
         model.findOne({_id: data._id}).exec(function(err, doc) {

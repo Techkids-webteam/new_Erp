@@ -165,10 +165,8 @@ var Users = function (logWriter, mongoose, models, department) {
                                     });
                                     res.cookie('lastDb', data.dbId);
                                     res.send(200);
-                                    console.log("oke baybay");
                                 }
                                 else {
-                                    console.log("sai roi homie");
                                     res.send(400);
                                 }
                             } else {

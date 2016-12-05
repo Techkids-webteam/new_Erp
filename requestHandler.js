@@ -1269,8 +1269,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function getCLASSForDd(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            res.send(200, {});
-            // classes.getClassesForDd(req, res);
+            classes.getClasses(req, res);
         } else {
             res.send(401);
         }
@@ -2131,6 +2130,21 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     }
 
 //-------------------------Instructor-----------------------------------
+
+    function getInstructorForDd(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 42, function (access) {
+                if (access) {
+                    instructor.getInstructorForDd(req,res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    }
     //beta
     function getInstructor1(req, res){
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -2367,7 +2381,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function getRolesForDd(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            role.getRolesForDd(req, res);
+            role.getRoles(req, res);
         } else {
             res.send(401);
         }
@@ -2454,6 +2468,132 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+
+    //-----------------------------TeacherAssignments------------------------------------------
+
+        //>>new
+
+        function TeacherAssignmentsTotalCollectionLength(req, res) {
+            instructor.getTeacherAssignmentsTotalCount(req, res);
+        }
+
+        function createTeacherAssignments(req, res, data) {
+            if (req.session && req.session.loggedIn && req.session.lastDb) {
+                access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                    if (access) {
+                        instructor.createTeacherAssignments(req, res, data);
+                    } else {
+                        res.send(403);
+                    }
+                });
+            } else {
+                res.send(401);
+            }
+        };
+
+        function getTeacherAssignmentsForDd(req, res) {
+            if (req.session && req.session.loggedIn && req.session.lastDb) {
+                instructor.getTeacherAssignmentsForDd(req, res);
+            } else {
+                res.send(401);
+            }
+        };
+
+        // Get JobPosition for list
+        function getFilterTeacherAssignments(req, res) {
+            if (req.session && req.session.loggedIn && req.session.lastDb) {
+                access.getReadAccess(req, req.session.uId, 14, function (access) {
+                    if (access) {
+                        instructor.getTeacherAssignments(req, res);
+                    } else {
+                        res.send(403);
+                    }
+                });
+            } else {
+                res.send(401);
+            }
+        };
+
+        function getTeacherAssignmentsById(req, res, data) {
+            if (req.session && req.session.loggedIn && req.session.lastDb) {
+                access.getReadAccess(req, req.session.uId, 14, function (access) {
+                    if (access) {
+                        instructor.getTeacherAssignmentsById(req, res, data.id);
+                    } else {
+                        res.send(403);
+                    }
+                });
+            } else {
+                res.send(401);
+            }
+
+        };
+
+        function updateTeacherAssignments(req, res, data) {
+            if (req.session && req.session.loggedIn && req.session.lastDb) {
+                data.editedBy = {
+                    user: req.session.uId,
+                    date: new Date().toISOString()
+                }
+                access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                    if (access) {
+                        instructor.updateTeacherAssignments(req, res, data);
+                    } else {
+                        res.send(403);
+                    }
+                });
+
+            } else {
+                res.send(401);
+            }
+        };
+
+        function updateTeacherAssignmentsselectedFields(req, res, data) {
+            if (req.session && req.session.loggedIn && req.session.lastDb) {
+                data.editedBy = {
+                    user: req.session.uId,
+                    date: new Date().toISOString()
+                }
+                access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                    if (access) {
+                        instructor.updateTeacherAssignmentsOnlySelectedFields(req, res, data);
+                    } else {
+                        res.send(403);
+                    }
+                });
+
+            } else {
+                res.send(401);
+            }
+        };
+
+        function removeTeacherAssignments(req, res, id) {
+            if (req.session && req.session.loggedIn && req.session.lastDb) {
+                access.getDeleteAccess(req, req.session.uId, 14, function (access) {
+                    if (access) {
+                        instructor.removeTeacherAssignments(req, res, id);
+                    } else {
+                        res.send(403);
+                    }
+                });
+            } else {
+                res.send(401);
+            }
+        };
+
+        function clearClass(req, res) {
+            if (req.session && req.session.loggedIn && req.session.lastDb) {
+                access.getDeleteAccess(req, req.session.uId, 14, function (access) {
+                    if (access) {
+                        instructor.clearClass(req, res);
+                    } else {
+                        res.send(403);
+                    }
+                });
+            } else {
+                res.send(401);
+            }
+        }
 
 
 //-----------------------------Teaching_Record-------------------------------
@@ -2739,6 +2879,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
 
         getInstructor: getInstructor,
+        getInstructorForDd: getInstructorForDd,
         getInstructor1: getInstructor1,
         getInstructorByCode : getInstructorByCode,
         createInstructor: createInstructor,
@@ -2770,7 +2911,19 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getRolesById: getRolesById,
         updateRoles: updateRoles,
         updateRolesselectedFields: updateRolesselectedFields,
-        removeRoles: removeRoles
+        removeRoles: removeRoles,
+
+
+        //----------TeacherAssignments--------------------------
+        TeacherAssignmentsTotalCollectionLength: TeacherAssignmentsTotalCollectionLength,
+        createTeacherAssignments: createTeacherAssignments,
+        getTeacherAssignmentsForDd: getTeacherAssignmentsForDd,
+        getFilterTeacherAssignments: getFilterTeacherAssignments,
+        getTeacherAssignmentsById: getTeacherAssignmentsById,
+        updateTeacherAssignments: updateTeacherAssignments,
+        updateTeacherAssignmentsselectedFields: updateTeacherAssignmentsselectedFields,
+        removeTeacherAssignments: removeTeacherAssignments,
+        clearClass: clearClass
 
 
 
