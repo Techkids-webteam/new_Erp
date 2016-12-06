@@ -92,9 +92,9 @@ define([
                 var self = this;
                 var mid = 39;
 
-                var instructor = $("#instructorDd").data("id");
-                var cl = $("#classesDd").data("id");
-                var role = $("#rolesDd").data("id");
+                var instructor = $("#instructorDd").attr("data-id");
+                var cl = $("#classesDd").attr("data-id");
+                var role = $("#rolesDd").attr("data-id");
                 var rate = $.trim($("#rate").val());
 
                 var usersId=[];
@@ -108,6 +108,7 @@ define([
                     }
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
+                var cacheModel = this.model;
                 this.model.save({
                     _id: instructor,
                     role: role,
@@ -131,14 +132,9 @@ define([
 						Backbone.history.navigate(location, { trigger: true });
                     },
                     error: function (model, xhr) {
-    					self.errorNotification(xhr);
+                    self.errorNotification(xhr);
                     }
                 });
-
-                // console.log(">>");
-                // console.log(location);
-                // console.log(">>");
-                // console.log(afterPage);
             },
             hideDialog: function () {
                 $(".create-dialog").remove();
@@ -178,7 +174,7 @@ define([
                         model: this.currentModel,
                     }).render().el
                 );
-                populate.get("#departmentDd", "/DepartmentsForDd", {}, "departmentName", this, true, true);
+                // populate.get("#departmentDd", "/DepartmentsForDd", {}, "departmentName", this, true, true);
                 populate.get("#instructorDd", "/InstructorForDd", {}, "name", this, true, true);
                 populate.get("#classesDd", "/CLASSForDd", {}, "code", this, true, true);
                 populate.get("#rolesDd", "/RolesforDd", {}, "code", this, true, true);

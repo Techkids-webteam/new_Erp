@@ -343,7 +343,6 @@ define([
                    model.fetch({
                        data: { id: id },
                        success: function (model) {
-                          console.log(model);
                            new editView({ model: model });
                        },
                        error: function () { alert('Please refresh browser'); }

@@ -166,7 +166,7 @@ define([
                 }
             },
             render: function () {
-				var self = this;
+		            var self = this;
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });

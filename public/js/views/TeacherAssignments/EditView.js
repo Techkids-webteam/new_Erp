@@ -171,7 +171,6 @@ define([
             },
             render: function () {
 			          var self = this;
-                console.log(this.currentModel.toJSON());
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
@@ -206,11 +205,6 @@ define([
                     }).render().el
                 );
 
-                // populate.get("#departmentDd", "/DepartmentsForDd", {}, "departmentName", this, true, true);
-                populate.get("#instructorDd", "/InstructorForDd", {}, "name", this, true, true);
-                populate.get("#classesDd", "/CLASSForDd", {}, "code", this, true, true);
-                populate.get("#rolesDd", "/RolesforDd", {}, "code", this, true, true);
-                // populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Job positions" }, "name", this, false);
                 //for input type number
                 this.$el.find("#expectedRecruitment").spinner({
                     min: 0,
@@ -230,6 +224,13 @@ define([
                         });
 
                     }
+
+
+                // populate.get("#departmentDd", "/DepartmentsForDd", {}, "departmentName", this, true, true);
+                populate.get("#instructorDd", "/InstructorForDd", {}, "name", this, true, true);
+                populate.getClassesRoles("#classesDd", "/CLASSForDd", {}, "code", this, true, true, null, model.class);
+                populate.getClassesRoles("#rolesDd", "/RolesforDd", {}, "code", this, true, true, null, model.role);
+                // populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Job positions" }, "name", this, false);
                 return this;
             }
 

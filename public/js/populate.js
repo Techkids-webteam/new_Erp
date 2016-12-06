@@ -30,6 +30,34 @@ define([
                });
            };
 
+           var getClassesRoles = function (id, url, data, field, content, isCreate, canBeEmpty, parrrentContentId, set) {
+               dataService.getData(url, data, function (response) {
+                   content.responseObj[id] = [];
+                   if (canBeEmpty) {
+                       content.responseObj[id].push({ _id: "", name: "Select" });
+                   }
+                   content.responseObj[id] = content.responseObj[id].concat(_.map(response.data, function (item) {
+                       return { _id: item._id, name: item[field], level: item.projectShortDesc || ""};
+                   }));
+
+                   if (isCreate) {
+                       $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id);
+                   }
+           if (parrrentContentId&&parrrentContentId.split("=").length===2) {
+             parrrentContentId = parrrentContentId.split("=")[1]
+           }
+                   if (parrrentContentId) {
+                       var current = _.filter(response.data, function(item) {
+                           return item._id == parrrentContentId;
+                       });
+                       $(id).text(current[0][field]).attr("data-id", current[0]._id);
+                   }
+                   if(set) {
+                     $(id).text(set[field]).attr("data-id", set._id);
+                   }
+               });
+           };
+
            var getParrentDepartment = function (id, url, data, content, isCreate, canBeEmpty) {
                dataService.getData(url, data, function (response) {
                    content.responseObj[id] = [];
@@ -194,6 +222,7 @@ define([
                showSelect: showSelect,
                getParrentDepartment: getParrentDepartment,
                getCompanies: getCompanies,
-               showSelectPriority: showSelectPriority
+               showSelectPriority: showSelectPriority,
+               getClassesRoles: getClassesRoles
            };
        });

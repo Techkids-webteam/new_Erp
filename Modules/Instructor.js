@@ -353,8 +353,6 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
             role: new ObjectId(data.role),
             class: new ObjectId(data.class)
           }
-          console.log(">>>");
-          console.log(data);
           model.find({_id: data.instructor ? data.instructor._id : ''})
             .exec(function(err, doc) {
               if(err) {
