@@ -7,8 +7,8 @@
     <td class = "notForm"><input type="checkbox" value="<%=tac._id%>" class="checkbox"/></td>
     <td><%=++count%></td>
     <td><%=tac.instructor ? tac.instructor.name : ""%></td>
-    <td><%=(tac.class ? (tac.class.code + " : " + tac.class.title) : "")%></td>
-    <td><%=(tac.role ? (tac.role.code + " : " + tac.role.title) : "")%></td>
+    <td><%=(tac.class ? ( tac.class.title) : "")%></td>
+    <td><%=(tac.role ? ( tac.role.title) : "")%></td>
     <td><%=tac.rate%></td>
 </tr>
 
