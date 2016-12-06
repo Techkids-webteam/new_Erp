@@ -228,8 +228,8 @@ define([
 
                 // populate.get("#departmentDd", "/DepartmentsForDd", {}, "departmentName", this, true, true);
                 populate.get("#instructorDd", "/InstructorForDd", {}, "name", this, true, true);
-                populate.getClassesRoles("#classesDd", "/CLASSForDd", {}, "code", this, true, true, null, model.class);
-                populate.getClassesRoles("#rolesDd", "/RolesforDd", {}, "code", this, true, true, null, model.role);
+                populate.getClassesRoles("#classesDd", "/CLASSForDd", {}, "title", this, true, true, null, model.class);
+                populate.getClassesRoles("#rolesDd", "/RolesforDd", {}, "title", this, true, true, null, model.role);
                 // populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Job positions" }, "name", this, false);
                 return this;
             }

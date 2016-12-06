@@ -176,8 +176,8 @@ define([
                 );
                 // populate.get("#departmentDd", "/DepartmentsForDd", {}, "departmentName", this, true, true);
                 populate.get("#instructorDd", "/InstructorForDd", {}, "name", this, true, true);
-                populate.get("#classesDd", "/CLASSForDd", {}, "code", this, true, true);
-                populate.get("#rolesDd", "/RolesforDd", {}, "code", this, true, true);
+                populate.get("#classesDd", "/CLASSForDd", {}, "title", this, true, true);
+                populate.get("#rolesDd", "/RolesforDd", {}, "title", this, true, true);
                 // populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Job positions" }, "name", this, true);
                 this.delegateEvents(this.events);
                 return this;
