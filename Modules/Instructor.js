@@ -71,7 +71,9 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
 
         var instructors = [];
         // Get all instructors from Instrcutor collectiona
-        var query = models.get(req.session.lastDb - 1, "Instructor", instructorSchema).find();
+        var query = models.get(req.session.lastDb - 1, "Instructor", instructorSchema).find()
+          .lean().populate("classes.class")
+          .lean().populate("classes.role");
 
         // For each instructor, get his/her info fom Employee collection
 
