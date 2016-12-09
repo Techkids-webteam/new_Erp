@@ -1,0 +1,37 @@
+<div class="form-holder">
+  <form method="post" action="" id="editJobPositionForm" class="form" data-id="<%=model._id%>">
+    <fieldset>
+      <div class="inner">
+        <ul class="dialog-tabs">
+          <li><a class="active" href="javascript:;">Main</a></li>
+          <!-- <li><a href="javascript:;">Assignees</a></li> -->
+        </ul>
+        <div class="clearfix"></div>
+        <div class="dialog-tabs-items">
+          <div class="dialog-tabs-item active">
+	        <div class="half-block left">
+    			  <dl class="job-create-info">
+                <dt><label for="assignmentDd">Assignment</label></dt>
+                <dd>
+                <a id="assignmentDd" class="current-selected" data-id="<%=(model.assignment ? model.assignment._id : "")%>" href="javascript:;"></a>
+                </dd>
+    			  </dl>
+		       </div>
+	        <div class="half-block left">
+    			  <dl class="job-create-info">
+
+              <dt><label for="recordTime">Record time</label></dt>
+
+              <dd><input  id="recordTime" type="datetime-local" value="<%=(model.record_time = model.record_time ? new Date(model.record_time).toISOString().substring(0, new Date(model.record_time).toISOString().indexOf(".")) : "")%>"/></dd>
+    			  </dl>
+    			</div>
+          </div>
+          <div class="dialog-tabs-item">
+			         <div class="assignees-container"></div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>

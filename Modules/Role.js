@@ -67,16 +67,6 @@ var Role = function (logWriter, mongoose, models){
               res.json(200, result);
             }
           });
-        //   .find();
-        // query.exec(function(err, data) {
-        //   if(err) {
-        //     res.json(500, {error: err});
-        //   } else {
-        //     var result = {};
-        //     result["count"] = data ? (data.length || 0) : 0;
-        //     res.json(200, result);
-        //   }
-        // });
     }
 
     function create(req, res, data) {

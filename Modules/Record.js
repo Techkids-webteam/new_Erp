@@ -1,18 +1,29 @@
 var Record = function (logWriter, mongoose, models){
 
+    var ObjectId = mongoose.Schema.Types.ObjectId;
     var recordSchema = mongoose.Schema({
-        instructor_code: String,
-        class_code: String,
-        role_code: String,
-        date: String,
-        user_name: String,
-        record_time: String
+        assignment: {
+          type: ObjectId,
+          require: true
+        },
+        record_time: {
+          type: Date,
+          require: true
+        },
+        createdBy: {
+            user: { type: String, default: null},
+            date: { type: Date }
+        },
+        editedBy: {
+            user: { type: String, default: null },
+            date: { type: Date }
+        }
     }, { collection: 'Teaching_Record' }, { __v: { type: Number, select: false}});
 
     mongoose.model('Teaching_Record', recordSchema);
 
     var moment = require('moment');
-
+    //>> old
     function getData(req, res){
         var query = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema).find();
         query.exec(function(err,data){
@@ -122,7 +133,221 @@ var Record = function (logWriter, mongoose, models){
         });
     }
 
+    //>>> new
+    function getTotalCount(req, res) {
+        var query = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema)
+          .find().count(function(err, count) {
+            if(err) {
+              res.json(500, {error: err});
+            } else {
+              var result = {};
+              result["count"] = count || 0;
+              res.json(200, result);
+            }
+          });
+    }
+
+    function create(req, res, data) {
+        if(data) {
+          var model = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema);
+          var newRecord = new model({
+              assignment: data.assignment,
+              record_time: data.record_time,
+              createdBy: {
+                  user: req.session.uName,
+                  date: Date.now()
+              }
+          });
+          newRecord.save(function(err, result) {
+            if(err || !result) {
+              res.json(500, err || new Error("Something went wrong!"));
+            } else {
+              res.json(200);
+            }
+          })
+        } else {
+          logWriter.log("Record.js create Bad request missing data!");
+          res.json(400, {error: new Error("Missing data")});
+        }
+    }
+
+    function getAssignment(req, cb) {
+      var assignments = [];
+      assignments.findById = function(id) {
+        for(var i = 0; i < this.length; i++) {
+          if(this[i]._id.toString() == (id || "").toString()) {
+            return this[i];
+          }
+        }
+      }
+       models.get(req.session.lastDb - 1, 'Instructor')
+        .find({})
+        .lean().populate("employee_id", "_id name")
+        .lean().populate("classes.class")
+        .lean().populate("classes.role")
+        .exec(function(err, docs) {
+          if(err || !docs) {
+            cb(err || new Error("Empty data"));
+          } else {
+            docs.forEach(function(doc, i){
+              if(doc.classes instanceof Array) {
+                doc.classes.forEach(function(assignment) {
+                  assignment.instructor = {
+                    _id: doc._id,
+                    name: doc.employee_id ? doc.employee_id.name ? doc.employee_id.name.last + " " + doc.employee_id.name.first : "" : ""
+                  }
+                })
+                Array.prototype.push.apply(assignments, doc.classes);
+              }
+            });
+            cb(null, assignments);
+          }
+        });
+    }
+
+    function getRecordsForDd(req, res) {
+        var query = models.get(req.session.lastDb - 1, 'Teaching_Record', recordSchema).find({})
+          .exec(function(err, docs) {
+            if(err || !docs) {
+              res.json(500, err || new Error("Empty data"));
+            } else {
+              docs = JSON.parse(JSON.stringify(docs));
+              getAssignment(req, function(err, assignments) {
+                  docs.forEach(function(doc, i) {
+                    doc.assignment = assignments.findById(doc.assignment);
+                  })
+                  res.json({data: docs});
+              })
+            }
+          });
+    }
+
+    function getRecords(req, res) {
+        var query = models.get(req.session.lastDb - 1, 'Teaching_Record', recordSchema).find({})
+          .exec(function(err, docs) {
+            if(err || !docs) {
+              res.json(500, err || new Error("Empty data"));
+            } else {
+              docs = JSON.parse(JSON.stringify(docs));
+              getAssignment(req, function(err, assignments) {
+                  docs.forEach(function(doc, i) {
+                    doc.assignment = assignments.findById(doc.assignment);
+                  })
+                  res.json({data: docs});
+              })
+            }
+          });
+    }
+
+    function getRecordsById(req, res, data) {
+        var query = models.get(req.session.lastDb - 1, 'Teaching_Record', recordSchema)
+          .findOne({_id: data})
+          .exec(function(err, doc) {
+            if(err || !doc) {
+              res.json(500, err || new Error("Empty data"));
+            } else {
+              doc = JSON.parse(JSON.stringify(doc));
+              getAssignment(req, function(err, assignments) {
+                  doc.assignment = assignments.findById(doc.assignment);
+                  res.json(doc);
+              })
+            }
+          });
+    }
+
+
+    function update(req, res, data) {
+      data = data || {};
+      if(data._id) {
+        var model = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema);
+        model.findOne({_id: data._id}).exec(function(err, doc) {
+          if(err) {
+            res.json(500, {error: err});
+          } else if(!doc) {
+            logWriter.log("Record.js update error Bad request not found Record with data._id" + id);
+            res.json(400, {error: new Error("Can not found Record data._id " + id)});
+          } else {
+            doc.assignment = data.assignment;
+            doc.record_time = data.record_time;
+            doc.editedBy = {
+              user: req.session.uName,
+              date: Date.now()
+            }
+            doc.save(function(err, result) {
+              if(err || !result) {
+                res.json(500, {error: err});
+              } else {
+                res.json(200);
+              }
+            });
+          }
+        });
+      }else{
+        logWriter.log("Record.js update error missing data._id ");
+        res.json(400, {error: new Error("Missing data _id")});
+      }
+    }
+
+
+    function updateOnlySelectedFields(req, res, data) {
+      data = data || {};
+      if(data._id) {
+        var model = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema);
+        model.findOne({_id: data._id}).exec(function(err, doc) {
+          if(err) {
+            res.json(500, {error: err});
+          } else if(!doc) {
+            logWriter.log("Record.js updateOnlySelectedFields error Bad request not found Record with data._id" + id);
+            res.json(400, {error: new Error("Can not found Record data._id " + id)});
+          } else {
+            doc.assignment = data.assignment || data.assignment;
+            doc.record_time = data.record_time || data.assignment;
+            doc.editedBy = {
+              user: req.session.uName,
+              date: Date.now()
+            }
+            doc.save(function(err, result) {
+              if(err || !result) {
+                res.json(500, {error: err});
+              } else {
+                res.json(200);
+              }
+            });
+          }
+        });
+      }else{
+        logWriter.log("Record.js updateOnlySelectedFields error missing data._id ");
+        res.json(400, {error: new Error("Missing data _id")});
+      }
+    }
+
+    function remove(req, res, id) {
+      if(id) {
+        var model = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema);
+        model.findOne({_id: id})
+          .exec(function(err, doc) {
+            if(err) {
+              res.json(500, {error: err});
+            } else if(!doc) {
+              logWriter.log("Record.js remove error Bad request not found Record with _id" + id);
+              res.json(400, {error: new Error("Can not found Record _id " + id)});
+            } else {
+              doc.remove(function(err, result) {
+                if(err || !result) {
+                  res.json(500, {error: err || new Error("Something went wrong!")});
+                } else {
+                  res.json(200);
+                }
+              });
+            }
+          });
+      }else{
+        logWriter.log("Record.js remove error missing data._id ");
+        res.json(400, {error: new Error("Missing data _id")});
+      }
+    }
     return {
+      //old
         recordSchema: recordSchema,
         getData: getData,
         getDataByCode: getDataByCode,
@@ -130,7 +355,18 @@ var Record = function (logWriter, mongoose, models){
         createData: createData,
         updateData: updateData,
         deleteData: deleteData,
-        getDataByDateRange: getDataByDateRange
+        getDataByDateRange: getDataByDateRange,
+
+        //new
+        getTotalCount: getTotalCount,
+        create: create,
+        getRecordsForDd: getRecordsForDd,
+        getRecords: getRecords,
+        getRecordsById: getRecordsById,
+        update: update,
+        updateOnlySelectedFields: updateOnlySelectedFields,
+        remove: remove
+
     };
 };
 

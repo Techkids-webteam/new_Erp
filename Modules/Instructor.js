@@ -3,8 +3,12 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
 
     var ObjectId = mongoose.Schema.Types.ObjectId;
 
-    var classesAndRoleSchema = mongoose.Schema({
+    var assignmentSchema = mongoose.Schema({
         rate: Number,
+        instructor: {
+          type: ObjectId,
+          ref: "Instructor"
+        },
         role: {
           type: ObjectId,
           ref: "Role"
@@ -24,7 +28,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
         image: String,
         team: String,
         code: String,
-        classes: [classesAndRoleSchema],
+        classes: [assignmentSchema],
         //classes: [type: role_id, ref: 'Roles']
         name: String,
         record_count : Number,
@@ -365,6 +369,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
                 res.json(400, {error: "Not found!"});
               } else {
                 doc.classes = doc.classes || [];
+                ta.instructor = doc._id;
                 doc.classes.push(ta);
                 doc.save(function(err, result) {
                   if(err || result) {
@@ -406,6 +411,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
                     _id: entry._id,
                     name: entry.employee_id ? entry.employee_id.name.first + " " + entry.employee_id.name.last : ""
                   };
+                  cl.show = cl.instructor.name + " | " + cl.class.title + " | " + cl.role.title;
                   processData.push(cl);
                 })
               }
@@ -493,13 +499,14 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
           } else {
             try {
               doc.classes.push({
+                instructor: doc._id,
                 class: data.class,
                 role: data.role,
                 rate: data.rate
               });
               doc.save(function(err, result) {
                 if(err || !result) {
-                  logWriter.log("Instructor.js getTeacherAssignmentsForDd > Error: " + err || "Something went wrong!");
+                  logWriter.log("Instructor.js updateTeacherAssignments > Error: " + err || "Something went wrong!");
                   res.json(500, {error: err || "Something went wrong!"})
                 } else {
                   res.json(200);
@@ -522,7 +529,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
               //   }
               // }
             }catch(err) {
-              logWriter.log("Instructor.js getTeacherAssignmentsForDd > Error: " + err || "Something went wrong!");
+              logWriter.log("Instructor.js updateTeacherAssignments > Error: " + err || "Something went wrong!");
               res.json(500, {error: err || "Something went wrong!"})
             }
           }
@@ -536,7 +543,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
         model.findOne({"classes._id": data._id})
           .exec(function(err, doc) {
             if(err || !doc) {
-              logWriter.log("Instructor.js updateTeacherAssignments > Error: " + err || "Not found instructor with _id: " + data._id);
+              logWriter.log("Instructor.js updateTeacherAssignmentsOnlySelectedFields > Error: " + err || "Not found instructor with _id: " + data._id);
               res.json(500, {error: err || "Not found instructor with _id: " + data._id});
             } else {
               try {
@@ -547,7 +554,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
                     doc.classes[i].rate = data.rate || doc.classes[i].rate;
                     doc.save(function(err, result) {
                       if(err || !result) {
-                        logWriter.log("Instructor.js getTeacherAssignmentsForDd > Error: " + err || "Something went wrong!");
+                        logWriter.log("Instructor.js updateTeacherAssignmentsOnlySelectedFields > Error: " + err || "Something went wrong!");
                         res.json(500, {error: err || "Something went wrong!"})
                       } else {
                         res.json(200);
@@ -557,13 +564,13 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
                   }
                 }
               }catch(err) {
-                logWriter.log("Instructor.js getTeacherAssignmentsForDd > Error: " + err || "Something went wrong!");
+                logWriter.log("Instructor.js updateTeacherAssignmentsOnlySelectedFields > Error: " + err || "Something went wrong!");
                 res.json(500, {error: err || "Something went wrong!"});
               }
             }
           });
       } else {
-        logWriter.log("Instructor.js getTeacherAssignmentsForDd > Error: " + "Missing data._id!");
+        logWriter.log("Instructor.js updateTeacherAssignmentsOnlySelectedFields > Error: " + "Missing data._id!");
         res.json(500, {error: "Missing data._id!"});
       }
     }
@@ -574,7 +581,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
       model.findOne({"classes._id": id})
         .exec(function(err, doc) {
           if(err || !doc) {
-            logWriter.log("Instructor.js updateTeacherAssignments > Error: " + err || "Not found instructor with _id: " + id);
+            logWriter.log("Instructor.js removeTeacherAssignments > Error: " + err || "Not found instructor with _id: " + id);
             res.json(500, {error: err || "Not found instructor with _id: " + id});
           } else {
             try {
@@ -583,7 +590,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
                   doc.classes.splice(i, 1);
                   doc.save(function(err, result) {
                     if(err || !result) {
-                      logWriter.log("Instructor.js getTeacherAssignmentsForDd > Error: " + err || "Something went wrong!");
+                      logWriter.log("Instructor.js removeTeacherAssignments > Error: " + err || "Something went wrong!");
                       res.json(500, {error: err || "Something went wrong!"})
                     } else {
                       res.json(200);
@@ -593,7 +600,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
                 }
               }
             }catch(err) {
-              logWriter.log("Instructor.js getTeacherAssignmentsForDd > Error: " + err || "Something went wrong!");
+              logWriter.log("Instructor.js removeTeacherAssignments > Error: " + err || "Something went wrong!");
               res.json(500, {error: err || "Something went wrong!"})
             }
           }
@@ -606,7 +613,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
       model.find()
         .exec(function(err, docs) {
           if(err) {
-            logWriter.log("Instructor.js getTeacherAssignments > Error: " + err);
+            logWriter.log("Instructor.js clearClass > Error: " + err);
             res.json(400, {error: err});
           } else {
 

@@ -675,6 +675,8 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
             break;
         case ('Roles'): requestHandler.RolesTotalCollectionLength(req, res);
             break;
+        case ('Records'): requestHandler.RecordsTotalCollectionLength(req, res);
+            break;
         case ('TeacherAssignments'): requestHandler.TeacherAssignmentsTotalCollectionLength(req, res);
             break;
         case ('Users'): requestHandler.usersTotalCollectionLength(req, res);
@@ -1153,6 +1155,50 @@ app.delete('/Roles/:_id', function (req, res) {
     requestHandler.removeRoles(req, res, req.param('_id'));
 });
 
+//------------------Records---------------------------------------------------
+
+app.post('/Records', function (req, res) {
+    var data = {};
+    data = req.body;
+    requestHandler.createRecords(req, res, data);
+});
+
+app.get('/RecordsForDd', function (req, res) {
+    requestHandler.getRecordsForDd(req, res);
+});
+
+app.get('/Records/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getRecordsById(req, res, data);
+            break;
+        default: requestHandler.getFilterRecords(req, res);
+            break;
+    }
+
+});
+
+app.patch('/Records/:_id', function (req, res) {
+    var data = req.body || {};
+    data._id = req.param('_id');
+    requestHandler.updateRecords(req, res, data);
+});
+
+app.put('/Records/:_id', function (req, res) {
+    var data = req.body || {};
+    data._id = req.param('_id');
+    requestHandler.updateRecordsselectedFields(req, res, data);
+});
+
+app.delete('/Records/:_id', function (req, res) {
+    requestHandler.removeRecords(req, res, req.param('_id'));
+});
+
+
 //------------------TeacherAssignments---------------------------------------------------
 
 app.post('/TeacherAssignments', function (req, res) {
@@ -1163,10 +1209,7 @@ app.post('/TeacherAssignments', function (req, res) {
 });
 
 app.get('/TeacherAssignmentsForDd', function (req, res) {
-    console.log(">>>>.");
-    console.log(req.body);
-    res.send(200);
-    // requestHandler.getTeacherAssignmentsForDd(req, res);
+    requestHandler.getTeacherAssignmentsForDd(req, res);
 });
 
 app.get('/TeacherAssignments/:viewType', function (req, res) {
@@ -1201,9 +1244,9 @@ app.delete('/TeacherAssignments/:_id', function (req, res) {
     requestHandler.removeTeacherAssignments(req, res, req.param('_id'));
 });
 
-app.get('/clearClass', function(req, res) {
-  requestHandler.clearClass(req, res);
-})
+// app.get('/clearClass', function(req, res) {
+//   requestHandler.clearClass(req, res);
+// })
 //------------------PersonTree---------------------------------------------------
 
 app.get('/getPersonTree', function(req, res) {

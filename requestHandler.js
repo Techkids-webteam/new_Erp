@@ -2597,7 +2597,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
 
 //-----------------------------Teaching_Record-------------------------------
-
+  //>old
     function getTeachingRecord(req, res){
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 42, function (access) {
@@ -2702,6 +2702,116 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     }
+
+    //>>new
+    function RecordsTotalCollectionLength(req, res) {
+        record.getTotalCount(req, res);
+    }
+
+    function createRecords(req, res, data) {
+
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    record.create(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getRecordsForDd(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            record.getRecordsForDd(req, res);
+        } else {
+            res.send(401);
+        }
+    };
+
+    // Get JobPosition for list
+    function getFilterRecords(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    record.getRecords(req, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getRecordsById(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    record.getRecordsById(req, res, data.id);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+
+    };
+
+    function updateRecords(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            data.editedBy = {
+                user: req.session.uId,
+                date: new Date().toISOString()
+            }
+            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    record.update(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
+    function updateRecordsselectedFields(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            data.editedBy = {
+                user: req.session.uId,
+                date: new Date().toISOString()
+            }
+            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    record.updateOnlySelectedFields(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
+    function removeRecords(req, res, id) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getDeleteAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    record.remove(req, res, id);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
 
 
 
@@ -2890,6 +3000,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getRate: getRate,
         getRateByInstructorCode: getRateByInstructorCode,
 
+        //old
         getTeachingRecord: getTeachingRecord,
         getTeachingRecordByDateRange: getTeachingRecordByDateRange,
         getTeachingRecordByMonth: getTeachingRecordByMonth,
@@ -2897,6 +3008,15 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         addTeachingRecord: addTeachingRecord,
         updateTeachingRecord: updateTeachingRecord,
         deleteTeachingRecord: deleteTeachingRecord,
+        //>>new
+        RecordsTotalCollectionLength: RecordsTotalCollectionLength,
+        createRecords: createRecords,
+        getRecordsForDd: getRecordsForDd,
+        getFilterRecords: getFilterRecords,
+        getRecordsById: getRecordsById,
+        updateRecords: updateRecords,
+        updateRecordsselectedFields: updateRecordsselectedFields,
+        removeRecords: removeRecords,
 
         //>>old
         getRole: getRole,
