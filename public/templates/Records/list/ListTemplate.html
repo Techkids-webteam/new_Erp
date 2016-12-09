@@ -1,4 +1,3 @@
-<%=RecordsCollection.length%>
 <% RecordsCollection.forEach(function(rc, index){
   var assignment = rc.assignment || {};
   rc.record_time = rc.record_time ? new Date(rc.record_time).toLocaleDateString() + " " + new Date(rc.record_time).toLocaleTimeString() : "";%>
