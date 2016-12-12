@@ -6,9 +6,10 @@ define([
     'views/Assignees/AssigneesView',
     "custom",
     'common',
-    "populate"
+    "populate",
+    "dataService"
 ],
-    function (EditTemplate, RecordsCollection, DepartmentsCollection, WorkflowsCollection, AssigneesView, Custom, common, populate) {
+    function (EditTemplate, RecordsCollection, DepartmentsCollection, WorkflowsCollection, AssigneesView, Custom, common, populate, dataService) {
         var EditView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Records",
@@ -213,7 +214,57 @@ define([
 
                     }
 
-		            populate.getAssignments("#assignmentDd", "/TeacherAssignmentsForDd", {}, "show", this, true, true, null, model.assignment);
+                self.instructors = [];
+                self.assignments = [];
+                self.firstClick = false;
+
+                var findAssignmentByInstructorId = function(assignments, id) {
+                  var result = [];
+                  assignments.forEach(function(assignment) {
+                    if(assignment.instructor._id == id) {
+                      result.push(assignment);
+                    };
+                  })
+                  return result;
+                }
+                this.findAssignmentByInstructorId = findAssignmentByInstructorId;
+
+                var cb = function() {
+                  self.instructors.forEach(function(instructor, index) {
+                    if(instructor._id == model.assignment.instructor._id) {
+                      $("#instructorDd").attr("data-id", instructor._id).text(instructor.name);
+                      $("#instructorImg").attr("src", instructor.imageSrc);
+                    }
+                  });
+                  $("#instructorDd").click(function(evt) {
+                    if(!self.firstClick) {
+                       self.firstClick = true;
+                       setTimeout(function(){
+                         self.instructors.forEach(function(instructor, index){
+                           $("#instructorDd+ul").children().click(function(evt) {
+                             setTimeout(function(){
+                               populate.populateFromData('#assignmentDd', findAssignmentByInstructorId(self.assignments, $("#instructorDd").attr("data-id")), "show", self, true, true);
+                               self.instructors.forEach(function(instructor){
+                                 if(instructor._id == $("#instructorDd").attr("data-id")) {
+                                   $("#instructorImg").attr("src", instructor.imageSrc);
+                                 }
+                               })
+                             }, 10);
+                           });
+                         });
+                       }, 10);
+                    }
+                  });
+                };
+
+                populate.getInstructorRecord('#instructorDd', '/InstructorForDd', {}, "name", this, true, true, null, cb);
+                dataService.getData('/TeacherAssignmentsForDd', {}, function(res) {
+                  self.assignments = res.data;
+                  populate.populateFromData('#assignmentDd', findAssignmentByInstructorId(self.assignments, model.assignment.instructor._id), "show", self, true, true);
+                  $("#assignmentDd").attr("data-id", model.assignment._id).text(model.assignment.role.title + " | " + model.assignment.class.title);
+                });
+
+		            // populate.getAssignments("#assignmentDd", "/TeacherAssignmentsForDd", {}, "show", this, true, true, null, model.assignment);
                 // $("#assignmentDd").attr("data-id", model.assignment._id);
                 return this;
             }

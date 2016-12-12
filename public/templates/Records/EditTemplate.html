@@ -10,14 +10,31 @@
         <div class="dialog-tabs-items">
           <div class="dialog-tabs-item active">
 	        <div class="half-block left">
+
+            <dl class="job-create-info">
+              <dt><img id="instructorImg" src=""/></dt>
+            </dl>
+    			  <!-- <dl class="job-create-info">
+                <dt><label for="assignmentDd">Assignment</label></dt>
+                <dd>
+                <a id="assignmentDd" class="current-selected" data-id="<%=(model.assignment ? model.assignment._id : "")%>" href="javascript:;"></a>
+                </dd>
+    			  </dl> -->
+		       </div>
+	        <div class="half-block left">
+
+            <dt><label for="instructorDd">Instructor</label></dt>
+
+            <dd>
+            <a id="instructorDd" class="current-selected" href="javascript:;"></a>
+            </dd>
+            </dl>
     			  <dl class="job-create-info">
                 <dt><label for="assignmentDd">Assignment</label></dt>
                 <dd>
                 <a id="assignmentDd" class="current-selected" data-id="<%=(model.assignment ? model.assignment._id : "")%>" href="javascript:;"></a>
                 </dd>
     			  </dl>
-		       </div>
-	        <div class="half-block left">
     			  <dl class="job-create-info">
 
               <dt><label for="recordTime">Record time</label></dt>

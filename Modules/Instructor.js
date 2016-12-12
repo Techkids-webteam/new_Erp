@@ -324,7 +324,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
             var processData = [];
             docs.forEach(function(doc, i){
               if(doc.employee_id.name) {
-                processData.push({_id:doc._id, name: doc.employee_id.name.first + " " + doc.employee_id.name.last});
+                processData.push({_id:doc._id, name: doc.employee_id.name.first + " " + doc.employee_id.name.last, imageSrc: doc.employee_id.imageSrc});
               }
             });
             res.json(200, {data: processData});
@@ -411,7 +411,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
                     _id: entry._id,
                     name: entry.employee_id ? entry.employee_id.name.first + " " + entry.employee_id.name.last : ""
                   };
-                  cl.show = cl.instructor.name + " | " + cl.class.title + " | " + cl.role.title;
+                  cl.show = cl.class.title + " | " + cl.role.title;
                   processData.push(cl);
                 })
               }

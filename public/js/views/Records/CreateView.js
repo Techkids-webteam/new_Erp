@@ -5,9 +5,10 @@ define([
     "models/RecordModel",
     'views/Assignees/AssigneesView',
     "common",
-    "populate"
+    "populate",
+    "dataService"
 ],
-    function (CreateTemplate, DepartmentsCollection, WorkflowsCollection, RecordModel, AssigneesView, common, populate) {
+    function (CreateTemplate, DepartmentsCollection, WorkflowsCollection, RecordModel, AssigneesView, common, populate, dataService) {
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Records",
@@ -94,7 +95,6 @@ define([
 
                 var assignment = $("#assignmentDd").attr("data-id");
                 var record_time = $.trim($("#recordTime").val());
-                console.log(record_time);
                 // var name = $.trim($("#name").val());
                 // var expectedRecruitment = parseInt($.trim($("#expectedRecruitment").val()));
                 // var description = $.trim($("#description").val());
@@ -146,7 +146,7 @@ define([
             },
 
             render: function () {
-				var self = this;
+				          var self = this;
                 var formString = this.template({});
                 this.$el = $(formString).dialog({
 					closeOnEscape: false,
@@ -177,7 +177,50 @@ define([
                         model: this.currentModel,
                     }).render().el
                 );
-		            populate.get("#assignmentDd", "/TeacherAssignmentsForDd", {}, "show", this, true, true);
+
+                self.instructors = [];
+                self.assignments = [];
+                self.firstClick = false;
+
+                var findAssignmentByInstructorId = function(assignments, id) {
+                  var result = [];
+                  assignments.forEach(function(assignment) {
+                    if(assignment.instructor._id == id) {
+                      result.push(assignment);
+                    };
+                  })
+                  return result;
+                }
+                this.findAssignmentByInstructorId = findAssignmentByInstructorId;
+
+                var cb = function() {
+                  $("#instructorDd").click(function(evt) {
+                    if(!self.firstClick) {
+                       self.firstClick = true;
+                       setTimeout(function(){
+                         self.instructors.forEach(function(instructor, index){
+                           $("#instructorDd+ul").children().click(function(evt) {
+                             setTimeout(function(){
+                               populate.populateFromData('#assignmentDd', findAssignmentByInstructorId(self.assignments, $("#instructorDd").attr("data-id")), "show", self, true, true);
+                               self.instructors.forEach(function(instructor){
+                                 if(instructor._id == $("#instructorDd").attr("data-id")) {
+                                   $("#instructorImg").attr("src", instructor.imageSrc);
+                                 }
+                               })
+                             }, 10);
+                           });
+                         });
+                       }, 10);
+                    }
+                  });
+                };
+
+                populate.getInstructorRecord('#instructorDd', '/InstructorForDd', {}, "name", this, true, true, null, cb);
+                dataService.getData('/TeacherAssignmentsForDd', {}, function(res) {
+                  self.assignments = res.data;
+                });
+
+		            // populate.populateFromData("#assignmentDd", self.assignments, "show", this, true, true);
                 // populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Job positions" }, "name", this, true);
                 this.delegateEvents(this.events);
                 return this;

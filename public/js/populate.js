@@ -18,9 +18,9 @@ define([
                    if (isCreate) {
                        $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id);
                    }
-				   if (parrrentContentId&&parrrentContentId.split("=").length===2) {
-					   parrrentContentId = parrrentContentId.split("=")[1]
-				   }
+        				   if (parrrentContentId&&parrrentContentId.split("=").length===2) {
+        					   parrrentContentId = parrrentContentId.split("=")[1]
+        				   }
                    if (parrrentContentId) {
                        var current = _.filter(response.data, function(item) {
                            return item._id == parrrentContentId;
@@ -30,8 +30,14 @@ define([
                });
            };
 
-           var getClassesRoles = function (id, url, data, field, content, isCreate, canBeEmpty, parrrentContentId, set) {
+           var getInstructorRecord = function (id, url, data, field, content, isCreate, canBeEmpty, parrrentContentId, cb) {
                dataService.getData(url, data, function (response) {
+                   content.instructors = response.data;
+                   for(var i = 0; i < content.instructors.length; i++) {
+                     if(content.findAssignmentByInstructorId(content.assignments, content.instructors[i]._id).length < 1) {
+                       content.instructors.splice(i--, 1);
+                     }
+                   }
                    content.responseObj[id] = [];
                    if (canBeEmpty) {
                        content.responseObj[id].push({ _id: "", name: "Select" });
@@ -44,6 +50,69 @@ define([
                        $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id);
                    }
                    if (parrrentContentId&&parrrentContentId.split("=").length===2) {
+                     parrrentContentId = parrrentContentId.split("=")[1]
+                   }
+                   if (parrrentContentId) {
+                       var current = _.filter(response.data, function(item) {
+                           return item._id == parrrentContentId;
+                       });
+                       $(id).text(current[0][field]).attr("data-id", current[0]._id);
+                   }
+                   if(cb){
+                     cb();
+                   }
+               });
+           };
+
+           var populateFromData = function (id, data, field, content, isCreate, canBeEmpty, parrrentContentId) {
+              if(content.responseObj[id]) {
+                content.responseObj[id].splice(0);
+              } else {
+                content.responseObj[id] = [];
+              }
+               if (canBeEmpty) {
+                   content.responseObj[id].push({ _id: "", name: "Select" });
+               }
+               content.responseObj[id] = content.responseObj[id].concat(_.map(data, function (item) {
+                   return { _id: item._id, name: item[field], level: item.projectShortDesc || ""};
+               }));
+
+               if (isCreate) {
+                   $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id);
+               }
+               if (parrrentContentId&&parrrentContentId.split("=").length===2) {
+                 parrrentContentId = parrrentContentId.split("=")[1]
+               }
+               if (parrrentContentId) {
+                   var current = _.filter(data, function(item) {
+                       return item._id == parrrentContentId;
+                   });
+                   $(id).text(current[0][field]).attr("data-id", current[0]._id);
+               }
+               var ul = $(id + "+ul");
+               if(ul.children().length > 0) {
+                  ul.empty();
+                  data.forEach(function(assignment){
+                    ul.append("<li id=" + assignment._id + " data-level='' data-status=''>" + assignment.show + "</li>");
+                  })
+               }
+           };
+
+           var getClassesRoles = function (id, url, data, field, content, isCreate, canBeEmpty, parrrentContentId, set) {
+               dataService.getData(url, data, function (response) {
+
+                   content.responseObj[id] = [];
+                   if (canBeEmpty) {
+                       content.responseObj[id].push({ _id: "", name: "Select" });
+                   }
+                   content.responseObj[id] = content.responseObj[id].concat(_.map(response.data, function (item) {
+                       return { _id: item._id, name: item[field], level: item.projectShortDesc || ""};
+                   }));
+
+                   if (isCreate) {
+                       $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id);
+                   }
+                   if (parrrentContentId && parrrentContentId.split("=").length===2) {
                      parrrentContentId = parrrentContentId.split("=")[1]
                    }
                    if (parrrentContentId) {
@@ -88,6 +157,35 @@ define([
                    }
                });
            };
+
+            var getAssignments = function (id, url, data, field, content, isCreate, canBeEmpty, parrrentContentId, set) {
+                dataService.getData(url, data, function (response) {
+                    content.responseObj[id] = [];
+                    if (canBeEmpty) {
+                        content.responseObj[id].push({ _id: "", name: "Select" });
+                    }
+                    content.responseObj[id] = content.responseObj[id].concat(_.map(response.data, function (item) {
+                        return { _id: item._id, name: item[field], level: item.projectShortDesc || ""};
+                    }));
+
+                    if (isCreate) {
+                        $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id);
+                    }
+                    if (parrrentContentId&&parrrentContentId.split("=").length===2) {
+                      parrrentContentId = parrrentContentId.split("=")[1]
+                    }
+                    if (parrrentContentId) {
+                        var current = _.filter(response.data, function(item) {
+                            return item._id == parrrentContentId;
+                        });
+                        $(id).text(current[0][field]).attr("data-id", current[0]._id);
+                    }
+                    if(set) {
+                      set.show = set.instructor.name + " | " + set.class.title + " | " + set.role.title;
+                      $(id).text(set[field]).attr("data-id", set._id);
+                    }
+                });
+            };
 
            var getParrentDepartment = function (id, url, data, content, isCreate, canBeEmpty) {
                dataService.getData(url, data, function (response) {
@@ -247,6 +345,8 @@ define([
            };
            return {
                get: get,
+               getInstructorRecord: getInstructorRecord,
+               populateFromData: populateFromData,
                get2name: get2name,
                getPriority: getPriority,
                getWorkflow: getWorkflow,
