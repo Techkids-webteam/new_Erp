@@ -36,9 +36,15 @@
 			  <dl class="job-create-info">
 
         <dt><label for="recordTime">Record time</label></dt>
-
+        <%
+          function format2(int) {
+            return int < 10 ? "0" + int : int;
+          }
+          var dateIso = new Date();
+          var dateStr = dateIso.getFullYear() + "-" + format2(dateIso.getMonth()) + "-" + format2(dateIso.getDate()) + "T" + format2(dateIso.getHours()) + ":" + format2(dateIso.getMinutes()) + ":" + format2(dateIso.getSeconds());
+        %>
         <!-- <%console.log()%> -->
-        <dd><input  id="recordTime" type="datetime-local" value="<%=new Date().toISOString().substring(0, new Date().toISOString().indexOf('.'))%>"/></dd>
+        <dd><input  id="recordTime" type="datetime-local" value="<%=dateStr%>"/></dd>
 			  </dl>
 			</div>
             <div class="clearfix"></div>
