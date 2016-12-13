@@ -37,7 +37,8 @@
 
         <dt><label for="recordTime">Record time</label></dt>
 
-        <dd><input  id="recordTime" type="datetime-local"/></dd>
+        <!-- <%console.log()%> -->
+        <dd><input  id="recordTime" type="datetime-local" value="<%=new Date().toISOString().substring(0, new Date().toISOString().indexOf('.'))%>"/></dd>
 			  </dl>
 			</div>
             <div class="clearfix"></div>
