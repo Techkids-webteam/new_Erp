@@ -40,25 +40,26 @@ define([
                        var ops;
                        $("#instructors").append(ops = $("<option value='" + report.instructor._id + "'>" + report.instructor.name + "</option>"));
                      })
-                   }catch(err) {}
+                   }catch(err) {};
                    $("#getReport").click(function() {
-                       self.collection = new contentCollection({
-                           viewType: 'list',
-                           page: self.page,
-                           count: self.defaultItemsNumber,
-                           filter: self.filter,
-                           parrentContentId: self.parrentContentId,
-                           contentType: self.contentType,
-                           newCollection: self.newCollection,
-                           //TODO: fill options fields bellow
-                           start_date: $("#start_date").val(),
-                           stop_date: $("#stop_date").val(),
-                           instructor_id: ($("#instructors").val()),
-                           cb: (function() {
-                             self.collection.bind('reset', self.renderContent, self);
-                             self.collection.bind('showmore', self.showMoreContent, self);
-                             self.render();
-                           })
+                        var option = {
+                            viewType: 'list',
+                            page: self.page,
+                            count: self.defaultItemsNumber,
+                            filter: self.filter,
+                            parrentContentId: self.parrentContentId,
+                            contentType: self.contentType,
+                            newCollection: self.newCollection,
+                            //TODO: fill options fields bellow
+                            start_date: $("#start_date").val(),
+                            stop_date: $("#stop_date").val(),
+                            instructor_id: ($("#instructors").val())
+                        };
+                       self.collection = new contentCollection(option, function() {
+                         self.collection.bind('reset', self.renderContent, self);
+                         self.collection.bind('showmore', self.showMoreContent, self);
+                         self.render();
+                         console.log("call back");
                        });
                    });
                },

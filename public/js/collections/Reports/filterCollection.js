@@ -30,7 +30,7 @@ function (ReportModel, common) {
                     reset: true,
                     success: function() {
                         that.page ++;
-                        if(options.cb) options.cb();
+                        if(cb) cb();
                     },
                     error: function (models, xhr) {
                         if (xhr.status == 401) Backbone.history.navigate('#login', { trigger: true });
