@@ -1,5 +1,16 @@
 <!-- <h3><%=contentHeader%></h3> -->
 <h3>Reports </h3>
+<div style="display: inline;">
+  <span>
+    <span style="text-decoration: underline; font-size: 18px;">Instructor: </span>
+    <select id="instructors">
+      <option value=""><option>
+    </select>
+  </span>
+  <span> <span style="text-decoration: underline; font-size: 18px;">Start date: </span><input id="start_date" type="date"/></span>
+  <span> <span style="text-decoration: underline; font-size: 18px;">Stop date: </span><input id="stop_date" type="date"/></span>
+  <span> <button id="getReport">Get Report</button></span>
+</div>
 <!-- <div id="createBtnHolder">
     <a href="#home/action-<%=contentType%>/Create" class="icon add left" title="Create" id="top-bar-createBtn">5</a>
     <a href="#home/action-<%=contentType%>/Edit" class="icon edit left" title="Edit" id="top-bar-editBtn">4</a>
@@ -10,4 +21,5 @@
         <li><a class="changeContentView icon icon-btn dark <%= (viewType == 'list') ? 'selected' : ''%>" data-view-type="list" id="listBtn">i</a></li>
         <!-- <li><a href="javascript;" class="changeContentView icon icon-btn dark <%= (viewType == 'form') ? 'selected' : ''%>" data-view-type="form" id="formBtn">m</a></li> -->
     </ul>
+
 </div>

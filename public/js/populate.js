@@ -7,6 +7,7 @@ define([
            // arr= {url:..., data:...}
            var get = function (id, url, data, field, content, isCreate, canBeEmpty, parrrentContentId) {
                dataService.getData(url, data, function (response) {
+                   content.responseObj = content.responseObj || {};
                    content.responseObj[id] = [];
                    if (canBeEmpty) {
                        content.responseObj[id].push({ _id: "", name: "Select" });

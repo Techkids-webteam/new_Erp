@@ -7,10 +7,11 @@ define([
     // 'views/Reports/EditView',
     'common',
     'dataService',
-    'text!templates/stages.html'
+    'text!templates/stages.html',
+    'populate'
 ],
 
-       function (listTemplate, listItemView, contentCollection, currentModel, common, dataService, stagesTamplate) {
+       function (listTemplate, listItemView, contentCollection, currentModel, common, dataService, stagesTamplate, populate) {
            var ReportsListView = Backbone.View.extend({
                el: '#content-holder',
                defaultItemsNumber: null,
@@ -22,23 +23,9 @@ define([
                viewType: 'list',
 
                initialize: function (options) {
+                  var self = this;
                    this.startTime = options.startTime;
                    this.collection = options.collection;
-                  //  console.log(options);
-                  //  this.collection = new contentCollection({
-                  //      viewType: 'list',
-                  //      sort: null,
-                  //      page: this.page,
-                  //      count: this.defaultItemsNumber,
-                  //      filter: this.filter,
-                  //      parrentContentId: this.parrentContentId,
-                  //      contentType: this.contentType,
-                  //      newCollection: this.newCollection,
-                  //      //TODO: fill options fields bellow
-                  //      start_date: null,
-                  //      stop_date: null,
-                  //      instructor_id: "57623a722cf941185b19661e"
-                  //  });
                    _.bind(this.collection.showMore, this.collection);
                    this.defaultItemsNumber = this.collection.namberToShow || 50;
                    this.newCollection = options.newCollection;
@@ -48,6 +35,30 @@ define([
                    this.render();
                   //  this.getTotalLength(null, this.defaultItemsNumber, this.filter);
                    this.contentCollection = contentCollection;
+                   try{
+                     this.collection.models[0].attributes.reports.forEach(function(report) {
+                       var ops;
+                       $("#instructors").append(ops = $("<option value='" + report.instructor._id + "'>" + report.instructor.name + "</option>"));
+                     })
+                   }catch(err) {}
+                   $("#getReport").click(function() {
+                       self.collection = new contentCollection({
+                           viewType: 'list',
+                           page: self.page,
+                           count: self.defaultItemsNumber,
+                           filter: self.filter,
+                           parrentContentId: self.parrentContentId,
+                           contentType: self.contentType,
+                           newCollection: self.newCollection,
+                           //TODO: fill options fields bellow
+                           start_date: $("#start_date").val(),
+                           stop_date: $("#stop_date").val(),
+                           instructor_id: ($("#instructors").val())
+                       });
+                       self.collection.bind('reset', self.renderContent, self);
+                       self.collection.bind('showmore', self.showMoreContent, self);
+                       self.render();
+                   });
                },
 
                events: {
@@ -230,17 +241,6 @@ define([
                    });
                    $(document).on("click", function () {
                        self.hideItemsNumber();
-                   });
-                   common.populateWorkflowsList("Job positions", ".filter-check-list", ".filter-check-list", "/Workflows", null, function (stages) {
-                       self.stages = stages;
-                       var stage = (self.filter) ? self.filter.workflow : null;
-                       if (stage) {
-                           $('.filter-check-list input').each(function () {
-                               var target = $(this);
-                               target.attr('checked', $.inArray(target.val(), stage) > -1);
-                           });
-                       }
-                       itemView.trigger('incomingStages', stages);
                    });
                    var pagenation = this.$el.find('.pagination');
                    if (this.collection.length === 0) {

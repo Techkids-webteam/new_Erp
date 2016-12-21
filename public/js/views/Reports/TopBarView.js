@@ -1,7 +1,7 @@
 define([
     'text!templates/Reports/TopBarTemplate.html',
     'custom',
-    'common'
+    'common',
 ],
     function (ContentTopBarTemplate, Custom, Common) {
         var TopBarView = Backbone.View.extend({
@@ -18,6 +18,7 @@ define([
             	// "click #top-bar-saveBtn": "saveEvent",
             	// "click #top-bar-discardBtn": "discardEvent",
                 // "click #top-bar-editBtn": "editEvent",
+                // "click #top-bar-createBtn": "createEvent"
                 // "click #top-bar-createBtn": "createEvent"
             },
 

@@ -453,14 +453,15 @@ var Record = function (logWriter, mongoose, models){
                     } else {
                       result.reports[index].assignments.addAssignment(assignment);
                     }
-                    if((data.instructor_code && assignment.instructor.code != (data.instructor_code || assignment.instructor.code))
-                      || (data.instructor_id && assignment.instructor._id != (data.instructor_id || assignment.instructor._id))) {
-                          docs.splice(i, 1);
-                    }
                   }
 
-                  result.reports.forEach(function(report) {
+                  for(var i = result.reports.length - 1; i >= 0; i--) {
+                    var report = result.reports[i];
                     report.total = report.assignments.getTotal();
+                    if((data.instructor_code && report.instructor.code != (data.instructor_code || report.instructor.code))
+                      || (data.instructor_id && report.instructor._id != (data.instructor_id || report.instructor._id))) {
+                          result.reports.splice(i, 1);
+                    }
                     // console.log("______________________");
                     // console.log(report);
                     // report.assignments.forEach(function(assignment){
@@ -468,7 +469,7 @@ var Record = function (logWriter, mongoose, models){
                     //   console.log(report.instructor.name + " | " + assignment.class.title + " | " + assignment.role.title + " | " + assignment.count);
                     // })
                     // console.log("Total: " + report.total);
-                  })
+                  };
                   res.json({data: result});
               })
             }
