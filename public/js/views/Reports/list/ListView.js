@@ -53,11 +53,13 @@ define([
                            //TODO: fill options fields bellow
                            start_date: $("#start_date").val(),
                            stop_date: $("#stop_date").val(),
-                           instructor_id: ($("#instructors").val())
+                           instructor_id: ($("#instructors").val()),
+                           cb: (function() {
+                             self.collection.bind('reset', self.renderContent, self);
+                             self.collection.bind('showmore', self.showMoreContent, self);
+                             self.render();
+                           })
                        });
-                       self.collection.bind('reset', self.renderContent, self);
-                       self.collection.bind('showmore', self.showMoreContent, self);
-                       self.render();
                    });
                },
 

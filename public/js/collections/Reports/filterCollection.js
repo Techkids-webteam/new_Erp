@@ -13,7 +13,7 @@ function (ReportModel, common) {
             start_date: null,
             stop_date: null,
             instructor_id: null,
-            initialize: function (options) {
+            initialize: function (options, cb) {
 			          this.startTime = new Date();
                 this.namberToShow = options.count;
                 this.page = options.page || 1;
@@ -30,6 +30,7 @@ function (ReportModel, common) {
                     reset: true,
                     success: function() {
                         that.page ++;
+                        if(options.cb) options.cb();
                     },
                     error: function (models, xhr) {
                         if (xhr.status == 401) Backbone.history.navigate('#login', { trigger: true });
