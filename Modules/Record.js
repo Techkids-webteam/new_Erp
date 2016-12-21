@@ -32,11 +32,25 @@ var Record = function (logWriter, mongoose, models){
     }
 
     function getDataByDateRange(req, res, data) {
-        var query = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema).find({"instructor_code": data.instructor_code, "record_time": {"$gte": data.start_date, "$lt": data.stop_date + 1}});
-        query.exec(function (err, data) {
-            if(err) res.send(err);
-            else res.json({items: data});
-        });
+        var query = models.get(req.session.lastDb - 1, 'Teaching_Record', recordSchema)
+          .find({record_time: {$gt: Date.parse(data.start_date || "1970-01-01"), $lte: Date.parse(data.stop_date || "3000-01-01")}})
+          .exec(function(err, docs) {
+            if(err || !docs) {
+              res.json(500, err || new Error("Empty data"));
+            } else {
+              docs = JSON.parse(JSON.stringify(docs));
+              getAssignment(req, function(err, assignments) {
+                  for(var i = docs.length - 1; i >= 0; i--) {
+                    var assignment = docs[i].assignment = assignments.findById(docs[i].assignment);
+                    if((data.instructor_code && assignment.instructor.code != (data.instructor_code || assignment.instructor.code))
+                      || (data.instructor_id && assignment.instructor._id != (data.instructor_id || assignment.instructor._id))) {
+                          docs.splice(i, 1);
+                    }
+                  }
+                  res.json({data: docs});
+              })
+            }
+          });
     }
 
     function getDataByMonth(req, res, data) {
@@ -133,7 +147,7 @@ var Record = function (logWriter, mongoose, models){
         });
     }
 
-    //>>> new
+    //>>> ----new----
     function getTotalCount(req, res) {
         var query = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema)
           .find().count(function(err, count) {
@@ -194,7 +208,8 @@ var Record = function (logWriter, mongoose, models){
                 doc.classes.forEach(function(assignment) {
                   assignment.instructor = {
                     _id: doc._id,
-                    name: doc.employee_id ? doc.employee_id.name ? doc.employee_id.name.last + " " + doc.employee_id.name.first : "" : ""
+                    name: doc.employee_id ? doc.employee_id.name ? doc.employee_id.name.last + " " + doc.employee_id.name.first : "" : "",
+                    code: doc.code
                   }
                 })
                 Array.prototype.push.apply(assignments, doc.classes);
@@ -254,7 +269,6 @@ var Record = function (logWriter, mongoose, models){
             }
           });
     }
-
 
     function update(req, res, data) {
       data = data || {};
@@ -346,6 +360,30 @@ var Record = function (logWriter, mongoose, models){
         res.json(400, {error: new Error("Missing data _id")});
       }
     }
+
+    //>> -----Reports--------
+    function getReportsByDateRange(req, res, data) {
+        var query = models.get(req.session.lastDb - 1, 'Teaching_Record', recordSchema)
+          .find({record_time: {$gt: Date.parse(data.start_date || "1970-01-01"), $lte: Date.parse(data.stop_date || "3000-01-01")}})
+          .exec(function(err, docs) {
+            if(err || !docs) {
+              res.json(500, err || new Error("Empty data"));
+            } else {
+              docs = JSON.parse(JSON.stringify(docs));
+              getAssignment(req, function(err, assignments) {
+                  for(var i = docs.length - 1; i >= 0; i--) {
+                    var assignment = docs[i].assignment = assignments.findById(docs[i].assignment);
+                    if((data.instructor_code && assignment.instructor.code != (data.instructor_code || assignment.instructor.code))
+                      || (data.instructor_id && assignment.instructor._id != (data.instructor_id || assignment.instructor._id))) {
+                          docs.splice(i, 1);
+                    }
+                  }
+                  //TODO: clear
+                  res.json({data: docs});
+              })
+            }
+          });
+    }
     return {
       //old
         recordSchema: recordSchema,
@@ -365,7 +403,10 @@ var Record = function (logWriter, mongoose, models){
         getRecordsById: getRecordsById,
         update: update,
         updateOnlySelectedFields: updateOnlySelectedFields,
-        remove: remove
+        remove: remove,
+
+        //Reports
+        getReportsByDateRange: getReportsByDateRange
 
     };
 };

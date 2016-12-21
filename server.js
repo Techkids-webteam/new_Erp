@@ -1199,6 +1199,44 @@ app.delete('/Records/:_id', function (req, res) {
 });
 
 
+//------------------Records---------------------------------------------------
+
+// app.post('/Records', function (req, res) {
+//     var data = {};
+//     data = req.body;
+//     requestHandler.createRecords(req, res, data);
+// });
+//
+// app.get('/RecordsForDd', function (req, res) {
+//     requestHandler.getRecordsForDd(req, res);
+// });
+
+app.get('/Reports/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    requestHandler.getFilterReports(req, res, data);
+});
+//
+// app.patch('/Records/:_id', function (req, res) {
+//     var data = req.body || {};
+//     data._id = req.param('_id');
+//     requestHandler.updateRecords(req, res, data);
+// });
+//
+// app.put('/Records/:_id', function (req, res) {
+//     var data = req.body || {};
+//     data._id = req.param('_id');
+//     requestHandler.updateRecordsselectedFields(req, res, data);
+// });
+//
+// app.delete('/Records/:_id', function (req, res) {
+//     requestHandler.removeRecords(req, res, req.param('_id'));
+// });
+//
+
+
 //------------------TeacherAssignments---------------------------------------------------
 
 app.post('/TeacherAssignments', function (req, res) {

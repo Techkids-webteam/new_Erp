@@ -2731,7 +2731,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    // Get JobPosition for list
+    //
     function getFilterRecords(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 14, function (access) {
@@ -2813,6 +2813,20 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
+    //-------------------------Reports------------------------------------------
+    function getFilterReports(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 14, function (access) {
+                if (access) {
+                    record.getReportsByDateRange(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    }
 
 
     return {
@@ -3018,6 +3032,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         updateRecordsselectedFields: updateRecordsselectedFields,
         removeRecords: removeRecords,
 
+        //>>report bundle
+        getFilterReports: getFilterReports,
         //>>old
         getRole: getRole,
         addRole: addRole,
