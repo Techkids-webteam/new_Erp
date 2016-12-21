@@ -361,8 +361,79 @@ var Record = function (logWriter, mongoose, models){
       }
     }
 
+    class ListAssignment extends Array {
+      constructor() {
+        super();
+      }
+      containsAssignment(assignment) {
+        try{
+          if(assignment) {
+            for(var i = 0; i < this.length; i++) {
+              if(this[i]._id.toString() == assignment._id.toString()) {
+                return i;
+              }
+            }
+            return -1;
+          } else{
+            return -1;
+          }
+        }catch(err) {
+          return -1;
+        }
+      }
+
+      addAssignment(assignment) {
+        try{
+          var index;
+          if((index = this.containsAssignment(assignment)) < 0) {
+            assignment.count = 1;
+            this.push(assignment);
+          } else {
+            this[index].count++;
+          }
+        }catch(err) {
+          return -1;
+        }
+      }
+
+      getTotal() {
+        var total = 0;
+        this.forEach(function(assignment) {
+          assignment.instructor = undefined;
+          assignment.salary = assignment.rate * assignment.count;
+          total += assignment.salary;
+        })
+        return total;
+      }
+    }
+
     //>> -----Reports--------
     function getReportsByDateRange(req, res, data) {
+        var result = {
+          start_date: Date.parse(data.start_date || "1970-01-01"),
+          stop_date: Date.parse(data.stop_date || "3000-01-01"),
+          reports: [
+            //{instructor, assignments: [ {+count}], total }
+          ]
+        };
+
+        result.reports.containsInstructor = function(instructor) {
+          try{
+            if(instructor) {
+              for(var i = 0; i < this.length; i++) {
+                if(this[i].instructor && this[i].instructor._id.toString() == instructor._id.toString()) {
+                  return i;
+                }
+              }
+              return -1;
+            } else {
+              return -1;
+            }
+          }catch(err) {
+            return -1;
+          }
+        };
+
         var query = models.get(req.session.lastDb - 1, 'Teaching_Record', recordSchema)
           .find({record_time: {$gt: Date.parse(data.start_date || "1970-01-01"), $lte: Date.parse(data.stop_date || "3000-01-01")}})
           .exec(function(err, docs) {
@@ -373,13 +444,31 @@ var Record = function (logWriter, mongoose, models){
               getAssignment(req, function(err, assignments) {
                   for(var i = docs.length - 1; i >= 0; i--) {
                     var assignment = docs[i].assignment = assignments.findById(docs[i].assignment);
+                    var index;
+                    if((index = result.reports.containsInstructor(assignment.instructor)) < 0) {
+                      result.reports.push({instructor: assignment.instructor, assignments: new ListAssignment(), total: 0});
+                      assignment.count = 1;
+                      result.reports[result.reports.length - 1].assignments.push(assignment);
+                    } else {
+                      result.reports[index].assignments.addAssignment(assignment);
+                    }
                     if((data.instructor_code && assignment.instructor.code != (data.instructor_code || assignment.instructor.code))
                       || (data.instructor_id && assignment.instructor._id != (data.instructor_id || assignment.instructor._id))) {
                           docs.splice(i, 1);
                     }
                   }
-                  //TODO: clear
-                  res.json({data: docs});
+
+                  result.reports.forEach(function(report) {
+                    report.total = report.assignments.getTotal();
+                    // console.log("______________________");
+                    // console.log(report);
+                    // report.assignments.forEach(function(assignment){
+                    //   console.log(">>>>>>>>>>>>");
+                    //   console.log(report.instructor.name + " | " + assignment.class.title + " | " + assignment.role.title + " | " + assignment.count);
+                    // })
+                    // console.log("Total: " + report.total);
+                  })
+                  res.json({data: result});
               })
             }
           });

@@ -17,13 +17,6 @@ function (ReportModel, common) {
 			          this.startTime = new Date();
                 this.namberToShow = options.count;
                 this.page = options.page || 1;
-
-                options.start_date = options.start_date || "1970-01-01";
-                options.stop_date = options.stop_date || "3000-01-01";
-                this.start_date = options.start_date;
-                this.stop_date = options.stop_date;
-                this.instructor_id = options.instructor_id;
-                console.log(options);
                 var that = this;
                 if (options && options.viewType) {
                     this.url += options.viewType;

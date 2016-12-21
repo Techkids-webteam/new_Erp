@@ -17,32 +17,9 @@ define(['Validation'], function (Validation) {
                 return errors;
         },
         defaults: {
-          assignment: {
-            instructor: {
-              _id: "",
-              name: ""
-            },
-            class: {
-              _id: "",
-              title: "",
-              code: ""
-            },
-            role: {
-              _id: "",
-              code: "",
-              title: ""
-            },
-            _id: ""
-          },
-          record_time: null,
-          editedBy: {
-            user: "",
-            date: null
-          },
-          createdBy: {
-            user: "",
-            date: null
-          }
+          start_date: 0,
+          stop_date: 0,
+          reports: []
         },
         urlRoot: function () {
             return "/Reports";

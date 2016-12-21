@@ -1,15 +1,25 @@
-<% ReportsCollection.forEach(function(rc, index){
-  var assignment = rc.assignment || {};
-  rc.record_time = rc.record_time ? new Date(rc.record_time).toLocaleDateString() + " " + new Date(rc.record_time).toLocaleTimeString() : "";%>
+<% console.log(ReportsCollection);
+if(ReportsCollection[0] && ReportsCollection[0].reports)
+  ReportsCollection[0].reports.forEach(function(rc, index){
+    rc.assignments.forEach(function(assignment, i) {
+
+
+%>
 <tr data-index="<%= index %>" data-id="<%=rc._id%>" rcass="stage-<%=(rc.workflow) ? rc.workflow.status.toLowerCase().replace(' ','') : ''%>">
     <!-- <td rcass = "notForm"><input type="checkbox" value="<%=rc._id%>" rcass="checkbox"/></td> -->
-      <td><%=startNumber + index +1 %></td>
-      <td><%=assignment.instructor ? assignment.instructor.name : ""%></td>
-      <td><%=assignment.class ? assignment.class.title : ""%></td>
-      <td><%=assignment.role ? assignment.role.title : ""%></td>
-      <td><%=rc.record_time%></td>
-      <td><%=rc.createdBy ? rc.createdBy.date ? rc.createdBy.date + (rc.createdBy.user ? " (" + rc.createdBy.user + ")" : "") : "" : ""%></td>
-      <td><%=rc.editedBy ? rc.editedBy.date ? rc.editedBy.date + (rc.editedBy.user ? " (" + rc.editedBy.user + ")" : "") : "" : ""%></td>
+      <%if(i == 0) {%>
+      <td rowspan="<%=rc.assignments.length%>"><%=index + 1%></td>
+      <td rowspan="<%=rc.assignments.length%>"><%=rc.instructor.name + " | " + rc.instructor.code%></td>
+      <%}%>
+      <td><%=assignment.class.title%></td>
+      <td><%=assignment.role.title%></td>
+      <td><%=assignment.count%></td>
+      <td><%=assignment.rate%></td>
+      <td><%=assignment.salary%></td>
+      <%if(i == 0) {%><td rowspan="<%=rc.assignments.length%>"><%=rc.total%></td><%}%>
 
 </tr>
-<% }) %>
+<%
+    })
+  })
+%>
