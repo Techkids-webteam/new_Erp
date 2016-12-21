@@ -1,3 +1,4 @@
+'use strict'
 var Record = function (logWriter, mongoose, models){
 
     var ObjectId = mongoose.Schema.Types.ObjectId;
