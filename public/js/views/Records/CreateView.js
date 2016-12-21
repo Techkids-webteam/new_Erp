@@ -207,10 +207,10 @@ define([
                                    $("#instructorImg").attr("src", instructor.imageSrc);
                                  }
                                })
-                             }, 10);
+                             }, 100);
                            });
                          });
-                       }, 10);
+                       }, 100);
                     }
                   });
                 };
