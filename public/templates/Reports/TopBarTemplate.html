@@ -5,7 +5,7 @@ function get2(num) {
   return num < 10 ? "0" + num : num;
 }
   var today = new Date();
-  var month = today.getMonth();
+  var month = today.getMonth() + 1;
   var start_date = (today.getFullYear() - (month > 1 ? 0 : 1)) + "-" + get2(month > 1 ? month - 1 : 12) + "-01";
   var stop_date = today.getFullYear() + "-" + get2(month) + "-01";
 %>

@@ -41,7 +41,7 @@
             return int < 10 ? "0" + int : int;
           }
           var dateIso = new Date();
-          var dateStr = dateIso.getFullYear() + "-" + format2(dateIso.getMonth()) + "-" + format2(dateIso.getDate()) + "T" + format2(dateIso.getHours()) + ":" + format2(dateIso.getMinutes()) + ":" + format2(dateIso.getSeconds());
+          var dateStr = dateIso.getFullYear() + "-" + format2(dateIso.getMonth() + 1) + "-" + format2(dateIso.getDate()) + "T" + format2(dateIso.getHours()) + ":" + format2(dateIso.getMinutes()) + ":" + format2(dateIso.getSeconds());
         %>
         <!-- <%console.log()%> -->
         <dd><input  id="recordTime" type="datetime-local" value="<%=dateStr%>"/></dd>
