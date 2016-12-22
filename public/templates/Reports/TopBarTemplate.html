@@ -6,7 +6,6 @@ function get2(num) {
 }
   var today = new Date();
   var month = today.getMonth();
-  month = 1;
   var start_date = (today.getFullYear() - (month > 1 ? 0 : 1)) + "-" + get2(month > 1 ? month - 1 : 12) + "-01";
   var stop_date = today.getFullYear() + "-" + get2(month) + "-01";
 %>
@@ -14,7 +13,7 @@ function get2(num) {
   <span>
     <label>Instructor: </label>
     <select id="instructors">
-      <option value selected disabled>------All------</option>
+      <option value selected>------All------</option>
     </select>
   </span>
   <span> <label>Start date: </span><input id="start_date" type="date" value="<%=start_date%>"/></label>

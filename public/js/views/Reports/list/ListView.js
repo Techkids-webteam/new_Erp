@@ -41,7 +41,7 @@ define([
                        $("#instructors").append(ops = $("<option value='" + report.instructor._id + "'>" + report.instructor.name + "</option>"));
                      })
                    }catch(err) {};
-                   $("#getReport").click(function() {
+                   var cb = function() {
                         var option = {
                             viewType: 'list',
                             page: self.page,
@@ -59,9 +59,13 @@ define([
                          self.collection.bind('reset', self.renderContent, self);
                          self.collection.bind('showmore', self.showMoreContent, self);
                          self.render();
-                         console.log("call back");
+                         console.log("cb");
                        });
-                   });
+                   };
+
+                   $("#getReport").click(cb);
+
+                   cb();
                },
 
                events: {
