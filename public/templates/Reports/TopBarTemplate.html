@@ -1,14 +1,24 @@
 <!-- <h3><%=contentHeader%></h3> -->
 <h3>Reports </h3>
-<div style="display: inline;">
+<%
+function get2(num) {
+  return num < 10 ? "0" + num : num;
+}
+  var today = new Date();
+  var month = today.getMonth();
+  month = 1;
+  var start_date = (today.getFullYear() - (month > 1 ? 0 : 1)) + "-" + get2(month > 1 ? month - 1 : 12) + "-01";
+  var stop_date = today.getFullYear() + "-" + get2(month) + "-01";
+%>
+<div style="display: inline-block; margin-left:100px">
   <span>
-    <span style="text-decoration: underline; font-size: 18px;">Instructor: </span>
+    <label>Instructor: </label>
     <select id="instructors">
-      <option value=""><option>
+      <option value selected disabled>------All------</option>
     </select>
   </span>
-  <span> <span style="text-decoration: underline; font-size: 18px;">Start date: </span><input id="start_date" type="date"/></span>
-  <span> <span style="text-decoration: underline; font-size: 18px;">Stop date: </span><input id="stop_date" type="date"/></span>
+  <span> <label>Start date: </span><input id="start_date" type="date" value="<%=start_date%>"/></label>
+  <span> <label>Stop date: </span><input id="stop_date" type="date" value="<%=stop_date%>"/></label>
   <span> <button id="getReport">Get Report</button></span>
 </div>
 <!-- <div id="createBtnHolder">
