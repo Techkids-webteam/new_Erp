@@ -163,7 +163,7 @@ var Record = function (logWriter, mongoose, models){
     }
 
     function create(req, res, data) {
-        if(data) {
+        if(data && data.assignment) {
           var model = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema);
           var newRecord = new model({
               assignment: data.assignment,
