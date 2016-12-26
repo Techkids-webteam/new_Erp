@@ -1,4 +1,4 @@
-var Instructor = function (logWriter, mongoose, employee, role, models, record, classes, personTree){
+var Instructor = function (logWriter, mongoose, employee, role, models, record, classes, personTree, event){
     var async = require('async');
 
     var ObjectId = mongoose.Schema.Types.ObjectId;
@@ -577,6 +577,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
 
 
     function removeTeacherAssignments(req, res, id) {
+        //TODO: add record
       var model = models.get(req.session.lastDb - 1, 'Instructor', instructorSchema);
       model.findOne({"classes._id": id})
         .exec(function(err, doc) {
@@ -626,7 +627,39 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
         })
     }
 
+    //----------------------Delete----------------------------------------------
+    function deleteRoleHandler(req, res, role_id, cb) {
+      var query = models.get(req.session.lastDb - 1, "Instructor", instructorSchema).find({"classes.role" : role_id})
+        .exec(function(err, docs) {
+          if(err || !docs) {
+            cb(err || new Error("Something went wrong!"));
+          } else {
+            if(docs.length < 1) {
+              cb();
+            } else {
+              cb(new Error("Can not remove this task! (linked)"));
+            }
+          }
+        })
+    }
 
+    function deleteClassHandler(req, res, class_id, cb) {
+      var query = models.get(req.session.lastDb - 1, "Instructor", instructorSchema).find({"classes.class" : class_id})
+        .exec(function(err, docs) {
+          if(err || !docs) {
+            cb(err || new Error("Something went wrong!"));
+          } else {
+            if(docs.length < 1) {
+              cb();
+            } else {
+              cb(new Error("Can not remove this task! (linked)"));
+            }
+          }
+        })
+    }
+
+    event.on("deleteRole", deleteRoleHandler);
+    event.on("deleteClass", deleteClassHandler);
 
     return {
         getData: getData,

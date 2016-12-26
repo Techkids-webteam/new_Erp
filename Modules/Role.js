@@ -1,7 +1,7 @@
 /**
  * Created by Admin on 28/06/2016.
  */
-var Role = function (logWriter, mongoose, models){
+var Role = function (logWriter, mongoose, models, event){
     var roleSchema = mongoose.Schema({
         code: String,
         title: String
@@ -55,6 +55,8 @@ var Role = function (logWriter, mongoose, models){
             }
         });
     }
+
+    //>>new
 
     function getTotalCount(req, res) {
         var query = models.get(req.session.lastDb - 1, "Role", roleSchema)
@@ -185,24 +187,30 @@ var Role = function (logWriter, mongoose, models){
 
     function remove(req, res, id) {
       if(id) {
-        var model = models.get(req.session.lastDb - 1, "Role", roleSchema);
-        model.findOne({_id: id})
-          .exec(function(err, doc) {
-            if(err) {
-              res.json(500, {error: err});
-            } else if(!doc) {
-              logWriter.log("Role.js remove error Bad request not found Role with _id" + id);
-              res.json(400, {error: new Error("Can not found Role _id " + id)});
-            } else {
-              doc.remove(function(err, result) {
-                if(err || !result) {
-                  res.json(500, {error: err || new Error("Something went wrong!")});
+        event.emit("deleteRole", req, res, id, function(err) {
+          if(err) {
+            res.json(500, {error: err});
+          } else {
+            var model = models.get(req.session.lastDb - 1, "Role", roleSchema);
+            model.findOne({_id: id})
+              .exec(function(err, doc) {
+                if(err) {
+                  res.json(500, {error: err});
+                } else if(!doc) {
+                  logWriter.log("Role.js remove error Bad request not found Role with _id" + id);
+                  res.json(400, {error: new Error("Can not found Role _id " + id)});
                 } else {
-                  res.json(200);
+                  doc.remove(function(err, result) {
+                    if(err || !result) {
+                      res.json(500, {error: err || new Error("Something went wrong!")});
+                    } else {
+                      res.json(200);
+                    }
+                  });
                 }
               });
-            }
-          });
+          }
+        });
       }else{
         logWriter.log("Role.js remove error missing data._id ");
         res.json(400, {error: new Error("Missing data _id")});

@@ -401,6 +401,7 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                             res.send(500, { error: 'Employees.save BD error' });
                         } else {
                             res.send(201, { success: 'A new Employees create success', result: result, id: result._id });
+                            //TODO: add instructor
                             if (result.isEmployee)
                                 event.emit('recalculate', req);
                         }
@@ -1127,6 +1128,7 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                             if (!err) {
                                 cb(req, res);
                             } else {
+                                //TODO: add instructor
                                 res.send(500, { error: "Can't update Employees" });
                             }
 
@@ -1143,6 +1145,7 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                         if (!err) {
                             cb(req, res);
                         } else {
+                            //TODO: add instructor
                             res.send(500, { error: "Can't update Employees" });
                         }
 
@@ -1194,6 +1197,7 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                         });
 
                     }
+                        //TODO: add instructor
                         cb(req, res);
                 } else {
                     res.send(500, { error: "Can't update Employees" });
@@ -1230,6 +1234,7 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                             data.sequence -= 1;
                         models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                             if (!err) {
+                                //TODO: add instructor
                                 res.send(200, { success: 'Employees updated', sequence: result.sequence });
                             } else {
                                 res.send(500, { error: "Can't update Employees" });
@@ -1246,6 +1251,7 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                     data.sequence = sequence;
                     models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                         if (!err) {
+                            //TODO: add instructor
                             res.send(200, { success: 'Employees updated' });
                         } else {
                             res.send(500, { error: "Can't update Employees" });
@@ -1299,6 +1305,7 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                         });
 
                     }
+                        //TODO: add instructor
                     res.send(200, { success: 'Employees updated', result: result });
                 } else {
                     res.send(500, { error: "Can't update Employees" });
@@ -1329,6 +1336,7 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
     }// end update
 
     function removeData(req, res, data, cb) {
+        //TODO: add instructor
         models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndRemove(data.employee_id, function (err, result) {
             if (err) {
                 console.log(err);
@@ -1347,6 +1355,7 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
     }
 
     function remove(req, _id, res) {
+        //TODO: add instructor
         models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndRemove(_id, function (err, result) {
             if (err) {
                 console.log(err);
