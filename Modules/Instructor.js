@@ -421,7 +421,6 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
         })
     }
 
-
     function getTeacherAssignments(req, res) {
       var model = models.get(req.session.lastDb - 1, 'Instructor', instructorSchema);
       model.find()
@@ -578,32 +577,38 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
 
     function removeTeacherAssignments(req, res, id) {
         //TODO: add record
-      var model = models.get(req.session.lastDb - 1, 'Instructor', instructorSchema);
-      model.findOne({"classes._id": id})
-        .exec(function(err, doc) {
-          if(err || !doc) {
-            logWriter.log("Instructor.js removeTeacherAssignments > Error: " + err || "Not found instructor with _id: " + id);
-            res.json(500, {error: err || "Not found instructor with _id: " + id});
+        event.emit("deleteAssignment", req, res, id, function(err) {
+          if(err) {
+            res.json(500, {Error: err});
           } else {
-            try {
-              for(var i = 0; i < doc.classes.length; i++) {
-                if(doc.classes[i]._id.toString() == id) {
-                  doc.classes.splice(i, 1);
-                  doc.save(function(err, result) {
-                    if(err || !result) {
-                      logWriter.log("Instructor.js removeTeacherAssignments > Error: " + err || "Something went wrong!");
-                      res.json(500, {error: err || "Something went wrong!"})
-                    } else {
-                      res.json(200);
+            var model = models.get(req.session.lastDb - 1, 'Instructor', instructorSchema);
+            model.findOne({"classes._id": id})
+              .exec(function(err, doc) {
+                if(err || !doc) {
+                  logWriter.log("Instructor.js removeTeacherAssignments > Error: " + err || "Not found instructor with _id: " + id);
+                  res.json(500, {error: err || "Not found instructor with _id: " + id});
+                } else {
+                  try {
+                    for(var i = 0; i < doc.classes.length; i++) {
+                      if(doc.classes[i]._id.toString() == id) {
+                        doc.classes.splice(i, 1);
+                        doc.save(function(err, result) {
+                          if(err || !result) {
+                            logWriter.log("Instructor.js removeTeacherAssignments > Error: " + err || "Something went wrong!");
+                            res.json(500, {error: err || "Something went wrong!"})
+                          } else {
+                            res.json(200);
+                          }
+                        });
+                        return;
+                      }
                     }
-                  });
-                  return;
+                  }catch(err) {
+                    logWriter.log("Instructor.js removeTeacherAssignments > Error: " + err || "Something went wrong!");
+                    res.json(500, {error: err || "Something went wrong!"})
+                  }
                 }
-              }
-            }catch(err) {
-              logWriter.log("Instructor.js removeTeacherAssignments > Error: " + err || "Something went wrong!");
-              res.json(500, {error: err || "Something went wrong!"})
-            }
+              });
           }
         });
     }

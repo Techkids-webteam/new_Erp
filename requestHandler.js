@@ -24,7 +24,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event),
         classes = require("./Modules/Classes.js")(logWriter, mongoose, employee, models, event);
         rate = require("./Modules/Rate.js")(logWriter, mongoose, classes, models);
-        record = require("./Modules/Record.js")(logWriter, mongoose , models);
+        record = require("./Modules/Record.js")(logWriter, mongoose , models, event);
         role = require("./Modules/Role.js")(logWriter, mongoose, models, event);
         instructor = require("./Modules/Instructor.js")(logWriter, mongoose, employee, role, models, record, classes, personTree, event);
 

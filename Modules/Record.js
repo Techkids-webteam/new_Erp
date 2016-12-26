@@ -1,5 +1,5 @@
 'use strict'
-var Record = function (logWriter, mongoose, models){
+var Record = function (logWriter, mongoose, models, event){
 
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var recordSchema = mongoose.Schema({
@@ -475,6 +475,25 @@ var Record = function (logWriter, mongoose, models){
             }
           });
     }
+
+    function deleteAssignmentHandler(req, res, assignment_id, cb) {
+      var query = models.get(req.session.lastDb - 1, 'Teaching_Record', recordSchema)
+        .find({assignment: assignment_id})
+        .exec(function(err, docs) {
+          if(err || !docs) {
+            cb(err || new Error("Something went wrong!"));
+          } else {
+            if(docs.length < 1) {
+              cb();
+            } else {
+              cb(new Error("Can not delete this task!(linked)"));
+            }
+          }
+        });
+    }
+
+    event.on("deleteAssignment", deleteAssignmentHandler);
+
     return {
       //old
         recordSchema: recordSchema,
