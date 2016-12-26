@@ -237,23 +237,25 @@ define([
                     }
                   });
                   $("#instructorDd").click(function(evt) {
-                    // if(!self.firstClick) {
+                    if(!self.firstClick) {
                        self.firstClick = true;
                        setTimeout(function(){
                          self.instructors.forEach(function(instructor, index){
                            $("#instructorDd+ul").children().click(function(evt) {
-                             setTimeout(function(){
-                               populate.populateFromData('#assignmentDd', findAssignmentByInstructorId(self.assignments, $("#instructorDd").attr("data-id")), "show", self, true, true);
-                               self.instructors.forEach(function(instructor){
-                                 if(instructor._id == $("#instructorDd").attr("data-id")) {
-                                   $("#instructorImg").attr("src", instructor.imageSrc);
-                                 }
-                               })
-                             }, 10);
+                             if(evt.target.id) {
+                               setTimeout(function(){
+                                 populate.populateFromData('#assignmentDd', findAssignmentByInstructorId(self.assignments, $("#instructorDd").attr("data-id")), "show", self, true, true);
+                                 self.instructors.forEach(function(instructor){
+                                   if(instructor._id == $("#instructorDd").attr("data-id")) {
+                                     $("#instructorImg").attr("src", instructor.imageSrc);
+                                   }
+                                 })
+                               }, 10);
+                             }
                            });
                          });
                        }, 10);
-                    // }
+                    }
                   });
                 };
 
