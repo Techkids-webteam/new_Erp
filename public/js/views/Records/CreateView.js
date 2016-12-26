@@ -195,7 +195,8 @@ define([
 
                 var cb = function() {
                   $("#instructorDd").click(function(evt) {
-                    if(!self.firstClick) {
+                    console.log(self.firstClick);
+                    // if(!self.firstClick) {
                        self.firstClick = true;
                        setTimeout(function(){
                          self.instructors.forEach(function(instructor, index){
@@ -207,11 +208,11 @@ define([
                                    $("#instructorImg").attr("src", instructor.imageSrc);
                                  }
                                })
-                             }, 100);
+                             }, 10);
                            });
                          });
-                       }, 100);
-                    }
+                       }, 10);
+                    // }
                   });
                 };
 

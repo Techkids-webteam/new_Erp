@@ -237,7 +237,7 @@ define([
                     }
                   });
                   $("#instructorDd").click(function(evt) {
-                    if(!self.firstClick) {
+                    // if(!self.firstClick) {
                        self.firstClick = true;
                        setTimeout(function(){
                          self.instructors.forEach(function(instructor, index){
@@ -253,7 +253,7 @@ define([
                            });
                          });
                        }, 10);
-                    }
+                    // }
                   });
                 };
 
