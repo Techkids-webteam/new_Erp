@@ -257,9 +257,9 @@ define([
                   });
                 };
 
-                populate.getInstructorRecord('#instructorDd', '/InstructorForDd', {}, "name", this, true, true, null, cb);
                 dataService.getData('/TeacherAssignmentsForDd', {}, function(res) {
                   self.assignments = res.data;
+                  populate.getInstructorRecord('#instructorDd', '/InstructorForDd', {}, "name", self, true, true, null, cb);
                   populate.populateFromData('#assignmentDd', findAssignmentByInstructorId(self.assignments, model.assignment.instructor._id), "show", self, true, true);
                   $("#assignmentDd").attr("data-id", model.assignment._id).text(model.assignment.role.title + " | " + model.assignment.class.title);
                 });

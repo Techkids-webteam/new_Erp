@@ -185,9 +185,11 @@ define([
                 var findAssignmentByInstructorId = function(assignments, id) {
                   var result = [];
                   assignments.forEach(function(assignment) {
-                    if(assignment.instructor._id == id) {
-                      result.push(assignment);
-                    };
+                    try{
+                      if(assignment.instructor._id.toString() == id.toString()) {
+                        result.push(assignment);
+                      };
+                    }catch(err) {}
                   })
                   return result;
                 }
@@ -195,8 +197,7 @@ define([
 
                 var cb = function() {
                   $("#instructorDd").click(function(evt) {
-                    console.log(self.firstClick);
-                    // if(!self.firstClick) {
+                    if(!self.firstClick) {
                        self.firstClick = true;
                        setTimeout(function(){
                          self.instructors.forEach(function(instructor, index){
@@ -212,13 +213,13 @@ define([
                            });
                          });
                        }, 10);
-                    // }
+                    }
                   });
                 };
 
-                populate.getInstructorRecord('#instructorDd', '/InstructorForDd', {}, "name", this, true, true, null, cb);
                 dataService.getData('/TeacherAssignmentsForDd', {}, function(res) {
                   self.assignments = res.data;
+                  populate.getInstructorRecord('#instructorDd', '/InstructorForDd', {}, "name", self, true, true, null, cb);
                 });
 
 		            // populate.populateFromData("#assignmentDd", self.assignments, "show", this, true, true);
