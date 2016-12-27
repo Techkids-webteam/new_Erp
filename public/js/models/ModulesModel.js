@@ -1,7 +1,7 @@
 define(function(){
  
     var ModulesModel = Backbone.Model.extend({
-        urlRoot: 'http://192.168.88.109:8088/getModules',
+        urlRoot: 'http://192.168.88.109:8087/getModules',
         parse: true,
         defauls: {
             mid: '',

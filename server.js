@@ -80,9 +80,9 @@ var config = {
 var allowCrossDomain = function (req, res, next) {
 
     var allowedHost = [
-        '185.2.100.192:8088',
-        'localhost:8088',
-        '192.168.88.13:8088'
+        '185.2.100.192:8087',
+        'localhost:8087',
+        '192.168.88.13:8087'
     ];
     var browser = req.headers['user-agent'];
     if (/Trident/.test(browser))
@@ -1738,7 +1738,7 @@ app.get('/:id', function (req, res) {
         res.send(500);
     }
 });
-app.set('port', 8088);
+app.set('port', 8087);
 app.listen(app.get('port'));
 
 console.log(colors.fg.Black, colors.bg.White, "Server opening at port: " ,colors.fg.Green, colors.bg.Red, app.get('port'), colors.Reset);
