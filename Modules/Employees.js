@@ -10,6 +10,8 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
             first: { type: String, default: '' },
             last: { type: String, default: '' }
         },
+        code: {type: String, default: '', require: true, unique: true},
+        order: {type: Number, default: 0},
         tags: { type: Array, default: [] },
         workAddress: {
             street: { type: String, default: '' },
@@ -394,18 +396,41 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                 ///////////////////////////////////////////////////
                 event.emit('updateSequence', models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", 0, 0, _employee.workflow, _employee.workflow, true, false, function (sequence) {
                     _employee.sequence = sequence;
-                    _employee.save(function (err, result) {
-                        if (err) {
-                            console.log(err);
-                            logWriter.log("Employees.js create savetoBd _employee.save " + err);
-                            res.send(500, { error: 'Employees.save BD error' });
+                    console.log("create employee");
+                    models.get(req.session.lastDb - 1, "Employees", employeeSchema)
+                      .findOne()
+                      .sort({order: -1})
+                      .exec(function(err, doc) {
+                        if(err) {
+                          logWriter.log("Employees.js create savetoBd _employee.save " + err);
+                          res.send(500, { error: 'Employees.save BD error' });
                         } else {
-                            res.send(201, { success: 'A new Employees create success', result: result, id: result._id });
-                            //TODO: add instructor
-                            if (result.isEmployee)
-                                event.emit('recalculate', req);
+                          _employee.order = doc ? doc.order + 1 : 1;
+                          models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema)
+                            .findOne({_id: _employee.department})
+                            .exec(function(err, departmentDoc) {
+                              if(err) {
+                                logWriter.log("Employees.js create savetoBd _employee.save " + err);
+                                res.send(500, { error: 'Employees.save BD error' });
+                              } else {
+                                _employee.code = (departmentDoc && departmentDoc.departmentName ? departmentDoc.departmentName : "TECHKIDS" )+ _employee.order;
+                                _employee.save(function (err, result) {
+                                    if (err) {
+                                        console.log(err);
+                                        logWriter.log("Employees.js create savetoBd _employee.save " + err);
+                                        res.send(500, { error: 'Employees.save BD error' });
+                                    } else {
+                                        event.emit("addInstructor", req, res, _employee._id);
+                                        res.send(201, { success: 'A new Employees create success', result: result, id: result._id });
+                                        //TODO: add instructor
+                                        if (result.isEmployee)
+                                            event.emit('recalculate', req);
+                                    }
+                                });
+                              }
+                            })
                         }
-                    });
+                      });
                 });
             }
         }
@@ -592,18 +617,41 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                 }
                 ///////////////////////////////////////////////////
                 event.emit('updateSequence', models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", 0, 0, _employee.workflow, _employee.workflow, true, false, function (sequence) {
-                    _employee.sequence = sequence;
-                    _employee.save(function (err, result) {
-                        if (err) {
-                            console.log(err);
-                            logWriter.log("Employees.js create savetoBd _employee.save " + err);
-                            res.send(500, { error: 'Employees.save BD error' });
-                        } else {
-                            // res.send(201, { success: 'A new Employees create success', result: result, id: result._id });
-                            // if (result.isEmployee)
-                            //     event.emit('recalculate', req);
-                            cb(result._id);
-                        }
+                  _employee.sequence = sequence;
+                  console.log("create employee");
+                  models.get(req.session.lastDb - 1, "Employees", employeeSchema)
+                    .findOne()
+                    .sort({order: -1})
+                    .exec(function(err, doc) {
+                      if(err) {
+                        logWriter.log("Employees.js create savetoBd _employee.save " + err);
+                        res.send(500, { error: 'Employees.save BD error' });
+                      } else {
+                        _employee.order = doc ? doc.order + 1 : 1;
+                        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema)
+                          .findOne({_id: _employee.department})
+                          .exec(function(err, departmentDoc) {
+                            if(err) {
+                              logWriter.log("Employees.js create savetoBd _employee.save " + err);
+                              res.send(500, { error: 'Employees.save BD error' });
+                            } else {
+                              _employee.code = (departmentDoc && departmentDoc.departmentName ? departmentDoc.departmentName : "TECHKIDS" )+ _employee.order;
+                              _employee.save(function (err, result) {
+                                  if (err) {
+                                      console.log(err);
+                                      logWriter.log("Employees.js create savetoBd _employee.save " + err);
+                                      res.send(500, { error: 'Employees.save BD error' });
+                                  } else {
+                                      event.emit("addInstructor", req, res, _employee._id);
+                                      res.send(201, { success: 'A new Employees create success', result: result, id: result._id });
+                                      //TODO: add instructor
+                                      if (result.isEmployee)
+                                          event.emit('recalculate', req);
+                                  }
+                              });
+                            }
+                          })
+                      }
                     });
                 });
             }
@@ -1126,6 +1174,7 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                             data.sequence -= 1;
                         models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                             if (!err) {
+                                event.emit("addInstructor", req, res, _id);
                                 cb(req, res);
                             } else {
                                 //TODO: add instructor
@@ -1143,6 +1192,7 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                     data.sequence = sequence;
                     models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                         if (!err) {
+                            event.emit("addInstructor", req, res, _id);
                             cb(req, res);
                         } else {
                             //TODO: add instructor
@@ -1157,6 +1207,7 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                 updateObject['age'] = getAge(updateObject.dateBirth);
             models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: updateObject }, function (err, result) {
                 if (!err) {
+                    event.emit("addInstructor", req, res, _id);
                     if (updateObject.dateBirth || updateObject.contractEnd || updateObject.hired) {
                         event.emit('recalculate', req);
                     }
@@ -1234,6 +1285,7 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                             data.sequence -= 1;
                         models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                             if (!err) {
+                                event.emit("addInstructor", req, res, _id);
                                 //TODO: add instructor
                                 res.send(200, { success: 'Employees updated', sequence: result.sequence });
                             } else {
@@ -1251,6 +1303,7 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                     data.sequence = sequence;
                     models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                         if (!err) {
+                            event.emit("addInstructor", req, res, _id);
                             //TODO: add instructor
                             res.send(200, { success: 'Employees updated' });
                         } else {
@@ -1265,6 +1318,8 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                 updateObject['age'] = getAge(updateObject.dateBirth);
             models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: updateObject }, function (err, result) {
                 if (!err) {
+                    event.emit("addInstructor", req, res, _id);
+                        //TODO: add instructor
                     if (updateObject.dateBirth || updateObject.contractEnd || updateObject.hired) {
                         event.emit('recalculate', req);
                     }
@@ -1305,7 +1360,6 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
                         });
 
                     }
-                        //TODO: add instructor
                     res.send(200, { success: 'Employees updated', result: result });
                 } else {
                     res.send(500, { error: "Can't update Employees" });
@@ -1337,40 +1391,52 @@ var Employee = function (logWriter, mongoose, event, department, models, personT
 
     function removeData(req, res, data, cb) {
         //TODO: add instructor
-        models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndRemove(data.employee_id, function (err, result) {
-            if (err) {
-                console.log(err);
-                logWriter.log("Employees.js remove employee.remove " + err);
-                res.send(500, { error: "Can't remove Employees" });
-            } else {
-                if (result && !result.isEmployee) {
-                    event.emit('updateSequence', models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true, function () {
-                        cb(req, res, data);
-                    });
+        event.emit("deleteInstructor", req, res, data.employee_id, function(err) {
+          if(err) {
+            res.json(500, {error: err.msg || err.message || err});
+          } else {
+            models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndRemove(data.employee_id, function (err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("Employees.js remove employee.remove " + err);
+                    res.send(500, { error: "Can't remove Employees" });
+                } else {
+                    if (result && !result.isEmployee) {
+                        event.emit('updateSequence', models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true, function () {
+                            cb(req, res, data);
+                        });
+                    }
+                    event.emit('recalculate', req);
+                    cb(req, res, data);
                 }
-                event.emit('recalculate', req);
-                cb(req, res, data);
-            }
-        });
+            });
+          }
+        })
     }
 
     function remove(req, _id, res) {
         //TODO: add instructor
-        models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndRemove(_id, function (err, result) {
-            if (err) {
-                console.log(err);
-                logWriter.log("Employees.js remove employee.remove " + err);
-                res.send(500, { error: "Can't remove Employees" });
-            } else {
-                if (result && !result.isEmployee) {
-                    event.emit('updateSequence', models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true, function () {
-                        res.send(200, { success: 'Employees removed' });
-                    });
+        event.emit("deleteInstructor", req, res, _id, function(err) {
+          if(err) {
+            res.json(500, {error: err.msg || err.message || err});
+          } else {
+            models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndRemove(_id, function (err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("Employees.js remove employee.remove " + err);
+                    res.send(500, { error: "Can't remove Employees" });
+                } else {
+                    if (result && !result.isEmployee) {
+                        event.emit('updateSequence', models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true, function () {
+                            res.send(200, { success: 'Employees removed' });
+                        });
+                    }
+                    event.emit('recalculate', req);
+                    res.send(200, { success: 'Employees removed' });
                 }
-                event.emit('recalculate', req);
-                res.send(200, { success: 'Employees removed' });
-            }
-        });
+            });
+          }
+        })
     }// end remove
 
     function getEmployeesImages(req, data, res) {

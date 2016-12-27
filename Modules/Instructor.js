@@ -1,4 +1,4 @@
-var Instructor = function (logWriter, mongoose, employee, role, models, record, classes, personTree, event){
+var Instructor = function (logWriter, mongoose, employee, role, models, record, classes, personTree, jobPosition, event){
     var async = require('async');
 
     var ObjectId = mongoose.Schema.Types.ObjectId;
@@ -35,7 +35,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
         contact : {}
     }, { collection: 'Instructor' });
 
-    mongoose.model('Instructor', instructorSchema);
+    var instructorModel = mongoose.model('Instructor', instructorSchema);
 
     //---------------------------TeacherAssignment------------------------------
 
@@ -576,7 +576,6 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
 
 
     function removeTeacherAssignments(req, res, id) {
-        //TODO: add record
         event.emit("deleteAssignment", req, res, id, function(err) {
           if(err) {
             res.json(500, {Error: err});
@@ -663,6 +662,58 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
         })
     }
 
+    function addInstructorHandler(req, res, employee_id) {
+      models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema)
+        .findOne({_id: employee_id})
+        .exec(function(err, employeeDoc) {
+          if(!err && employeeDoc) {
+            models.get(req.session.lastDb - 1, "JobPosition", jobPosition.jobPositionSchema)
+              .findOne({_id: employeeDoc.jobPosition}).exec(function(err, jobDoc) {
+                if(!err && jobDoc && jobDoc.name == "Teacher") {
+                  models.get(req.session.lastDb - 1, "Instructor", instructorSchema)
+                    .findOne({employee_id: employee_id})
+                    .exec(function(err, doc) {
+                      if(!err && !doc) {
+                        var newIns = models.get(req.session.lastDb - 1, "Instructor", instructorSchema)();
+                        newIns.employee_id = employee_id;
+                        newIns.team = "TECHKIDS";
+                        newIns.code = employeeDoc.code;
+                        newIns.classes = [];
+                        newIns.save(function(err, result) {
+                          console.log(err || result);
+                        });
+                      }
+                    })
+                }
+              });
+          }
+        })
+    }
+
+    function deleteInstructorHandler(req, res, employee_id, cb) {
+      models.get(req.session.lastDb - 1, "Instructor", instructorSchema)
+        .findOne({employee_id: employee_id})
+        .exec(function(err, doc) {
+          if(err) {
+            cb(err);
+          } else if(!doc) {
+            cb();
+          } else if(doc.classes && doc.classes.length > 0) {
+           cb(new Error("Can not delete this task!(linked)"));
+          } else {
+           doc.remove(function(err) {
+             if(err) {
+               cb(err);
+             } else {
+               cb();
+             }
+           })
+          }
+        })
+    }
+
+    event.on("addInstructor", addInstructorHandler);
+    event.on("deleteInstructor", deleteInstructorHandler);
     event.on("deleteRole", deleteRoleHandler);
     event.on("deleteClass", deleteClassHandler);
 

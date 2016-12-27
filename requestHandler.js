@@ -26,7 +26,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         rate = require("./Modules/Rate.js")(logWriter, mongoose, classes, models);
         record = require("./Modules/Record.js")(logWriter, mongoose , models, event);
         role = require("./Modules/Role.js")(logWriter, mongoose, models, event);
-        instructor = require("./Modules/Instructor.js")(logWriter, mongoose, employee, role, models, record, classes, personTree, event);
+        instructor = require("./Modules/Instructor.js")(logWriter, mongoose, employee, role, models, record, classes, personTree, jobPosition, event);
 
     //binding for remove Workflow
     event.on('removeWorkflow', function (req, wId, id) {
