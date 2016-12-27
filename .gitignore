@@ -4,6 +4,7 @@
 
 /log.txt
 /crmbb.iml
+/dump
 
 node_modules
 .idea
