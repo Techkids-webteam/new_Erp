@@ -223,6 +223,7 @@ var Record = function (logWriter, mongoose, models, event){
 
     function getRecordsForDd(req, res) {
         var query = models.get(req.session.lastDb - 1, 'Teaching_Record', recordSchema).find({})
+          .sort({"record_time" : -1})
           .exec(function(err, docs) {
             if(err || !docs) {
               res.json(500, err || new Error("Empty data"));
@@ -240,6 +241,7 @@ var Record = function (logWriter, mongoose, models, event){
 
     function getRecords(req, res) {
         var query = models.get(req.session.lastDb - 1, 'Teaching_Record', recordSchema).find({})
+          .sort({"record_time" : -1})
           .exec(function(err, docs) {
             if(err || !docs) {
               res.json(500, err || new Error("Empty data"));
