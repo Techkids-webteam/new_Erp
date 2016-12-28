@@ -1255,7 +1255,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function createCLASS(req, res, data) {
 
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 54, function (access) {
                 if (access) {
                     classes.create(req, res, data);
                 } else {
@@ -1278,7 +1278,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     // Get JobPosition for list
     function getFilterCLASS(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 14, function (access) {
+            access.getReadAccess(req, req.session.uId, 54, function (access) {
                 if (access) {
                     classes.getClasses(req, res);
                 } else {
@@ -1292,7 +1292,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function getCLASSById(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 14, function (access) {
+            access.getReadAccess(req, req.session.uId, 54, function (access) {
                 if (access) {
                     classes.getCLASSById(req, res, data.id);
                 } else {
@@ -1311,7 +1311,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                 user: req.session.uId,
                 date: new Date().toISOString()
             }
-            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 54, function (access) {
                 if (access) {
                     classes.update(req, res, data);
                 } else {
@@ -1330,7 +1330,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                 user: req.session.uId,
                 date: new Date().toISOString()
             }
-            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 54, function (access) {
                 if (access) {
                     classes.updateOnlySelectedFields(req, res, data);
                 } else {
@@ -1345,7 +1345,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function removeCLASS(req, res, id) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getDeleteAccess(req, req.session.uId, 14, function (access) {
+            access.getDeleteAccess(req, req.session.uId, 54, function (access) {
                 if (access) {
                     classes.remove(req, res, id);
                 } else {
@@ -2303,7 +2303,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     //>>old
     function getRole(req, res){
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 42, function (access) {
+            access.getReadAccess(req, req.session.uId, 56, function (access) {
                 if (access) {
                     role.getData(req,res);
                 } else {
@@ -2318,7 +2318,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function addRole(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getEditWritAccess(req, req.session.uId, 42, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 56, function (access) {
                 if (access) {
                     role.createData(req, res, data);
                 } else {
@@ -2332,7 +2332,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function updateRole(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getEditWritAccess(req, req.session.uId, 42, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 56, function (access) {
                 if (access) {
                     role.updateData(req, res, data);
                 } else {
@@ -2346,7 +2346,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function deleteRole(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getEditWritAccess(req, req.session.uId, 42, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 56, function (access) {
                 if (access) {
                     role.deleteData(req, res, data);
                 } else {
@@ -2367,7 +2367,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function createRoles(req, res, data) {
 
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 56, function (access) {
                 if (access) {
                     role.create(req, res, data);
                 } else {
@@ -2390,7 +2390,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     // Get JobPosition for list
     function getFilterRoles(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 14, function (access) {
+            access.getReadAccess(req, req.session.uId, 56, function (access) {
                 if (access) {
                     role.getRoles(req, res);
                 } else {
@@ -2404,7 +2404,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function getRolesById(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 14, function (access) {
+            access.getReadAccess(req, req.session.uId, 56, function (access) {
                 if (access) {
                     role.getRolesById(req, res, data.id);
                 } else {
@@ -2423,7 +2423,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                 user: req.session.uId,
                 date: new Date().toISOString()
             }
-            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 56, function (access) {
                 if (access) {
                     role.update(req, res, data);
                 } else {
@@ -2442,7 +2442,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                 user: req.session.uId,
                 date: new Date().toISOString()
             }
-            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 56, function (access) {
                 if (access) {
                     role.updateOnlySelectedFields(req, res, data);
                 } else {
@@ -2457,7 +2457,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function removeRoles(req, res, id) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getDeleteAccess(req, req.session.uId, 14, function (access) {
+            access.getDeleteAccess(req, req.session.uId, 56, function (access) {
                 if (access) {
                     role.remove(req, res, id);
                 } else {
@@ -2479,7 +2479,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         function createTeacherAssignments(req, res, data) {
             if (req.session && req.session.loggedIn && req.session.lastDb) {
-                access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                access.getEditWritAccess(req, req.session.uId, 57, function (access) {
                     if (access) {
                         instructor.createTeacherAssignments(req, res, data);
                     } else {
@@ -2502,7 +2502,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         // Get JobPosition for list
         function getFilterTeacherAssignments(req, res) {
             if (req.session && req.session.loggedIn && req.session.lastDb) {
-                access.getReadAccess(req, req.session.uId, 14, function (access) {
+                access.getReadAccess(req, req.session.uId, 57, function (access) {
                     if (access) {
                         instructor.getTeacherAssignments(req, res);
                     } else {
@@ -2516,7 +2516,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         function getTeacherAssignmentsById(req, res, data) {
             if (req.session && req.session.loggedIn && req.session.lastDb) {
-                access.getReadAccess(req, req.session.uId, 14, function (access) {
+                access.getReadAccess(req, req.session.uId, 57, function (access) {
                     if (access) {
                         instructor.getTeacherAssignmentsById(req, res, data.id);
                     } else {
@@ -2535,7 +2535,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                     user: req.session.uId,
                     date: new Date().toISOString()
                 }
-                access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                access.getEditWritAccess(req, req.session.uId, 57, function (access) {
                     if (access) {
                         instructor.updateTeacherAssignments(req, res, data);
                     } else {
@@ -2554,7 +2554,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                     user: req.session.uId,
                     date: new Date().toISOString()
                 }
-                access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+                access.getEditWritAccess(req, req.session.uId, 57, function (access) {
                     if (access) {
                         instructor.updateTeacherAssignmentsOnlySelectedFields(req, res, data);
                     } else {
@@ -2569,7 +2569,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         function removeTeacherAssignments(req, res, id) {
             if (req.session && req.session.loggedIn && req.session.lastDb) {
-                access.getDeleteAccess(req, req.session.uId, 14, function (access) {
+                access.getDeleteAccess(req, req.session.uId, 57, function (access) {
                     if (access) {
                         instructor.removeTeacherAssignments(req, res, id);
                     } else {
@@ -2583,7 +2583,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         function clearClass(req, res) {
             if (req.session && req.session.loggedIn && req.session.lastDb) {
-                access.getDeleteAccess(req, req.session.uId, 14, function (access) {
+                access.getDeleteAccess(req, req.session.uId, 57, function (access) {
                     if (access) {
                         instructor.clearClass(req, res);
                     } else {
@@ -2600,7 +2600,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
   //>old
     function getTeachingRecord(req, res){
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 42, function (access) {
+            access.getReadAccess(req, req.session.uId, 58, function (access) {
                 if (access) {
                     record.getData(req,res);
                 } else {
@@ -2615,7 +2615,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function getTeachingRecordByDateRange(req, res, data){
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 42, function (access) {
+            access.getReadAccess(req, req.session.uId, 58, function (access) {
                 if (access) {
                     record.getDataByDateRange(req, res, data);
                 } else {
@@ -2630,7 +2630,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function getTeachingRecordByMonth(req, res, data){
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 42, function (access) {
+            access.getReadAccess(req, req.session.uId, 58, function (access) {
                 if (access) {
                     record.getDataByMonth(req, res, data);
                 } else {
@@ -2646,7 +2646,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function getTeachingRecordByCode(req, res, data){
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 42, function (access) {
+            access.getReadAccess(req, req.session.uId, 58, function (access) {
                 if (access) {
                     record.getDataByCode(req, res, data);
                 } else {
@@ -2663,7 +2663,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function addTeachingRecord(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getEditWritAccess(req, req.session.uId, 42, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 58, function (access) {
                 if (access) {
                     record.createData(req, res, data);
                 } else {
@@ -2677,7 +2677,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function updateTeachingRecord(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getEditWritAccess(req, req.session.uId, 42, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 58, function (access) {
                 if (access) {
                     record.updateData(req, res, data);
                 } else {
@@ -2691,7 +2691,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function deleteTeachingRecord(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getEditWritAccess(req, req.session.uId, 42, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 58, function (access) {
                 if (access) {
                     record.deleteData(req, res, data);
                 } else {
@@ -2711,7 +2711,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function createRecords(req, res, data) {
 
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 58, function (access) {
                 if (access) {
                     record.create(req, res, data);
                 } else {
@@ -2734,7 +2734,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     //
     function getFilterRecords(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 14, function (access) {
+            access.getReadAccess(req, req.session.uId, 58, function (access) {
                 if (access) {
                     record.getRecords(req, res);
                 } else {
@@ -2748,7 +2748,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function getRecordsById(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 14, function (access) {
+            access.getReadAccess(req, req.session.uId, 58, function (access) {
                 if (access) {
                     record.getRecordsById(req, res, data.id);
                 } else {
@@ -2767,7 +2767,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                 user: req.session.uId,
                 date: new Date().toISOString()
             }
-            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 58, function (access) {
                 if (access) {
                     record.update(req, res, data);
                 } else {
@@ -2786,7 +2786,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                 user: req.session.uId,
                 date: new Date().toISOString()
             }
-            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 58, function (access) {
                 if (access) {
                     record.updateOnlySelectedFields(req, res, data);
                 } else {
@@ -2801,7 +2801,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function removeRecords(req, res, id) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getDeleteAccess(req, req.session.uId, 14, function (access) {
+            access.getDeleteAccess(req, req.session.uId, 58, function (access) {
                 if (access) {
                     record.remove(req, res, id);
                 } else {
@@ -2816,7 +2816,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     //-------------------------Reports------------------------------------------
     function getFilterReports(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 14, function (access) {
+            access.getReadAccess(req, req.session.uId, 59, function (access) {
                 if (access) {
                     record.getReportsByDateRange(req, res, data);
                 } else {
