@@ -3,8 +3,8 @@
  */
 var Role = function (logWriter, mongoose, models, event){
     var roleSchema = mongoose.Schema({
-        code: String,
-        title: String
+        code: {type: String, unique: true, require: true},
+        title: {type: String, unique: true, require: true},
         //rate:
         //class_id
     }, { collection: 'Role' });

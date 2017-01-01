@@ -117,7 +117,7 @@ define([
                        numberOfEmployees: obj.toJSON().numberOfEmployees
                    }, {
                        headers: {
-                           mid: 39
+                           mid: 59
                        },
                        patch: true,
                        success: function (err, model) {
@@ -413,7 +413,7 @@ define([
                },
                deleteItems: function () {
                    var that = this;
-                   var mid = 39;
+                   var mid = 59;
                    var model;
                    var localCounter = 0;
                    var count = $("#listTable input:checked").length;

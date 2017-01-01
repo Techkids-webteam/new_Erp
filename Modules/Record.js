@@ -26,7 +26,8 @@ var Record = function (logWriter, mongoose, models, event){
     var moment = require('moment');
     //>> old
     function getData(req, res){
-        var query = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema).find();
+        var query = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema).find()
+          .limit(50);
         query.exec(function(err,data){
             res.json({items: data});
         });
@@ -35,6 +36,7 @@ var Record = function (logWriter, mongoose, models, event){
     function getDataByDateRange(req, res, data) {
         var query = models.get(req.session.lastDb - 1, 'Teaching_Record', recordSchema)
           .find({record_time: {$gt: Date.parse(data.start_date || "1970-01-01"), $lte: Date.parse(data.stop_date || "3000-01-01")}})
+          .limit(50)
           .exec(function(err, docs) {
             if(err || !docs) {
               res.json(500, err || new Error("Empty data"));
@@ -57,7 +59,8 @@ var Record = function (logWriter, mongoose, models, event){
     function getDataByMonth(req, res, data) {
         var start_date = data.year + "-" + data.month + "-" + "1";
         var stop_date = data.year + "-" + data.month +  "-" + "31";
-        var query = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema).find({"instructor_code": data.instructor_code, "record_time": {"$gte": start_date, "$lt": stop_date }});
+        var query = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema).find({"instructor_code": data.instructor_code, "record_time": {"$gte": start_date, "$lt": stop_date }})
+          .limit(50);
         query.exec(function (err, data) {
             if(err) res.send(err);
             else res.json({items: data});
@@ -66,14 +69,14 @@ var Record = function (logWriter, mongoose, models, event){
 
     function getDataByCode(req, res, requestData){
         var response = [];
-        var query = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema).find({'instructor_code': requestData.code});
+        var query = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema).find({'instructor_code': requestData.code})
+          .limit(50);
         var promise  = query.exec(function(err, data){
             if(!err){
                 var recordFetchCount = 0;
                 for (var i=0;i<data.length; i++) {
                     var record = data[i].record_time;
                     (function(record) {
-                        console.log(record);
                         recordFetchCount ++;
                         if(record.record_time.indexOf(requestData.date) != -1){
                             response.push(record);
@@ -95,8 +98,8 @@ var Record = function (logWriter, mongoose, models, event){
     }
 
     function getDataDay(req, res, data) {
-        var query = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema).find({'record_time': data.date, 'instructor_code': data.code});
-        console.log(data);
+        var query = models.get(req.session.lastDb - 1, "Teaching_Record", recordSchema).find({'record_time': data.date, 'instructor_code': data.code})
+          .limit(50);
         query.exec(function(err, record){
             res.json({number: record.length});
         });
@@ -187,6 +190,7 @@ var Record = function (logWriter, mongoose, models, event){
     }
 
     function getAssignment(req, cb) {
+      var compact = req.query.compact;
       var assignments = [];
       assignments.findById = function(id) {
         for(var i = 0; i < this.length; i++) {
@@ -197,7 +201,7 @@ var Record = function (logWriter, mongoose, models, event){
       }
        models.get(req.session.lastDb - 1, 'Instructor')
         .find({})
-        .lean().populate("employee_id", "_id name")
+        .lean().populate("employee_id", "_id name" + (compact ? "" : " imageSrc"))
         .lean().populate("classes.class")
         .lean().populate("classes.role")
         .exec(function(err, docs) {
@@ -210,8 +214,9 @@ var Record = function (logWriter, mongoose, models, event){
                   assignment.instructor = {
                     _id: doc._id,
                     name: doc.employee_id ? doc.employee_id.name ? doc.employee_id.name.last + " " + doc.employee_id.name.first : "" : "",
-                    code: doc.code
-                  }
+                    code: doc.code,
+                    imageSrc: compact ? undefined : (doc.employee_id ? doc.employee_id.imageSrc : null)
+                  };
                 })
                 Array.prototype.push.apply(assignments, doc.classes);
               }
@@ -223,6 +228,7 @@ var Record = function (logWriter, mongoose, models, event){
 
     function getRecordsForDd(req, res) {
         var query = models.get(req.session.lastDb - 1, 'Teaching_Record', recordSchema).find({})
+          .limit(50)
           .sort({"record_time" : -1})
           .exec(function(err, docs) {
             if(err || !docs) {
@@ -241,6 +247,7 @@ var Record = function (logWriter, mongoose, models, event){
 
     function getRecords(req, res) {
         var query = models.get(req.session.lastDb - 1, 'Teaching_Record', recordSchema).find({})
+          .limit(50)
           .sort({"record_time" : -1})
           .exec(function(err, docs) {
             if(err || !docs) {

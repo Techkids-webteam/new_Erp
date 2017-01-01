@@ -90,7 +90,7 @@ define([
                     location = location.split('/p=')[0] + '/p=1' + '/' + afterPage;
                 }
                 var self = this;
-                var mid = 39;
+                var mid = 57;
 
                 var instructor = $("#instructorDd").attr("data-id");
                 var cl = $("#classesDd").attr("data-id");

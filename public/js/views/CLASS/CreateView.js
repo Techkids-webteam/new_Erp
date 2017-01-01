@@ -90,7 +90,7 @@ define([
                     location = location.split('/p=')[0] + '/p=1' + '/' + afterPage;
                 }
                 var self = this;
-                var mid = 39;
+                var mid = 54;
 
                 var title = $.trim($("#title").val());
                 var code = $.trim($("#code").val());

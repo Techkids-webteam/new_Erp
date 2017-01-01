@@ -1240,9 +1240,9 @@ app.get('/Reports/:viewType', function (req, res) {
 //------------------TeacherAssignments---------------------------------------------------
 
 app.post('/TeacherAssignments', function (req, res) {
-  console.log("server come post");
     var data = {};
     data = req.body;
+    console.log(data);
     requestHandler.createTeacherAssignments(req, res, data);
 });
 

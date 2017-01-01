@@ -87,7 +87,7 @@ define([
                     location = location.split('/p=')[0] + '/p=1' + '/' + afterPage;
                 }
                 var self = this;
-                var mid = 39;
+                var mid = 57;
 
                 var instructor = $("#instructorDd").data("id");
                 var cl = $("#classesDd").data("id");
@@ -150,7 +150,7 @@ define([
                 $(".add-user-dialog").remove();
             },
             deleteItem: function(event) {
-                var mid = 39;
+                var mid = 57;
                 event.preventDefault();
                 var self = this;
                     var answer = confirm("Realy DELETE items ?!");

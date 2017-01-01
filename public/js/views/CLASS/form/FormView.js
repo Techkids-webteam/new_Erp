@@ -19,7 +19,7 @@ define([
                 new EditView({ model: this.formModel });
             },
             deleteItems: function () {
-                var mid = 39;
+                var mid = 54;
                 this.formModel.destroy({
                     headers: {
                         mid: mid

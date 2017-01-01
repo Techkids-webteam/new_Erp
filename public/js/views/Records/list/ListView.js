@@ -20,6 +20,7 @@ define([
                page: null,
                contentType: 'Records',
                viewType: 'list',
+               compact: true,
 
                initialize: function (options) {
                    this.startTime = options.startTime;
@@ -85,7 +86,7 @@ define([
                        numberOfEmployees: obj.toJSON().numberOfEmployees
                    }, {
                        headers: {
-                           mid: 39
+                           mid: 58
                        },
                        patch: true,
                        success: function (err, model) {
@@ -388,7 +389,7 @@ define([
                },
                deleteItems: function () {
                    var that = this;
-                   var mid = 39;
+                   var mid = 58;
                    var model;
                    var localCounter = 0;
                    var count = $("#listTable input:checked").length;

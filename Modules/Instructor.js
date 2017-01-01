@@ -356,10 +356,10 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
         try{
           var ta = {
             rate: data.rate,
-            role: new ObjectId(data.role),
-            class: new ObjectId(data.class)
+            role: ObjectId(data.role),
+            class: ObjectId(data.class)
           }
-          model.find({_id: data.instructor ? data.instructor._id : ''})
+          model.findOne({_id: data.instructor})
             .exec(function(err, doc) {
               if(err) {
                 logWriter.log("Instructor.js createTeacherAssignments > Error: " + err || "Add failed!");
@@ -372,7 +372,8 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
                 ta.instructor = doc._id;
                 doc.classes.push(ta);
                 doc.save(function(err, result) {
-                  if(err || result) {
+                  if(err || !result) {
+                    console.log(err);
                     logWriter.log("Instructor.js createTeacherAssignments > Error: " + err || "Add failed!");
                     res.json(400, {error: err || "Something went wrong!"});
                   } else {
