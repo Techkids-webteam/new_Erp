@@ -412,7 +412,7 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
                     _id: entry._id,
                     name: entry.employee_id ? entry.employee_id.name.first + " " + entry.employee_id.name.last : ""
                   };
-                  cl.show = cl.class.title + " | " + cl.role.title;
+                  cl.show = (cl.class ? cl.class.title : "Missing class!") + " | " + (cl.role ? cl.role.title : "Missing role!");
                   processData.push(cl);
                 })
               }
