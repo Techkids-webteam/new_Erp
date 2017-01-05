@@ -37,8 +37,6 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
 
     var instructorModel = mongoose.model('Instructor', instructorSchema);
 
-    //---------------------------TeacherAssignment------------------------------
-
 
     //>>old
 
@@ -114,9 +112,15 @@ var Instructor = function (logWriter, mongoose, employee, role, models, record, 
             for (var i=0;i<data.length; i++) {
                 var instructor = data[i];
                 (function(instructor) {
-                    models.get(req.session.lastDb - 1, "Teaching_Record", record.recordSchema).find({"instructor_code": instructor.code, "date" : {"$gte": today, "$lt": tomorow }}, function (err, recordData) {
+                    let assigmentIDs = [];
+                    instructor.classes.forEach(function(assignment) {
+                      assigmentIDs.push(assignment._id);
+                    })
+                    models.get(req.session.lastDb - 1, "Teaching_Record", record.recordSchema)
+                      .find({"assignment": {$in: assigmentIDs}, "record_time" : {"$gte": today, "$lt": tomorow }})
+                      .exec(function (err, recordData) {
                         instructor.record_count = recordData.length;
-                    });
+                      });
                     models.get(req.session.lastDb - 1,
                         "Employees",
                         employee.employeeSchema)
